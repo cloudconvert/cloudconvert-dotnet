@@ -10,6 +10,6 @@ namespace СloudСonvert.API.СloudСonvert.Models.JobModels
   public partial class Result
   {
     [JsonProperty("files")]
-    public List<FileCC> Files { get; set; }
+    public List<File> Files { get; set; }
   }
 }

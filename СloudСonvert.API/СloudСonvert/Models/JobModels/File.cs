@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.СloudСonvert.Models.JobModels
 {
-  public partial class FileCC
+  public partial class File
   {
     [JsonProperty("filename")]
     public string Filename { get; set; }

@@ -28,5 +28,9 @@ namespace СloudСonvert.API.СloudСonvert
     /// <returns></returns>
     [Get("/jobs/{id}")]
     Task<JobResponse> GetJob([Header("Authorization")] string api_key, string id);
+
+
+    [Get("/jobs/{id}/wait")]
+    Task<JobResponse> WaitJob([Header("Authorization")] string api_key, string id);
   }
 }

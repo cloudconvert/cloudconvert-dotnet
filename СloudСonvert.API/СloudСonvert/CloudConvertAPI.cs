@@ -24,5 +24,7 @@ namespace СloudСonvert.API.СloudСonvert
     public Task<JobsResponse> GetAllJobsAsync(JobFilter jobFilter) => _api.GetAllJobs(_api_key, jobFilter.Status, jobFilter.Tag, jobFilter.Include, jobFilter.PerPage, jobFilter.Page);
 
     public Task<JobResponse> GetJobAsync(string id) => _api.GetJob(_api_key, id);
+
+    public Task<JobResponse> WaitJobAsync(string id) => _api.WaitJob(_api_key, id);
   }
 }
