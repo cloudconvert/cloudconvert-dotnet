@@ -32,5 +32,15 @@ namespace СloudСonvert.Test
       {
       }
     }
+
+
+    [Test]
+    public async Task GetJob()
+    {
+      CloudConvertAPI ccAPI = new CloudConvertAPI(urlApi, apiKey);
+
+      var result = await ccAPI.GetJobAsync("5b5a6eed-1be3-4179-8f3c-8600b6835881");
+    }
+
   }
 }

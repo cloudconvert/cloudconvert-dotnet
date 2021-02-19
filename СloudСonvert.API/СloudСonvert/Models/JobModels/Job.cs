@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace СloudСonvert.API.СloudСonvert.Models.JobModels
@@ -19,6 +20,9 @@ namespace СloudСonvert.API.СloudСonvert.Models.JobModels
 
     [JsonProperty("started_at")]
     public DateTimeOffset Started_At { get; set; }
+
+    [JsonProperty("tasks")]
+    public List<TaskCC> Tasks { get; set; }
 
     [JsonProperty("links")]
     public DatumLinks Links { get; set; }

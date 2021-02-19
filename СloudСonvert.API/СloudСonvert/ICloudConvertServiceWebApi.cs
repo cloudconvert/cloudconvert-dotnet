@@ -19,5 +19,14 @@ namespace СloudСonvert.API.СloudСonvert
     /// <returns></returns>
     [Get("/jobs?filter[status]={status}&filter[tag]={tag}&include={include}&per_page={perPage}&page={page}")]
     Task<JobsResponse> GetAllJobs([Header("Authorization")] string api_key, JobStatus? status = null, string tag = null, string include = null, int? perPage = null, int? page = null);
+
+    /// <summary>
+    /// Show a job
+    /// </summary>
+    /// <param name="api_key"></param>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Get("/jobs/{id}")]
+    Task<JobResponse> GetJob([Header("Authorization")] string api_key, string id);
   }
 }
