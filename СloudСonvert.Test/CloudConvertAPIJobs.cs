@@ -50,5 +50,13 @@ namespace СloudСonvert.Test
       var result = await ccAPI.WaitJobAsync("5b5a6eed-1be3-4179-8f3c-8600b6835881");
     }
 
+    [Test]
+    public async Task DeleteJob()
+    {
+      CloudConvertAPI ccAPI = new CloudConvertAPI(urlApi, apiKey);
+
+      await ccAPI.DeleteJobAsync("2d1224e3-aeb1-4b90-8639-d422b6a0b61a");
+    }
+
   }
 }

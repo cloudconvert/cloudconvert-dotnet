@@ -26,5 +26,7 @@ namespace СloudСonvert.API.СloudСonvert
     public Task<JobResponse> GetJobAsync(string id) => _api.GetJob(_api_key, id);
 
     public Task<JobResponse> WaitJobAsync(string id) => _api.WaitJob(_api_key, id);
+
+    public Task DeleteJobAsync(string id) => _api.DeleteJob(_api_key, id);
   }
 }

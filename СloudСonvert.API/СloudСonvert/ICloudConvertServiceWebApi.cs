@@ -29,8 +29,22 @@ namespace СloudСonvert.API.СloudСonvert
     [Get("/jobs/{id}")]
     Task<JobResponse> GetJob([Header("Authorization")] string api_key, string id);
 
-
+    /// <summary>
+    /// Wait for a job
+    /// </summary>
+    /// <param name="api_key"></param>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Get("/jobs/{id}/wait")]
     Task<JobResponse> WaitJob([Header("Authorization")] string api_key, string id);
+
+    /// <summary>
+    /// Delete a job
+    /// </summary>
+    /// <param name="api_key"></param>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Delete("/jobs/{id}")]
+    Task DeleteJob([Header("Authorization")] string api_key, string id);
   }
 }
