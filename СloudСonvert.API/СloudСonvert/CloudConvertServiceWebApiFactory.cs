@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Refit;
 
 namespace СloudСonvert.API.СloudСonvert
@@ -8,7 +10,8 @@ namespace СloudСonvert.API.СloudСonvert
     {
       return RestService.For<ICloudConvertServiceWebApi>(serverUrl, new RefitSettings
       {
-        HttpMessageHandlerFactory = () => new WebApiHandler(loggingEnabled: false)
+        HttpMessageHandlerFactory = () => new WebApiHandler(loggingEnabled: false),
+        ContentSerializer = new NewtonsoftJsonContentSerializer()
       });
     }
   }

@@ -9,5 +9,8 @@ namespace СloudСonvert.API.СloudСonvert.Models
 
     [JsonProperty("code")]
     public string Code { get; set; }
+
+    [JsonProperty("errors")]
+    public object Errors { get; set; }
   }
 }

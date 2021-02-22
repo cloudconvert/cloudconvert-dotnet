@@ -109,6 +109,7 @@ namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
     [JsonProperty("result")]
     public Result Result { get; set; }
 
+
     [JsonProperty("links")]
     public DatumLinks Links { get; set; }
   }

@@ -6,23 +6,23 @@ using Refit;
 using СloudСonvert.API;
 using СloudСonvert.API.СloudСonvert;
 using СloudСonvert.API.СloudСonvert.Models;
-using СloudСonvert.API.СloudСonvert.Models.TaskModels;
+using СloudСonvert.API.СloudСonvert.Models.JobModels;
 
 namespace СloudСonvert.Test
 {
-  public class SandboxAPITasks
+  public class SandboxJobs
   {
     const string sandboxUrlApi = "https://api.sandbox.cloudconvert.com/v2/";
     const string apiKey = "";
 
     [Test]
-    public async Task GetAllTasks()
+    public async Task GetAllJobs()
     {
       CloudConvertAPI ccAPI = new CloudConvertAPI(sandboxUrlApi, apiKey);
       try
       {
-        TaskFilter filter = new TaskFilter();
-        var result = await ccAPI.GetAllTasksAsync(filter);
+        JobFilter filter = new JobFilter();
+        var result = await ccAPI.GetAllJobsAsync(filter);
       }
       catch (WebApiException ex)
       {
@@ -37,27 +37,27 @@ namespace СloudСonvert.Test
     }
 
     [Test]
-    public async Task GetTask()
+    public async Task GetJob()
     {
       CloudConvertAPI ccAPI = new CloudConvertAPI(sandboxUrlApi, apiKey);
 
-      var result = await ccAPI.GetTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
+      var result = await ccAPI.GetJobAsync("5b5a6eed-1be3-4179-8f3c-8600b6835881");
     }
 
     [Test]
-    public async Task WaitTask()
+    public async Task WaitJob()
     {
       CloudConvertAPI ccAPI = new CloudConvertAPI(sandboxUrlApi, apiKey);
 
-      var result = await ccAPI.WaitTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
+      var result = await ccAPI.WaitJobAsync("5b5a6eed-1be3-4179-8f3c-8600b6835881");
     }
 
     [Test]
-    public async Task DeleteTask()
+    public async Task DeleteJob()
     {
       CloudConvertAPI ccAPI = new CloudConvertAPI(sandboxUrlApi, apiKey);
 
-      await ccAPI.DeleteTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
+      await ccAPI.DeleteJobAsync("2d1224e3-aeb1-4b90-8639-d422b6a0b61a");
     }
 
   }

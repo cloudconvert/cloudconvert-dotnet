@@ -12,7 +12,6 @@ namespace СloudСonvert.API.СloudСonvert.Models.JobModels
     /// The other parameters are the same as for creating the task using their direct endpoint.
     /// The input parameter allows it to directly reference the name of another task, created with the same job request.
     /// </summary>
-    [JsonRequired]
     [JsonProperty("tasks")]
     public dynamic Tasks { get; set; }
 

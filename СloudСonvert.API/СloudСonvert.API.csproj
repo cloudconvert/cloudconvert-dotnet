@@ -6,8 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Refit" Version="6.0.15" />
+    <PackageReference Include="Refit.Newtonsoft.Json" Version="6.0.15" />
   </ItemGroup>
 
 </Project>

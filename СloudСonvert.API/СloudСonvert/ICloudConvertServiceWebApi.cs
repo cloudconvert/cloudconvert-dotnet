@@ -36,7 +36,7 @@ namespace СloudСonvert.API.СloudСonvert
     /// The created job. You can find details about the job model response in the documentation about the show jobs endpoint.
     /// </returns>
     [Post("/jobs")]
-    Task CreateJob([Header("Authorization")] string api_key, [Body] JobCreateRequest request);
+    Task<JobResponse> CreateJob([Header("Authorization")] string api_key, [Body(BodySerializationMethod.Serialized)] JobCreateRequest request);
 
     /// <summary>
     /// Show a job

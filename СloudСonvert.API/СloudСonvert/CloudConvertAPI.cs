@@ -35,6 +35,15 @@ namespace СloudСonvert.API.СloudСonvert
     public Task<JobsResponse> GetAllJobsAsync(JobFilter jobFilter) => _api.GetAllJobs(_api_key, jobFilter.Status, jobFilter.Tag, jobFilter.Include, jobFilter.PerPage, jobFilter.Page);
 
     /// <summary>
+    /// Create a job with one ore more tasks. Requires the task.write scope.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created job. You can find details about the job model response in the documentation about the show jobs endpoint.
+    /// </returns>
+    public Task<JobResponse> CreateJobAsync(JobCreateRequest request) => _api.CreateJob(_api_key, request);
+
+    /// <summary>
     /// Show a job. Requires the task.read scope.
     /// </summary>
     /// <param name="id"></param>

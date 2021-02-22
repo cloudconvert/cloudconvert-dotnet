@@ -20,10 +20,6 @@ namespace СloudСonvert.API
     {
 
       bool writeLog = _loggingEnabled;
-      if (writeLog)
-      {
-        //var requestString = await request?.Content?.ReadAsStringAsync();
-      }
 
       try
       {
