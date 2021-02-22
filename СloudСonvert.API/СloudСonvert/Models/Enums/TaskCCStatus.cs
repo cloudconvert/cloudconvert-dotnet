@@ -1,7 +1,8 @@
 namespace СloudСonvert.API.СloudСonvert.Models.Enums
 {
-  public enum JobStatus
+  public enum TaskCCStatus
   {
+    waiting,
     processing,
     finished,
     error
