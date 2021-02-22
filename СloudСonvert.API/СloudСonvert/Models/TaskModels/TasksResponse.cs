@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using СloudСonvert.API.СloudСonvert.Models.JobModels;
 
-namespace СloudСonvert.API.СloudСonvert.Models.JobModels
+namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
 {
-  public partial class JobsResponse
+  public partial class TasksResponse
   {
     [JsonProperty("data")]
-    public List<JobCC> Data { get; set; }
+    public List<TaskCC> Data { get; set; }
 
     [JsonProperty("links")]
     public Links Links { get; set; }

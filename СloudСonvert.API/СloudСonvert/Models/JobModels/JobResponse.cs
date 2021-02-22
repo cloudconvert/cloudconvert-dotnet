@@ -5,6 +5,6 @@ namespace СloudСonvert.API.СloudСonvert.Models.JobModels
   public partial class JobResponse
   {
     [JsonProperty("data")]
-    public Job Data { get; set; }
+    public JobCC Data { get; set; }
   }
 }

@@ -1,11 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.JobModels
+namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
 {
   public partial class Result
   {

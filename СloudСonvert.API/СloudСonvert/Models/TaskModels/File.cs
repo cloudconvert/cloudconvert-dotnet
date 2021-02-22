@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.JobModels
+namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
 {
   public partial class File
   {

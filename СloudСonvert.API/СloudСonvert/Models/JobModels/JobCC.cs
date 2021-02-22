@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using СloudСonvert.API.СloudСonvert.Models.TaskModels;
 
 namespace СloudСonvert.API.СloudСonvert.Models.JobModels
 {
-  public partial class Job
+  public partial class JobCC
   {
     [JsonProperty("id")]
     public Guid Id { get; set; }

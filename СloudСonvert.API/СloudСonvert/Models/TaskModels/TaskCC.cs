@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.JobModels
+namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
 {
   public partial class TaskCC
   {
@@ -31,6 +31,9 @@ namespace СloudСonvert.API.СloudСonvert.Models.JobModels
 
     [JsonProperty("ended_at")]
     public DateTimeOffset? Ended_At { get; set; }
+
+    [JsonProperty("payload")]
+    public Payload Payload { get; set; }
 
     [JsonProperty("result")]
     public Result Result { get; set; }
