@@ -4,9 +4,8 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using Refit;
 using СloudСonvert.API;
-using СloudСonvert.API.СloudСonvert;
-using СloudСonvert.API.СloudСonvert.Models;
-using СloudСonvert.API.СloudСonvert.Models.TaskModels;
+using СloudСonvert.API.Models;
+using СloudСonvert.API.Models.TaskModels;
 
 namespace СloudСonvert.Test
 {

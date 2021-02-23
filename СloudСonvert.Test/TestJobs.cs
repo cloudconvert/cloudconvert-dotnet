@@ -5,11 +5,12 @@ using NUnit.Framework;
 using Refit;
 using СloudСonvert.API;
 using СloudСonvert.API.Extensions;
-using СloudСonvert.API.СloudСonvert;
-using СloudСonvert.API.СloudСonvert.Models;
-using СloudСonvert.API.СloudСonvert.Models.Enums;
-using СloudСonvert.API.СloudСonvert.Models.ImportOperations;
-using СloudСonvert.API.СloudСonvert.Models.JobModels;
+using СloudСonvert.API.Models;
+using СloudСonvert.API.Models.Enums;
+using СloudСonvert.API.Models.ExportOperations;
+using СloudСonvert.API.Models.ImportOperations;
+using СloudСonvert.API.Models.JobModels;
+using СloudСonvert.API.Models.TaskOperations;
 
 namespace СloudСonvert.Test
 {
@@ -50,8 +51,24 @@ namespace СloudСonvert.Test
         {
           import_example_1 = new ImportUploadData
           {
-            Operation = ImportOperation.ImportUpload.GetEnumDescription(),
-            Redirect = "test"
+            Operation = ImportOperation.ImportUpload.GetEnumDescription()
+          },
+          convert = new TaskConvertData
+          {
+            Operation = TaskOperation.Convert.GetEnumDescription(),
+            Input = "import_example_1",
+            Input_Format = "pdf",
+            Output_Format = "docx",
+            Page_Range = "1-2",
+            Optimize_Print = true,
+            Engine = "bcl"
+          },
+          export = new ExportUrlData
+          {
+            Operation = ExportOperation.ExportUrl.GetEnumDescription(),
+            Input = "convert",
+            Inline_Additional = true,
+            Archive_Multiple_Files = true
           }
         },
         Tag = "Test"
