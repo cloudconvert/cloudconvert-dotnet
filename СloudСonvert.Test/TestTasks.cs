@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -46,7 +47,7 @@ namespace СloudСonvert.Test
     }
 
     [Test]
-    public async Task CreateConvertTask()
+    public async Task CreateTask()
     {
       CloudConvertAPI ccAPI = new CloudConvertAPI(urlApi, apiKey);
 
@@ -61,45 +62,8 @@ namespace СloudСonvert.Test
         Engine = "bcl"
       };
 
-      var result = await ccAPI.CreateConvertTaskAsync(req);
+      var result = await ccAPI.CreateTaskAsync(TaskOperation.Convert.GetEnumDescription(), req);
     }
-
-    //[Test]
-    //public async Task CreateTask()
-    //{
-    //  CloudConvertAPI ccAPI = new CloudConvertAPI(urlApi, apiKey);
-
-    //  var req = new JobCreateRequest
-    //  {
-    //    Tasks = new
-    //    {
-    //      import_example_1 = new ImportUploadData
-    //      {
-    //        Operation = ImportOperation.ImportUpload.GetEnumDescription()
-    //      },
-    //      convert = new TaskConvertData
-    //      {
-    //        Operation = TaskOperation.Convert.GetEnumDescription(),
-    //        Input = "import_example_1",
-    //        Input_Format = "pdf",
-    //        Output_Format = "docx",
-    //        Page_Range = "1-2",
-    //        Optimize_Print = true,
-    //        Engine = "bcl"
-    //      },
-    //      export = new ExportUrlData
-    //      {
-    //        Operation = ExportOperation.ExportUrl.GetEnumDescription(),
-    //        Input = "convert",
-    //        Inline_Additional = true,
-    //        Archive_Multiple_Files = true
-    //      }
-    //    },
-    //    Tag = "Test"
-    //  };
-
-    //  var result = await ccAPI.CreateJobAsync(req);
-    //}
 
     [Test]
     public async Task GetTask()
@@ -125,5 +89,16 @@ namespace СloudСonvert.Test
       await ccAPI.DeleteTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
     }
 
+    //[Test]
+    //public async Task Upload()
+    //{
+    //  CloudConvertAPI ccAPI = new CloudConvertAPI(urlApi, apiKey);
+
+
+    //  var path = @"TestFiles\Test.pdf";
+    //  using var stream = new FileStream(path, FileMode.Open);
+    //  var result = await ccAPI.UploadAsync(new StreamPart(stream, "test-streampart.pdf", "application/pdf"));
+
+    //}
   }
 }

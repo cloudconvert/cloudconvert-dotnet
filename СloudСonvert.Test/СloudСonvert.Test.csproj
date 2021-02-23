@@ -16,4 +16,13 @@
     <ProjectReference Include="..\СloudСonvert.API\СloudСonvert.API.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestFiles\ava2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Test.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
