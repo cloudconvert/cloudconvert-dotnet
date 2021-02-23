@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
 {
-  public class ImportS3Data : Import
+  public class ImportS3Data : Base
   {
     /// <summary>
     /// The Amazon S3 bucket where to download the file.

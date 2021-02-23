@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
 {
-  public class ImportOpenStackData : Import
+  public class ImportOpenStackData : Base
   {
     [JsonProperty("auth_url")]
     public string Auth_Url { get; set; }

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
 {
-  public class ImportUrlData : Import
+  public class ImportUrlData : Base
   {
     [JsonProperty("url")]
     public string Url { get; set; }
