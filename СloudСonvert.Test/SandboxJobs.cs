@@ -4,9 +4,12 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using Refit;
 using СloudСonvert.API;
+using СloudСonvert.API.Extensions;
 using СloudСonvert.API.СloudСonvert;
 using СloudСonvert.API.СloudСonvert.Models;
+using СloudСonvert.API.СloudСonvert.Models.Enums;
 using СloudСonvert.API.СloudСonvert.Models.JobModels;
+using СloudСonvert.API.СloudСonvert.Models.TaskModels;
 
 namespace СloudСonvert.Test
 {
@@ -34,6 +37,27 @@ namespace СloudСonvert.Test
       catch (Exception ex)
       {
       }
+    }
+
+    [Test]
+    public async Task CreateJob()
+    {
+      CloudConvertAPI ccAPI = new CloudConvertAPI(sandboxUrlApi, apiKey);
+
+      var req = new JobCreateRequest
+      {
+        Tasks = new
+        {
+          import_example_1 = new ImportUploadData
+          {
+            Operation = ImportOperation.ImportUpload.GetEnumDescription(),
+            Redirect = "test"
+          }
+        },
+        Tag = "Test"
+      };
+
+      var result = await ccAPI.CreateJobAsync(req);
     }
 
     [Test]

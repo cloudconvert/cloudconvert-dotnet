@@ -98,6 +98,18 @@ namespace СloudСonvert.API.СloudСonvert
     Task<TasksResponse> GetAllTasks([Header("Authorization")] string api_key, string jobId = null, TaskCCStatus? status = null, string operation = null, string[] include = null, int? perPage = null, int? page = null);
 
     /// <summary>
+    /// Create job
+    /// Create a job with one ore more tasks. Requires the task.write scope.
+    /// </summary>
+    /// <param name="api_key"></param>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created job. You can find details about the job model response in the documentation about the show jobs endpoint.
+    /// </returns>
+    [Post("/jobs")]
+    Task<JobResponse> CreateTask([Header("Authorization")] string api_key, [Body(BodySerializationMethod.Serialized)] JobCreateRequest request);
+
+    /// <summary>
     /// Show a job
     /// Show a task. Requires the task.read scope.
     /// </summary>

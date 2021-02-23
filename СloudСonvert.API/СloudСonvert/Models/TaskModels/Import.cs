@@ -2,9 +2,9 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
 {
-  public partial class ImportUpload
+  public partial class Import
   {
     [JsonProperty("operation")]
-    public string Operation { get; set; } = "import/upload";
+    public string Operation { get; set; }
   }
 }
