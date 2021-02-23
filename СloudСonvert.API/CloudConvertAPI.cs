@@ -1,18 +1,39 @@
 using System.Threading.Tasks;
 using СloudСonvert.API.Models.JobModels;
 using СloudСonvert.API.Models.TaskModels;
-using СloudСonvert.API.Models.TaskOperations;
 
 namespace СloudСonvert.API
 {
-  public class CloudConvertAPI
+  public interface ICloudConvertAPI
+  {
+    #region Jobs
+    Task<JobsResponse> GetAllJobsAsync(JobFilter jobFilter);
+    Task<JobResponse> CreateJobAsync(JobCreateRequest request);
+    Task<JobResponse> GetJobAsync(string id);
+    Task<JobResponse> WaitJobAsync(string id);
+    Task DeleteJobAsync(string id);
+    #endregion
+
+    #region Tasks
+    Task<TasksResponse> GetAllTasksAsync(TaskFilter jobFilter);
+    Task<TaskResponse> CreateTaskAsync<T>(string operation, T request);
+    Task<TaskResponse> GetTaskAsync(string id, string[] include = null);
+    Task<TaskResponse> WaitTaskAsync(string id);
+    Task DeleteTaskAsync(string id);
+    #endregion
+  }
+
+  public class CloudConvertAPI : ICloudConvertAPI
   {
     readonly string _apiUrl;
     readonly ICloudConvertServiceWebApi _api;
     readonly string _api_key = "Bearer ";
+    const string sandboxUrlApi = "https://api.sandbox.cloudconvert.com/v2";
+    const string publicUrlApi = "https://api.cloudconvert.com/v2";
 
-    public CloudConvertAPI(string api_key)
+    public CloudConvertAPI(string api_key, bool isSandbox = false)
     {
+      _apiUrl = isSandbox ? sandboxUrlApi : publicUrlApi;
       _api_key += api_key;
       _api = CloudConvertServiceWebApiFactory.CreateWebApi(_apiUrl);
     }
@@ -90,7 +111,7 @@ namespace СloudСonvert.API
     /// <returns>
     /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<TaskResponse> CreateTaskAsync(string operation, TaskConvertData request) => _api.CreateTask(_api_key, operation, request);
+    public Task<TaskResponse> CreateTaskAsync<T>(string operation, T request) => _api.CreateTask(_api_key, operation, request);
 
     /// <summary>
     /// Show a task. Requires the task.read scope.
