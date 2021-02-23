@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models.ImportOperations
 {
-  public class ImportUploadData : Base
+  public class ImportUploadData : BaseOperation
   {
     /// <summary>
     /// Redirect user to this URL after upload

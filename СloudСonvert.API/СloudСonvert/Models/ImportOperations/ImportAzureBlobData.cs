@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models.ImportOperations
 {
-  public class ImportAzureBlobData : Base
+  public class ImportAzureBlobData : BaseOperation
   {
     [JsonProperty("storage_account")]
     public string Storage_Account { get; set; }

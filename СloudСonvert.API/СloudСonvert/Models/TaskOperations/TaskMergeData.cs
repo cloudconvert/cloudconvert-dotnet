@@ -1,8 +1,9 @@
 using Newtonsoft.Json;
+using СloudСonvert.API.СloudСonvert.Models.Enums;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models.TaskOperations
 {
-  public class TaskArchiveData : Base
+  public class TaskMergeData : BaseOperation
   {
     /// <summary>
     /// The input task name(s) for this task.
@@ -12,7 +13,7 @@ namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
     public dynamic Input { get; set; }
 
     [JsonProperty("output_format")]
-    public string Output_Format { get; set; }
+    public OutputFormatMerge Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }

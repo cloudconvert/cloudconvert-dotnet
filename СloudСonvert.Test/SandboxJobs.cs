@@ -8,8 +8,8 @@ using СloudСonvert.API.Extensions;
 using СloudСonvert.API.СloudСonvert;
 using СloudСonvert.API.СloudСonvert.Models;
 using СloudСonvert.API.СloudСonvert.Models.Enums;
+using СloudСonvert.API.СloudСonvert.Models.ImportOperations;
 using СloudСonvert.API.СloudСonvert.Models.JobModels;
-using СloudСonvert.API.СloudСonvert.Models.TaskModels;
 
 namespace СloudСonvert.Test
 {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models.ImportOperations
 {
-  public class ImportUrlData : Base
+  public class ImportUrlData : BaseOperation
   {
     [JsonProperty("url")]
     public string Url { get; set; }

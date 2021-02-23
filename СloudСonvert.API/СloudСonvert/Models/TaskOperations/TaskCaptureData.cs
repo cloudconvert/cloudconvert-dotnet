@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using СloudСonvert.API.СloudСonvert.Models.Enums;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models.TaskOperations
 {
-  public class TaskCaptureData : Base
+  public class TaskCaptureData : BaseOperation
   {
     /// <summary>
     /// URL of the website

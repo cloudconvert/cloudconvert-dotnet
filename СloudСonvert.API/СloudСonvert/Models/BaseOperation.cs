@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models
 {
-  public partial class Base
+  public partial class BaseOperation
   {
     [JsonProperty("operation")]
     public string Operation { get; set; }

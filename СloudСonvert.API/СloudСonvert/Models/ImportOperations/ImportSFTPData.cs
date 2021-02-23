@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models.ImportOperations
 {
-  public class ImportSFTPData : Base
+  public class ImportSFTPData : BaseOperation
   {
     [JsonProperty("host")]
     public string Host { get; set; }

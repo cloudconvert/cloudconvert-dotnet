@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models.TaskOperations
 {
-  public class TaskConvertData : Base
+  public class TaskConvertData : BaseOperation
   {
     /// <summary>
     /// The input task name(s) for this task.

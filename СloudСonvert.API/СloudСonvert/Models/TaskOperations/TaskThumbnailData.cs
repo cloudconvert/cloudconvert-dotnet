@@ -1,9 +1,9 @@
 using Newtonsoft.Json;
 using СloudСonvert.API.СloudСonvert.Models.Enums;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models.TaskOperations
 {
-  public class TaskOptimizeData : Base
+  public class TaskThumbnailData : BaseOperation
   {
     /// <summary>
     /// The input task name(s) for this task.
@@ -16,7 +16,10 @@ namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
     /// If not set, the extension of the input file is used as input format
     /// </summary>
     [JsonProperty("input_format", NullValueHandling = NullValueHandling.Ignore)]
-    public InputFormat? Input_Format { get; set; }
+    public string Input_Format { get; set; }
+
+    [JsonProperty("output_format")]
+    public OutputFormatThumbnail Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }
@@ -30,17 +33,10 @@ namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
     [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
     public string Filename { get; set; }
 
-    [JsonProperty("quality", NullValueHandling = NullValueHandling.Ignore)]
-    public int? Quality { get; set; }
-
-    [JsonProperty("profile", NullValueHandling = NullValueHandling.Ignore)]
-    public Profile? Profile { get; set; }
-
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.
     /// </summary>
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
-    
   }
 }

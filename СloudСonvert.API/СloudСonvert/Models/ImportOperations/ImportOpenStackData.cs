@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace СloudСonvert.API.СloudСonvert.Models.TaskModels
+namespace СloudСonvert.API.СloudСonvert.Models.ImportOperations
 {
-  public class ImportOpenStackData : Base
+  public class ImportOpenStackData : BaseOperation
   {
     [JsonProperty("auth_url")]
     public string Auth_Url { get; set; }
