@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using СloudСonvert.API.Models.JobModels;
 using СloudСonvert.API.Models.TaskModels;
+using СloudСonvert.API.Models.TaskOperations;
 
 namespace СloudСonvert.API
 {
@@ -81,6 +82,84 @@ namespace СloudСonvert.API
     /// The list of tasks. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
     public Task<TasksResponse> GetAllTasksAsync(TaskFilter jobFilter) => _api.GetAllTasks(_api_key, jobFilter.JobId, jobFilter.Status, jobFilter.Operation, jobFilter.Include, jobFilter.PerPage, jobFilter.Page);
+
+    /// <summary>
+    /// Create a task to convert one input file from input_format to output_format. Requires the task.write scope.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
+    /// </returns>
+    public Task<TaskResponse> CreateConvertTaskAsync(TaskConvertData request) => _api.CreateConvertTask(_api_key, request);
+
+    /// <summary>
+    /// Create a task to optimize and compress a file. Currently supported formats are PDF, PNG and JPG.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
+    /// </returns>
+    public Task<TaskResponse> CreateOptimizeTaskAsync(TaskOptimizeData request) => _api.CreateOptimizeTask(_api_key, request);
+
+    /// <summary>
+    /// Create a task to convert a website to PDF or to capture a screenshot of a website (png, jpg).
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
+    /// </returns>
+    public Task<TaskResponse> CreateCaptureWebsiteTaskAsync(TaskCaptureData request) => _api.CreateCaptureWebsiteTask(_api_key, request);
+
+    /// <summary>
+    /// Create a task to create a PNG or JPG thumbnail of one input file. Requires the task.write scope.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
+    /// </returns>
+    public Task<TaskResponse> CreateThumbnailTaskAsync(TaskThumbnailData request) => _api.CreateThumbnailTask(_api_key, request);
+
+    /// <summary>
+    /// Create a task to extract metadata from files. Under the hood, this is using exiftool. 
+    /// You can use this operation to get the number of pages of PDFs or to get the resolution of images/videos. 
+    /// You can find an example result of of the metadata extraction of a PDF on the right.
+    /// 
+    /// The metadata operation does not consume any minutes.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
+    /// </returns>
+    public Task<TaskResponse> CreateMetadataTaskAsync(TaskMetadataData request) => _api.CreateMetadataTask(_api_key, request);
+
+    /// <summary>
+    /// Create a task to merge at least two files to one PDF. If input files are not PDFs yet, they are automatically converted to PDF.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
+    /// </returns>
+    public Task<TaskResponse> CreateMergeTaskAsync(TaskMergeData request) => _api.CreateMergeTask(_api_key, request);
+
+    /// <summary>
+    /// Create a task to create a ZIP, RAR, 7Z, TAR, TAR.GZ or TAR.BZ2 archive.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
+    /// </returns>
+    public Task<TaskResponse> CreateArchiveTaskAsync(TaskArchiveData request) => _api.CreateArchiveTask(_api_key, request);
+
+    /// <summary>
+    /// Create a task to execute a command. Currently, ffmpeg, imagemagick and graphicsmagick commands re supported.
+    /// You can access the files from the input task in the /input/{taskName}/ (For example: /input/import-1/) directory.
+    /// All files that are created in the /output/ directory are available for following tasks(e.g.export tasks).
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>
+    /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
+    /// </returns>
+    public Task<TaskResponse> CreateCommandTaskAsync(TaskCommandData request) => _api.CreateCommandTask(_api_key, request);
 
     /// <summary>
     /// Show a task. Requires the task.read scope.

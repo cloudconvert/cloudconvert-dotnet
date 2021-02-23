@@ -8,7 +8,7 @@ namespace СloudСonvert.API
     {
       return RestService.For<ICloudConvertServiceWebApi>(serverUrl, new RefitSettings
       {
-        HttpMessageHandlerFactory = () => new WebApiHandler(loggingEnabled: false),
+        HttpMessageHandlerFactory = () => new WebApiHandler(loggingEnabled: true),
         ContentSerializer = new NewtonsoftJsonContentSerializer()
       });
     }

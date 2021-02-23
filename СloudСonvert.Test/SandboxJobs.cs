@@ -33,7 +33,14 @@ namespace СloudСonvert.Test
       }
       catch (ApiException ex)
       {
-        var error = JsonConvert.DeserializeObject<ErrorResponse>(ex.Content);
+        if (ex.Content != null)
+        {
+          var error = JsonConvert.DeserializeObject<ErrorResponse>(ex.Content);
+        }
+        else
+        {
+          var error = ex.Message;
+        }
       }
       catch (Exception ex)
       {

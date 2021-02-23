@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.TaskOperations
 {
-  public class TaskCommandBaseData : BaseOperation
+  public class TaskCommandData : BaseOperation
   {
     /// <summary>
     /// The input task name(s) for this task.
@@ -22,6 +22,12 @@ namespace СloudСonvert.API.Models.TaskOperations
     /// </summary>
     [JsonProperty("capture_output", NullValueHandling = NullValueHandling.Ignore)]
     public bool? Capture_Output { get; set; }
+
+    [JsonProperty("command", NullValueHandling = NullValueHandling.Ignore)]
+    public string Command { get; set; }
+
+    [JsonProperty("arguments", NullValueHandling = NullValueHandling.Ignore)]
+    public string Arguments { get; set; }
 
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.

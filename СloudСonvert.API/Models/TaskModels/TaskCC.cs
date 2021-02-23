@@ -16,7 +16,7 @@ namespace СloudСonvert.API.Models.TaskModels
     /// The Job ID the tasks belongs to.
     /// </summary>
     [JsonProperty("job_id")]
-    public Guid Job_Id { get; set; }
+    public Guid? Job_Id { get; set; }
 
     /// <summary>
     /// Name of the operation, for example convert or import/s3.
@@ -100,14 +100,14 @@ namespace СloudСonvert.API.Models.TaskModels
     /// Your submitted payload for the tasks. Depends on the operation type.
     /// </summary>
     [JsonProperty("payload")]
-    public Payload Payload { get; set; }
+    public object Payload { get; set; }
 
     /// <summary>
     /// The result of the task. Depends on the operation type. 
     /// Finished tasks always do have a files key with the names of the result files of the task (See the example on the right).
     /// </summary>
     [JsonProperty("result")]
-    public Result Result { get; set; }
+    public object Result { get; set; }
 
 
     [JsonProperty("links")]
