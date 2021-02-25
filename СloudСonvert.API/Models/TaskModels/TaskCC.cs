@@ -107,7 +107,7 @@ namespace СloudСonvert.API.Models.TaskModels
     /// Finished tasks always do have a files key with the names of the result files of the task (See the example on the right).
     /// </summary>
     [JsonProperty("result")]
-    public object Result { get; set; }
+    public ResultTask Result { get; set; }
 
 
     [JsonProperty("links")]

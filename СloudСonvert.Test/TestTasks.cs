@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -109,9 +110,7 @@ namespace СloudСonvert.Test
       byte[] file = await File.ReadAllBytesAsync(path);
       string fileName = "Test.pdf";
 
-      var obj = (JObject)task.Data.Result;
-      var attributes = obj["form"]["parameters"].ToList();
-      var url = obj["form"]["url"].ToString();
+      var attributes = ((JToken)task.Data.Result.Form.Parameters).ToList();
       Dictionary<string, string> parameters = new Dictionary<string, string>();
       foreach (JToken attribute in attributes)
       {
@@ -119,27 +118,34 @@ namespace СloudСonvert.Test
         parameters.Add(jProperty.Name, jProperty.Value.ToString().Replace("${filename}", fileName));
       }
 
-      var result = await _cloudConvertAPI.UploadAsync(url, file, fileName, parameters);
-      
+      var result = await _cloudConvertAPI.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, parameters);
+
       Assert.IsNotNull(result);
     }
 
     [Test]
-    public async Task DownLoad()
+    public async Task Download()
     {
       var req = new ExportUrlData
       {
         Operation = ExportOperation.ExportUrl.GetEnumDescription(),
-        Input = "1d9f85de-360a-428d-aed2-a8e568c6c46f", //Guid import
+        Input = "989a5f99-80c9-4746-94cb-47f3b6a7e98f", //Guid id import
         Archive_Multiple_Files = false
       };
 
       var result = await _cloudConvertAPI.CreateTaskAsync(ExportOperation.ExportUrl.GetEnumDescription(), req);
-      var wait = await _cloudConvertAPI.WaitTaskAsync(result.Data.Id);
-
 
       Assert.IsNotNull(result);
-      Assert.IsTrue(result.Data.Status == TaskCCStatus.waiting);
+
+      var task = await _cloudConvertAPI.WaitTaskAsync(result.Data.Id);
+
+      Assert.IsNotNull(task);
+      Assert.IsTrue(task.Data.Status == TaskCCStatus.finished);
+
+      foreach (var file in task.Data.Result.Files)
+      {
+        using (var client = new WebClient()) client.DownloadFile(file.Url, file.Filename);
+      }
     }
   }
 }
