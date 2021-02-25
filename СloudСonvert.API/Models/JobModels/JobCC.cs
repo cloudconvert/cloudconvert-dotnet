@@ -11,7 +11,7 @@ namespace СloudСonvert.API.Models.JobModels
     /// The ID of the job.
     /// </summary>
     [JsonProperty("id")]
-    public Guid Id { get; set; }
+    public string Id { get; set; }
 
     /// <summary>
     /// Your given tag of the job.

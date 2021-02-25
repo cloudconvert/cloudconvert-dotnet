@@ -110,15 +110,7 @@ namespace СloudСonvert.Test
       byte[] file = await File.ReadAllBytesAsync(path);
       string fileName = "Test.pdf";
 
-      var attributes = ((JToken)task.Data.Result.Form.Parameters).ToList();
-      Dictionary<string, string> parameters = new Dictionary<string, string>();
-      foreach (JToken attribute in attributes)
-      {
-        JProperty jProperty = attribute.ToObject<JProperty>();
-        parameters.Add(jProperty.Name, jProperty.Value.ToString().Replace("${filename}", fileName));
-      }
-
-      var result = await _cloudConvertAPI.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, parameters);
+      var result = await _cloudConvertAPI.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters);
 
       Assert.IsNotNull(result);
     }

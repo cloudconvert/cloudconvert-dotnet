@@ -18,6 +18,9 @@ namespace СloudСonvert.API.Models.TaskModels
     [JsonProperty("job_id")]
     public string Job_Id { get; set; }
 
+    [JsonProperty("name")]
+    public string Name { get; set; }
+
     /// <summary>
     /// Name of the operation, for example convert or import/s3.
     /// </summary>

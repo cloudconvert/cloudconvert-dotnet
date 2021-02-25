@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using СloudСonvert.API.Models.JobModels;
 using СloudСonvert.API.Models.TaskModels;
 
@@ -30,7 +31,7 @@ namespace СloudСonvert.API
     Task DeleteTaskAsync(string id);
     #endregion
 
-    Task<string> UploadAsync(string url, byte[] file, string fileName, Dictionary<string, string> parameters = null);
+    Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters = null);
     bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret);
   }
 
@@ -201,7 +202,7 @@ namespace СloudСonvert.API
 
     #endregion
 
-    public Task<string> UploadAsync(string url, byte[] file, string fileName, Dictionary<string, string> parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest($"{url}", HttpMethod.Post, file, fileName, parameters));
+    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters = null) => _restHelper.RequestAsync(GetMultipartFormDataRequest($"{url}", HttpMethod.Post, file, fileName, GetParameters(parameters, fileName)));
 
     public bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret)
     {
@@ -214,6 +215,19 @@ namespace СloudСonvert.API
     {
       byte[] hash = new HMACSHA256(Encoding.UTF8.GetBytes(key)).ComputeHash(new ASCIIEncoding().GetBytes(message));
       return BitConverter.ToString(hash).Replace("-", "").ToLower();
+    }
+
+    private Dictionary<string, string> GetParameters(object parameters, string fileName)
+    {
+      var attributes = ((JToken)parameters).ToList();
+      Dictionary<string, string> dictionaryParameters = new Dictionary<string, string>();
+      foreach (JToken attribute in attributes)
+      {
+        JProperty jProperty = attribute.ToObject<JProperty>();
+        dictionaryParameters.Add(jProperty.Name, jProperty.Value.ToString().Replace("${filename}", fileName));
+      }
+
+      return dictionaryParameters;
     }
   }
 }
