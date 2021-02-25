@@ -3,8 +3,11 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.ImportOperations
 {
-  public class ImportUrlData : BaseOperation
+  public class ImportUrlData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "import/url";
+
     [JsonProperty("url")]
     public string Url { get; set; }
 

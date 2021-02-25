@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using СloudСonvert.API;
-using СloudСonvert.API.Extensions;
 using СloudСonvert.API.Models;
-using СloudСonvert.API.Models.Enums;
 using СloudСonvert.API.Models.ExportOperations;
 using СloudСonvert.API.Models.ImportOperations;
 using СloudСonvert.API.Models.JobModels;
@@ -52,23 +50,16 @@ namespace СloudСonvert.Test
       {
         Tasks = new
         {
-          import_example_1 = new ImportUploadData
+          import_example_1 = new ImportUploadData(),
+          convert = new TaskConvertCreateData
           {
-            Operation = ImportOperation.ImportUpload.GetEnumDescription()
-          },
-          convert = new TaskConvertData
-          {
-            Operation = TaskOperation.Convert.GetEnumDescription(),
             Input = "import_example_1",
             Input_Format = "pdf",
             Output_Format = "docx",
-            Page_Range = "1-2",
-            Optimize_Print = true,
             Engine = "bcl"
           },
           export = new ExportUrlData
           {
-            Operation = ExportOperation.ExportUrl.GetEnumDescription(),
             Input = "convert",
             Inline_Additional = true,
             Archive_Multiple_Files = true
@@ -88,7 +79,7 @@ namespace СloudСonvert.Test
     public async Task GetJob()
     {
       var result = await _cloudConvertAPI.GetJobAsync("e1b61f3a-a97f-43c7-b464-13209c87e89c");
-      
+
       Assert.IsNotNull(result);
       Assert.IsTrue(result.Data.Tasks.Count > 0);
       Assert.AreEqual(result.Data.Status, "waiting");

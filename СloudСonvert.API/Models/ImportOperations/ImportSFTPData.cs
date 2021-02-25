@@ -2,8 +2,11 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.ImportOperations
 {
-  public class ImportSFTPData : BaseOperation
+  public class ImportSFTPData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "import/sftp";
+
     [JsonProperty("host")]
     public string Host { get; set; }
 

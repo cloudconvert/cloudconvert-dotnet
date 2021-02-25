@@ -2,8 +2,11 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.ImportOperations
 {
-  public class ImportS3Data : BaseOperation
+  public class ImportS3Data
   {
+    [JsonProperty("operation")]
+    public static string Operation = "import/s3";
+
     /// <summary>
     /// The Amazon S3 bucket where to download the file.
     /// </summary>

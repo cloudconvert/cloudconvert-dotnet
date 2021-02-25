@@ -2,8 +2,10 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.ExportOperations
 {
-  public class ExportSFTPData : BaseOperation
+  public class ExportSFTPData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "export/sftp";
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];

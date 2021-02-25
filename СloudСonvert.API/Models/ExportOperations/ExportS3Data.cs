@@ -4,8 +4,11 @@ using СloudСonvert.API.Models.Enums;
 
 namespace СloudСonvert.API.Models.ExportOperations
 {
-  public class ExportS3Data : BaseOperation
+  public class ExportS3Data
   {
+    [JsonProperty("operation")]
+    public static string Operation = "export/s3";
+
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];

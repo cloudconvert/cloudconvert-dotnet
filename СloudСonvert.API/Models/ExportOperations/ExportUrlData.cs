@@ -2,8 +2,11 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.ExportOperations
 {
-  public class ExportUrlData : BaseOperation
+  public class ExportUrlData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "export/url";
+
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];

@@ -2,8 +2,11 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.ImportOperations
 {
-  public class ImportGoogleCloudStorageData : BaseOperation
+  public class ImportGoogleCloudStorageData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "import/google-cloud-storage";
+
     [JsonProperty("project_id")]
     public string Project_Id { get; set; }
 

@@ -2,8 +2,11 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.ImportOperations
 {
-  public class ImportOpenStackData : BaseOperation
+  public class ImportOpenStackData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "import/openstack";
+
     [JsonProperty("auth_url")]
     public string Auth_Url { get; set; }
 

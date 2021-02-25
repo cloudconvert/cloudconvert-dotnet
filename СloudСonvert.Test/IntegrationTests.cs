@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using СloudСonvert.API;
-using СloudСonvert.API.Extensions;
 using СloudСonvert.API.Models.Enums;
 using СloudСonvert.API.Models.ExportOperations;
 using СloudСonvert.API.Models.ImportOperations;
@@ -31,13 +30,9 @@ namespace СloudСonvert.Test
       {
         Tasks = new
         {
-          import_it = new ImportUploadData
-          {
-            Operation = ImportOperation.ImportUpload.GetEnumDescription()
-          },
+          import_it = new ImportUploadData(),
           export_it = new ExportUrlData
           {
-            Operation = ExportOperation.ExportUrl.GetEnumDescription(),
             Input = "import_it"
           }
         },
@@ -77,12 +72,9 @@ namespace СloudСonvert.Test
     {
       // import
 
-      var reqImport = new ImportUploadData
-      {
-        Operation = ImportOperation.ImportUpload.GetEnumDescription()
-      };
+      var reqImport = new ImportUploadData();
 
-      var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportOperation.ImportUpload.GetEnumDescription(), reqImport);
+      var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportUploadData.Operation, reqImport);
 
       var path = @"TestFiles\Test.pdf";
       byte[] file = await File.ReadAllBytesAsync(path);
@@ -99,11 +91,10 @@ namespace СloudСonvert.Test
 
       var reqExport = new ExportUrlData
       {
-        Operation = ExportOperation.ExportUrl.GetEnumDescription(),
         Input = importTask.Data.Id
       };
 
-      var exportTask = await _cloudConvertAPI.CreateTaskAsync(ExportOperation.ExportUrl.GetEnumDescription(), reqExport);
+      var exportTask = await _cloudConvertAPI.CreateTaskAsync(ExportUrlData.Operation, reqExport);
 
       Assert.IsNotNull(exportTask);
 

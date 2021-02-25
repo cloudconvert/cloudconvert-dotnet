@@ -2,14 +2,20 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.TaskOperations
 {
-  public class TaskCommandData : BaseOperation
+  public class TaskArchiveCreateData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "archive";
+
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
     /// </summary>
     [JsonProperty("input")]
     public dynamic Input { get; set; }
+
+    [JsonProperty("output_format")]
+    public string Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }
@@ -18,16 +24,10 @@ namespace СloudСonvert.API.Models.TaskOperations
     public string Engine_Version { get; set; }
 
     /// <summary>
-    /// Capture the console output of the command and return it in the results object.
+    /// Choose a filename (including extension) for the output file.
     /// </summary>
-    [JsonProperty("capture_output", NullValueHandling = NullValueHandling.Ignore)]
-    public bool? Capture_Output { get; set; }
-
-    [JsonProperty("command", NullValueHandling = NullValueHandling.Ignore)]
-    public string Command { get; set; }
-
-    [JsonProperty("arguments", NullValueHandling = NullValueHandling.Ignore)]
-    public string Arguments { get; set; }
+    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    public string Filename { get; set; }
 
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.

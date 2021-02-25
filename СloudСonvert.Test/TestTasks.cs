@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using СloudСonvert.API;
-using СloudСonvert.API.Extensions;
 using СloudСonvert.API.Models;
 using СloudСonvert.API.Models.Enums;
 using СloudСonvert.API.Models.ExportOperations;
@@ -53,18 +49,15 @@ namespace СloudСonvert.Test
     [Test]
     public async Task CreateTask()
     {
-      var req = new TaskConvertData
+      var req = new TaskConvertCreateData
       {
-        Operation = TaskOperation.Convert.GetEnumDescription(),
         Input = "1d9f85de-360a-428d-aed2-a8e568c6c46f", //Guid import
         Input_Format = "pdf",
         Output_Format = "docx",
-        Page_Range = "1-2",
-        Optimize_Print = true,
         Engine = "bcl"
       };
 
-      var result = await _cloudConvertAPI.CreateTaskAsync(TaskOperation.Convert.GetEnumDescription(), req);
+      var result = await _cloudConvertAPI.CreateTaskAsync(TaskConvertCreateData.Operation, req);
 
       Assert.IsNotNull(result);
       Assert.IsTrue(result.Data.Status == TaskCCStatus.waiting);
@@ -99,12 +92,9 @@ namespace СloudСonvert.Test
     [Test]
     public async Task Upload()
     {
-      var req = new ImportUploadData
-      {
-        Operation = ImportOperation.ImportUpload.GetEnumDescription()
-      };
+      var req = new ImportUploadData();
 
-      var task = await _cloudConvertAPI.CreateTaskAsync(ImportOperation.ImportUpload.GetEnumDescription(), req);
+      var task = await _cloudConvertAPI.CreateTaskAsync(ImportUploadData.Operation, req);
 
       var path = @"TestFiles\Test.pdf";
       byte[] file = await File.ReadAllBytesAsync(path);
@@ -120,12 +110,11 @@ namespace СloudСonvert.Test
     {
       var req = new ExportUrlData
       {
-        Operation = ExportOperation.ExportUrl.GetEnumDescription(),
         Input = "989a5f99-80c9-4746-94cb-47f3b6a7e98f", //Guid id import
         Archive_Multiple_Files = false
       };
 
-      var result = await _cloudConvertAPI.CreateTaskAsync(ExportOperation.ExportUrl.GetEnumDescription(), req);
+      var result = await _cloudConvertAPI.CreateTaskAsync(ExportUrlData.Operation, req);
 
       Assert.IsNotNull(result);
 

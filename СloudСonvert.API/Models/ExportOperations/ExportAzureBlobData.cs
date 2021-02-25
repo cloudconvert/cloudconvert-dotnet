@@ -2,8 +2,11 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.ExportOperations
 {
-  public class ExportAzureBlobData : BaseOperation
+  public class ExportAzureBlobData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "export/azure/blob";
+
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];

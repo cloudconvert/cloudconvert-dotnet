@@ -4,8 +4,11 @@ using СloudСonvert.API.Models.Enums;
 
 namespace СloudСonvert.API.Models.TaskOperations
 {
-  public class TaskCaptureData : BaseOperation
+  public class TaskCaptureCreateData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "capture-website";
+
     /// <summary>
     /// URL of the website
     /// </summary>

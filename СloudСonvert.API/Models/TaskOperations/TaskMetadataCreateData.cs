@@ -3,8 +3,11 @@ using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.TaskOperations
 {
-  public class TaskMetadataData : BaseOperation
+  public class TaskMetadataCreateData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "metadata";
+
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
@@ -27,7 +30,8 @@ namespace СloudСonvert.API.Models.TaskOperations
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
 
-    [JsonProperty("option", NullValueHandling = NullValueHandling.Ignore)]
-    public Dictionary<string, object> Option { get; set; }
+    [JsonExtensionData]
+    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<string, object> Options { get; set; }
   }
 }

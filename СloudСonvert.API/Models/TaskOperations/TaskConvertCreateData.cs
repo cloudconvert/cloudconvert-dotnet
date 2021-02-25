@@ -1,10 +1,12 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
-using СloudСonvert.API.Models.Enums;
 
 namespace СloudСonvert.API.Models.TaskOperations
 {
-  public class TaskMergeData : BaseOperation
+  public class TaskConvertCreateData
   {
+    [JsonProperty("operation")]
+    public static string Operation = "convert";
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
@@ -12,8 +14,14 @@ namespace СloudСonvert.API.Models.TaskOperations
     [JsonProperty("input")]
     public dynamic Input { get; set; }
 
+    /// <summary>
+    /// If not set, the extension of the input file is used as input format
+    /// </summary>
+    [JsonProperty("input_format", NullValueHandling = NullValueHandling.Ignore)]
+    public string Input_Format { get; set; }
+
     [JsonProperty("output_format")]
-    public OutputFormatMerge Output_Format { get; set; }
+    public string Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }
@@ -32,5 +40,14 @@ namespace СloudСonvert.API.Models.TaskOperations
     /// </summary>
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
+
+    /// <summary>
+    /// Conversion and engine specific options. Depends on input_format and output_format.
+    /// Select input and output format above to show additional conversion options.
+    /// </summary>
+    [JsonExtensionData]
+    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<string, object> Options { get; set; }
+
   }
 }
