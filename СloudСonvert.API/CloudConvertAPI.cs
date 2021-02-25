@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -28,6 +31,7 @@ namespace СloudСonvert.API
     #endregion
 
     Task<string> UploadAsync(string url, byte[] file, string fileName, Dictionary<string, string> parameters = null);
+    bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret);
   }
 
   public class CloudConvertAPI : ICloudConvertAPI
@@ -198,5 +202,18 @@ namespace СloudСonvert.API
     #endregion
 
     public Task<string> UploadAsync(string url, byte[] file, string fileName, Dictionary<string, string> parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest($"{url}", HttpMethod.Post, file, fileName, parameters));
+
+    public bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret)
+    {
+      string hashHMAC = HashHMAC(signingSecret, payloadString);
+
+      return hashHMAC == signature;
+    }
+
+    private string HashHMAC(string key, string message)
+    {
+      byte[] hash = new HMACSHA256(Encoding.UTF8.GetBytes(key)).ComputeHash(new ASCIIEncoding().GetBytes(message));
+      return BitConverter.ToString(hash).Replace("-", "").ToLower();
+    }
   }
 }
