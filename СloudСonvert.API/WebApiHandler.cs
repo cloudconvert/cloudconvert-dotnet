@@ -25,7 +25,7 @@ namespace СloudСonvert.API
       {
         if (writeLog)
         {
-          var requestString = await request?.Content?.ReadAsStringAsync();
+          var requestString = request.Content != null ? await request.Content.ReadAsStringAsync() : string.Empty;
         }
 
         var response = await base.SendAsync(request, cancellationToken);

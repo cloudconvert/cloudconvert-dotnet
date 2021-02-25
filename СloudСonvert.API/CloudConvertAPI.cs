@@ -54,12 +54,16 @@ namespace СloudСonvert.API
 
     private HttpRequestMessage GetRequest(string endpoint, HttpMethod method, object model = null)
     {
-      var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-      var request = new HttpRequestMessage { RequestUri = new Uri(endpoint), Method = method, };
-
+      var request = new HttpRequestMessage { RequestUri = new Uri(endpoint), Method = method };
+      
+      if (model != null)
+      {
+        var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+        request.Content = content;
+      }
+      
       request.Headers.Add("Authorization", _api_key);
-      request.Content = content;
-
+     
       return request;
     }
 

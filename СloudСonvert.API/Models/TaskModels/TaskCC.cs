@@ -10,13 +10,13 @@ namespace СloudСonvert.API.Models.TaskModels
     /// The ID of the task.
     /// </summary>
     [JsonProperty("id")]
-    public Guid Id { get; set; }
+    public string Id { get; set; }
 
     /// <summary>
     /// The Job ID the tasks belongs to.
     /// </summary>
     [JsonProperty("job_id")]
-    public Guid? Job_Id { get; set; }
+    public string Job_Id { get; set; }
 
     /// <summary>
     /// Name of the operation, for example convert or import/s3.

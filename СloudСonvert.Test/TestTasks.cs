@@ -10,6 +10,7 @@ using СloudСonvert.API;
 using СloudСonvert.API.Extensions;
 using СloudСonvert.API.Models;
 using СloudСonvert.API.Models.Enums;
+using СloudСonvert.API.Models.ExportOperations;
 using СloudСonvert.API.Models.ImportOperations;
 using СloudСonvert.API.Models.TaskModels;
 using СloudСonvert.API.Models.TaskOperations;
@@ -81,10 +82,10 @@ namespace СloudСonvert.Test
     [Test]
     public async Task WaitTask()
     {
-      var result = await _cloudConvertAPI.WaitTaskAsync("b9feeca2-1139-46d6-b5cd-ac3367647135");
+      var result = await _cloudConvertAPI.WaitTaskAsync("34b8dd4c-2d47-4728-88da-ed1f089e5134");
 
       Assert.IsNotNull(result);
-      Assert.IsTrue(result.Data.Operation == "convert");
+      Assert.IsTrue(result.Data.Operation == "export/url");
       Assert.AreEqual(result.Data.Status, TaskCCStatus.finished);
     }
 
@@ -121,6 +122,24 @@ namespace СloudСonvert.Test
       var result = await _cloudConvertAPI.UploadAsync(url, file, fileName, parameters);
       
       Assert.IsNotNull(result);
+    }
+
+    [Test]
+    public async Task DownLoad()
+    {
+      var req = new ExportUrlData
+      {
+        Operation = ExportOperation.ExportUrl.GetEnumDescription(),
+        Input = "1d9f85de-360a-428d-aed2-a8e568c6c46f", //Guid import
+        Archive_Multiple_Files = false
+      };
+
+      var result = await _cloudConvertAPI.CreateTaskAsync(ExportOperation.ExportUrl.GetEnumDescription(), req);
+      var wait = await _cloudConvertAPI.WaitTaskAsync(result.Data.Id);
+
+
+      Assert.IsNotNull(result);
+      Assert.IsTrue(result.Data.Status == TaskCCStatus.waiting);
     }
   }
 }
