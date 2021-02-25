@@ -15,5 +15,9 @@ namespace СloudСonvert.API
     public WebApiException(string message, Exception innerException) : base(message, innerException)
     {
     }
+
+    public WebApiException(string message) : base(message)
+    {
+    }
   }
 }

@@ -23,11 +23,22 @@ namespace СloudСonvert.API
 
       try
       {
+        if (writeLog)
+        {
+          var requestString = await request?.Content?.ReadAsStringAsync();
+        }
+
         var response = await base.SendAsync(request, cancellationToken);
 
         if (writeLog)
         {
           string responseString = (await response.Content.ReadAsStringAsync()).TrimLengthWithEllipsis(20000);
+        }
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+          || response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+          throw new WebApiException((await response.Content.ReadAsStringAsync()).TrimLengthWithEllipsis(20000));
         }
 
         return response;

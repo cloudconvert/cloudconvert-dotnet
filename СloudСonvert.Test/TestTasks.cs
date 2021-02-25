@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Refit;
 using СloudСonvert.API;
 using СloudСonvert.API.Extensions;
 using СloudСonvert.API.Models;
 using СloudСonvert.API.Models.Enums;
+using СloudСonvert.API.Models.ImportOperations;
 using СloudСonvert.API.Models.TaskModels;
 using СloudСonvert.API.Models.TaskOperations;
 
@@ -14,8 +18,8 @@ namespace СloudСonvert.Test
 {
   public class TestTasks
   {
-    const string apiKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzhlMTU1OTU2ZjQyNjU2YmU4NGJhOGExOTNiZTZkMTdlODA4MWM5MDQ5Yjk4ZDllYjIzMjFkNzgxYTNkOGNkNWYwODQ4NDFiYzRmODczOWQiLCJpYXQiOiIxNjEzNzM5NjIzLjA3NzQ1MSIsIm5iZiI6IjE2MTM3Mzk2MjMuMDc3NDU0IiwiZXhwIjoiNDc2OTQxMzIyMy4wMjA1ODUiLCJzdWIiOiIyMzAwNjM4OSIsInNjb3BlcyI6WyJ1c2VyLndyaXRlIiwidXNlci5yZWFkIiwidGFzay5yZWFkIiwidGFzay53cml0ZSIsIndlYmhvb2sucmVhZCIsIndlYmhvb2sud3JpdGUiLCJwcmVzZXQucmVhZCIsInByZXNldC53cml0ZSJdfQ.mt0E24JFoSSPPtZsham6fMzvz-cCUM_8vp5NEiq3NEvhn8SsHLBBEqug310hK63gIISEuBOqBlC0Nhc41dfsuxzQqu7cSJ86nCeTZc9IgqmgSCk2IzAnSeQeAO409f_qyKTgLeglgYUefRgfuMhDHym9fQLqbMhdYB0cyJufZZ4UoqZewwgUlMl5f4sm-mwKpIiNdIIfXVRyN4Rc1dMSfM3ZXw10YRlvBuIgEQDndnATpl3CuTy2bgw-_TjiAaPgqv2OoYWo5VCOqz3c0L4P9KulfP74mrE2FX2OY4uH9njkUFxfvBlOXIS4F-netI0gI-U4G1N68g9NKYm5mpTIg8dS7iVeOzh0bgFIGuiG56quxiIbKLG5kn8HoT3RsNCIZmHR7azPPXxekxVyqA_LTRRHWwGDXIMPEyWIAfp3GtfU-3Bn8S4imbZUpyMAWUZpDj26itJVQvFYmDM_5dhCQEZoa6eQm3g0_sFSVETAwJl1DxR8yB5HgWgQUmH82Hpn4Nq02xLZ0leyoFYP3bXFsKmtYyDsxYM-S_TkB9bCszdVmO4O753P62nl87zwEU4L0XHhwDb6tdswCBO7uUM_BoUlelmGKNS0Ew-KtOHKQpmrOZgrYWeNGMfMluf4429MlWlNhO8ceYBLakxqo5hh4cF8kbtyCwu9T6nyAJh9aFQ";
-    readonly ICloudConvertAPI _cloudConvertAPI = new CloudConvertAPI(apiKey);
+    const string apiKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMDM5MGQ3Njk4N2I3NzY1YjMyZTJhMTRjYjIzOTUzYTc0YzNmMTEyOWY5MzU5M2E5ODdhZjUxM2YzYWY5YmZjNzU1YjZkMTUzMjMwM2Y5MjEiLCJpYXQiOjE2MTM3NDAzNTAsIm5iZiI6MTYxMzc0MDM1MCwiZXhwIjo0NzY5NDEzOTUwLCJzdWIiOiIyMzAwNjM4OSIsInNjb3BlcyI6WyJ1c2VyLnJlYWQiLCJ1c2VyLndyaXRlIiwidGFzay5yZWFkIiwidGFzay53cml0ZSIsIndlYmhvb2sucmVhZCIsIndlYmhvb2sud3JpdGUiLCJwcmVzZXQucmVhZCIsInByZXNldC53cml0ZSJdfQ.A-mMEGul6IEPUUkga7iTnjBrcSZnPNfLVOiN7CRLK29jOaZBL0eIuZtsao8E9uUqqgoXy1KLDUelh5WyzsO4w34KYQojgVJsZKEU86QCbVsJQXXnaSXbXPoTlyugnHdEKqnncBNqgbSbKMOOZhiglXLRk7IXAOl8ai4PmaW9_yymqlz4NH95RtM7CDIm5Ej1i4u517-1fdd3QQKeJAYLVi_Xt_vgfWYATf0JIT_2r2ED1-sk2DWALtonvFiR-HRZX7SltftWWWct9OjxcGigC45hxLke3Ln-VhthySIebo48hbE89UYWCkh8ElzRT2UpVNE1S7LNYJxfAimjh2DZpfyJALVQNJXUrbMLDWJeDJDAgcKyzeElllioxxTY2K-wmDi2HiVzB-j6qMgAoueAfhyshoTtUouLGpZeX51GWv6kr74Fn31WYihevlDDrpkmgNfCKkVPt__tx6SI5Qh-cvGLgwT-x1QK0jQxeSjXm1N6NLH4jDN0qh88eWDrG1KsRqRwKRtWOnWRYTEehUgoEkmRBG8bXPB6MuFRaoWiav-tZ41kxya8jORWGAYoUuMbtKJS8WxzTYEV8ipnQo8sLHI7Jt27TMZAHZTBSYsOQUY9aUxN6f40eXdUY7Uw33zNCam-vUcTvZ46cwdCdlI3KRjXXoM6_cFS1RUhDEZWcr4";
+    readonly ICloudConvertAPI _cloudConvertAPI = new CloudConvertAPI(apiKey, true);
 
     [Test]
     public async Task GetAllTasks()
@@ -24,15 +28,15 @@ namespace СloudСonvert.Test
       {
         TaskFilter filter = new TaskFilter();
         var result = await _cloudConvertAPI.GetAllTasksAsync(filter);
+
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result.Data.Count >= 0);
       }
       catch (WebApiException ex)
       {
-      }
-      catch (ApiException ex)
-      {
-        if (ex.Content != null)
+        if (ex.InnerException != null)
         {
-          var error = JsonConvert.DeserializeObject<ErrorResponse>(ex.Content);
+          var error = JsonConvert.DeserializeObject<ErrorResponse>(ex.InnerException.Message);
         }
         else
         {
@@ -50,7 +54,7 @@ namespace СloudСonvert.Test
       var req = new TaskConvertData
       {
         Operation = TaskOperation.Convert.GetEnumDescription(),
-        Input = "941a21d2-0d13-4c83-94de-7fe760e16fc4", //Guid import
+        Input = "1d9f85de-360a-428d-aed2-a8e568c6c46f", //Guid import
         Input_Format = "pdf",
         Output_Format = "docx",
         Page_Range = "1-2",
@@ -59,18 +63,29 @@ namespace СloudСonvert.Test
       };
 
       var result = await _cloudConvertAPI.CreateTaskAsync(TaskOperation.Convert.GetEnumDescription(), req);
+
+      Assert.IsNotNull(result);
+      Assert.IsTrue(result.Data.Status == TaskCCStatus.waiting);
     }
 
     [Test]
     public async Task GetTask()
     {
-      var result = await _cloudConvertAPI.GetTaskAsync("db14fa95-9cf3-482c-92d1-34c26551bba0");
+      var result = await _cloudConvertAPI.GetTaskAsync("e87282ad-522f-4aec-9d71-7dde411774d3");
+
+      Assert.IsNotNull(result);
+      Assert.IsTrue(result.Data.Operation == "convert");
+      Assert.AreEqual(result.Data.Status, TaskCCStatus.waiting);
     }
 
     [Test]
     public async Task WaitTask()
     {
-      var result = await _cloudConvertAPI.WaitTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
+      var result = await _cloudConvertAPI.WaitTaskAsync("b9feeca2-1139-46d6-b5cd-ac3367647135");
+
+      Assert.IsNotNull(result);
+      Assert.IsTrue(result.Data.Operation == "convert");
+      Assert.AreEqual(result.Data.Status, TaskCCStatus.finished);
     }
 
     [Test]
@@ -79,22 +94,33 @@ namespace СloudСonvert.Test
       await _cloudConvertAPI.DeleteTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
     }
 
-    //[Test]
-    //public async Task Upload()
-    //{
-    //  CloudConvertAPI ccAPI = new CloudConvertAPI(apiKey);
+    [Test]
+    public async Task Upload()
+    {
+      var req = new ImportUploadData
+      {
+        Operation = ImportOperation.ImportUpload.GetEnumDescription()
+      };
 
-    //  var req = new ImportUploadData
-    //  {
-    //    Operation = ImportOperation.ImportUpload.GetEnumDescription()
-    //  };
+      var task = await _cloudConvertAPI.CreateTaskAsync(ImportOperation.ImportUpload.GetEnumDescription(), req);
 
-    //  var task = ccAPI.CreateTaskAsync(ImportOperation.ImportUpload.GetEnumDescription(), req);
+      var path = @"TestFiles\Test.pdf";
+      byte[] file = await File.ReadAllBytesAsync(path);
+      string fileName = "Test.pdf";
 
-    //  var path = @"TestFiles\Test.pdf";
-    //  using var stream = new FileStream(path, FileMode.Open);
-    //  var result = await ccAPI.UploadAsync(new StreamPart(stream, "test-streampart.pdf", "application/pdf"));
+      var obj = (JObject)task.Data.Result;
+      var attributes = obj["form"]["parameters"].ToList();
+      var url = obj["form"]["url"].ToString();
+      Dictionary<string, string> parameters = new Dictionary<string, string>();
+      foreach (JToken attribute in attributes)
+      {
+        JProperty jProperty = attribute.ToObject<JProperty>();
+        parameters.Add(jProperty.Name, jProperty.Value.ToString().Replace("${filename}", fileName));
+      }
 
-    //}
+      var result = await _cloudConvertAPI.UploadAsync(url, file, fileName, parameters);
+      
+      Assert.IsNotNull(result);
+    }
   }
 }
