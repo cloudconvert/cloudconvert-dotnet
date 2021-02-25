@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.TaskOperations
@@ -43,6 +44,13 @@ namespace СloudСonvert.API.Models.TaskOperations
     /// </summary>
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
+
+    /// <summary>
+    /// Conversion and engine specific options. Depends on input_format and output_format.
+    /// Select input and output format above to show additional conversion options.
+    /// </summary>
+    [JsonProperty("option", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<string, object> Option { get; set; }
 
   }
 }

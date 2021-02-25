@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace СloudСonvert.API.Models.TaskOperations
@@ -25,5 +26,8 @@ namespace СloudСonvert.API.Models.TaskOperations
 
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
+
+    [JsonProperty("option", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<string, object> Option { get; set; }
   }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using СloudСonvert.API.Models.Enums;
 
@@ -42,5 +43,7 @@ namespace СloudСonvert.API.Models.TaskOperations
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
 
+    [JsonProperty("option", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<string, object> Option { get; set; }
   }
 }
