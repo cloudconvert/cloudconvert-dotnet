@@ -66,6 +66,7 @@ namespace СloudСonvert.Test
 
       var fileExport = exportTask.Result.Files.FirstOrDefault();
 
+      Assert.IsNotNull(fileExport);
       Assert.AreEqual(fileExport.Filename, "Test.pdf");
 
       using (var client = new WebClient()) client.DownloadFile(fileExport.Url, fileExport.Filename);
@@ -74,6 +75,49 @@ namespace СloudСonvert.Test
     [Test]
     public async Task CreateTask()
     {
+      // import
+
+      var reqImport = new ImportUploadData
+      {
+        Operation = ImportOperation.ImportUpload.GetEnumDescription()
+      };
+
+      var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportOperation.ImportUpload.GetEnumDescription(), reqImport);
+
+      var path = @"TestFiles\Test.pdf";
+      byte[] file = await File.ReadAllBytesAsync(path);
+      string fileName = "Test.pdf";
+
+      await _cloudConvertAPI.UploadAsync(importTask.Data.Result.Form.Url.ToString(), file, fileName, importTask.Data.Result.Form.Parameters);
+
+      importTask = await _cloudConvertAPI.WaitTaskAsync(importTask.Data.Id);
+
+      Assert.IsNotNull(importTask);
+      Assert.AreEqual(importTask.Data.Status, TaskCCStatus.finished);
+
+      // export
+
+      var reqExport = new ExportUrlData
+      {
+        Operation = ExportOperation.ExportUrl.GetEnumDescription(),
+        Input = importTask.Data.Id
+      };
+
+      var exportTask = await _cloudConvertAPI.CreateTaskAsync(ExportOperation.ExportUrl.GetEnumDescription(), reqExport);
+
+      Assert.IsNotNull(exportTask);
+
+      exportTask = await _cloudConvertAPI.WaitTaskAsync(exportTask.Data.Id);
+
+      Assert.IsNotNull(exportTask);
+      Assert.IsTrue(exportTask.Data.Status == TaskCCStatus.finished);
+
+      var fileExport = exportTask.Data.Result.Files.FirstOrDefault();
+
+      Assert.IsNotNull(fileExport);
+      Assert.AreEqual(fileExport.Filename, "Test.pdf");
+
+      using (var client = new WebClient()) client.DownloadFile(fileExport.Url, fileExport.Filename);
 
     }
   }
