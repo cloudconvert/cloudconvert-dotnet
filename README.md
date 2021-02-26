@@ -45,8 +45,6 @@ You can use the [CloudConvert Job Builder](https://cloudconvert.com/api/v2/jobs/
 CloudConvert can generate public URLs for using `export/url` tasks. You can use these URLs to download output files.
 
 ```c#
-job = await cloudConvert.jobs.wait(job.id); 
-
 job = await _cloudConvertAPI.WaitJobAsync(job.Data.Id); // Wait for job completion
 
 // download export file
