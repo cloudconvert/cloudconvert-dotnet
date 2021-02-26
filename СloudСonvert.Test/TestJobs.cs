@@ -46,7 +46,7 @@ namespace СloudСonvert.Test
     [Test]
     public async Task CreateJob()
     {
-      var req = new JobCreateRequest
+      var job = await _cloudConvertAPI.CreateJobAsync(new JobCreateRequest
       {
         Tasks = new
         {
@@ -66,13 +66,11 @@ namespace СloudСonvert.Test
           }
         },
         Tag = "Test"
-      };
+      });
 
-      var result = await _cloudConvertAPI.CreateJobAsync(req);
-
-      Assert.IsNotNull(result);
-      Assert.IsTrue(result.Data.Tasks.Count > 0);
-      Assert.AreEqual(result.Data.Status, "waiting");
+      Assert.IsNotNull(job);
+      Assert.IsTrue(job.Data.Tasks.Count > 0);
+      Assert.AreEqual(job.Data.Status, "waiting");
     }
 
     [Test]

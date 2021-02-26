@@ -96,9 +96,9 @@ namespace СloudСonvert.Test
 
       var task = await _cloudConvertAPI.CreateTaskAsync(ImportUploadData.Operation, req);
 
-      var path = @"TestFiles\Test.pdf";
+      var path = @"TestFiles\test.pdf";
       byte[] file = await File.ReadAllBytesAsync(path);
-      string fileName = "Test.pdf";
+      string fileName = "test.pdf";
 
       var result = await _cloudConvertAPI.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters);
 
