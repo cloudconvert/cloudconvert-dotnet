@@ -1,6 +1,7 @@
 using System;
 using Newtonsoft.Json;
 using CloudConvert.API.Models.Enums;
+using System.Collections.Generic;
 
 namespace CloudConvert.API.Models.TaskModels
 {
@@ -51,6 +52,9 @@ namespace CloudConvert.API.Models.TaskModels
     [JsonProperty("code")]
     public string Code { get; set; }
 
+    [JsonProperty("percent")]
+    public int Percent { get; set; }
+
     /// <summary>
     /// ISO8601 timestamp of the creation of the task.
     /// </summary>
@@ -75,11 +79,29 @@ namespace CloudConvert.API.Models.TaskModels
     [JsonProperty("depends_on_tasks")]
     public object Depends_On_Tasks { get; set; }
 
+    [JsonProperty("depends_on_task_ids")]
+    public List<string> Depends_On_Task_Ids { get; set; }
+
     /// <summary>
     /// ID of the original task, if this task is a retry.
     /// </summary>
     [JsonProperty("retry_of_task_id")]
     public string Retry_Of_Task_Id { get; set; }
+
+    [JsonProperty("copy_of_task_id")]
+    public object Copy_Of_Task_Id { get; set; }
+
+    [JsonProperty("user_id")]
+    public int User_Id { get; set; }
+
+    [JsonProperty("priority")]
+    public long Priority { get; set; }
+
+    [JsonProperty("host_name")]
+    public object Host_Name { get; set; }
+
+    [JsonProperty("storage")]
+    public string Storage { get; set; }
 
     /// <summary>
     /// List of tasks that are retries of this task. Only available if the include parameter was set to retries.
@@ -111,8 +133,7 @@ namespace CloudConvert.API.Models.TaskModels
     /// </summary>
     [JsonProperty("result")]
     public ResultTask Result { get; set; }
-
-
+  
     [JsonProperty("links")]
     public DatumLinks Links { get; set; }
   }

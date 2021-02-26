@@ -1,6 +1,6 @@
 using System.IO;
-using NUnit.Framework;
 using CloudConvert.API;
+using NUnit.Framework;
 
 namespace CloudConvert.Test
 {
@@ -12,16 +12,12 @@ namespace CloudConvert.Test
     [Test]
     public void Verify()
     {
-      var path = @"TestFiles\webhook_job_created_payload.json";
-      using (StreamReader r = new StreamReader(path))
-      {
-        string json = r.ReadToEnd();
+      var path = @"Responses\webhook_job_created_payload.json";
+      string json = File.ReadAllText(path);
 
-        var result = _cloudConvertAPI.ValidateWebhookSignatures(json, "88c3103f1d64282bf963af5dd8405ef26348af25b8903e10f0c288c11f0f907b", "your secret key");
+      var result = _cloudConvertAPI.ValidateWebhookSignatures(json, "88c3103f1d64282bf963af5dd8405ef26348af25b8903e10f0c288c11f0f907b", "9E1I8fQSLM7WsH1Y2Zp0uurYfhLqdERu");
 
-        Assert.IsTrue(result);
-      }
-      
+      Assert.IsTrue(result);
     }
   }
 }

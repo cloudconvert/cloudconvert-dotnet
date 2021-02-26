@@ -1,27 +1,26 @@
 {
   "data": {
-    "id": "2f901289-c9fe-4c89-9c4b-98be526bdfbf",
+    "id": "9de1a620-952c-4482-9d44-681ae28d72a1",
     "job_id": null,
     "status": "waiting",
+    "credits": null,
     "code": null,
     "message": null,
     "percent": 100,
-    "operation": "import\/url",
-    "payload": {
-      "name": "test",
-      "url": "http:\/\/invalid.url",
-      "filename": "test.file"
-    },
+    "operation": "convert",
+    "engine": "bcl",
+    "engine_version": "5.0",
     "result": null,
-    "created_at": "2019-05-31T23:52:39+00:00",
-    "started_at": "2019-05-31T23:52:39+00:00",
-    "ended_at": "2019-05-31T23:53:26+00:00",
+    "created_at": "2021-02-26T16:40:50+00:00",
+    "started_at": null,
+    "ended_at": null,
     "retry_of_task_id": null,
     "copy_of_task_id": null,
-    "retries": [],
-    "depends_on_tasks": [],
-    "links": {
-      "self": "https:\/\/api.cloudconvert.com\/v2\/tasks\/2f901289-c9fe-4c89-9c4b-98be526bdfbf"
-    }
+    "user_id": 23006389,
+    "priority": -10,
+    "host_name": null,
+    "storage": "minio-lim-sandbox",
+    "depends_on_task_ids": [ "9ebdb9c7-ee41-4c08-9fb7-1f342289f712" ],
+    "links": { "self": "https:\/\/api.sandbox.cloudconvert.com\/v2\/tasks\/9de1a620-952c-4482-9d44-681ae28d72a1" }
   }
 }
