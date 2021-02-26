@@ -1,0 +1,74 @@
+{
+  "data": {
+    "id": "1087398b-077e-4e30-8971-1be424da232a",
+    "tag": "integration-test-upload-download",
+    "status": "finished",
+    "created_at": "2021-02-26T15:14:03+00:00",
+    "started_at": "2021-02-26T15:14:07+00:00",
+    "ended_at": "2021-02-26T15:14:08+00:00",
+    "tasks": [
+      {
+        "id": "cfcbbf87-d986-45ef-8392-074eb50748f4",
+        "name": "export_it",
+        "job_id": "1087398b-077e-4e30-8971-1be424da232a",
+        "status": "finished",
+        "credits": 0,
+        "code": null,
+        "message": null,
+        "percent": 100,
+        "operation": "export/url",
+        "result": {
+          "files": [
+            {
+              "filename": "input.pdf",
+              "size": 172570,
+              "url": "https://storage.cloudconvert.com/tasks-sandbox/cfcbbf87-d986-45ef-8392-074eb50748f4/input.pdf?AWSAccessKeyId=cloudconvert-sandbox&Expires=1614438847&Signature=42wJMkn%2FDq3e2xpcwSpwnGlXpQk%3D&response-content-disposition=attachment%3B%20filename%3D%22input.pdf%22&response-content-type=application%2Fpdf"
+            }
+          ]
+        },
+        "created_at": "2021-02-26T15:14:03+00:00",
+        "started_at": "2021-02-26T15:14:07+00:00",
+        "ended_at": "2021-02-26T15:14:08+00:00",
+        "retry_of_task_id": null,
+        "copy_of_task_id": null,
+        "user_id": 23006389,
+        "priority": -10,
+        "host_name": "laurianne",
+        "storage": "minio-lim-sandbox",
+        "depends_on_task_ids": [ "9ebdb9c7-ee41-4c08-9fb7-1f342289f712" ],
+        "links": { "self": "https://api.sandbox.cloudconvert.com/v2/tasks/cfcbbf87-d986-45ef-8392-074eb50748f4" }
+      },
+      {
+        "id": "9ebdb9c7-ee41-4c08-9fb7-1f342289f712",
+        "name": "import_it",
+        "job_id": "1087398b-077e-4e30-8971-1be424da232a",
+        "status": "finished",
+        "credits": 0,
+        "code": null,
+        "message": null,
+        "percent": 100,
+        "operation": "import/upload",
+        "result": {
+          "files": [
+            {
+              "filename": "input.pdf",
+              "md5": "53d6fe6b688c31c565907c81de625046"
+            }
+          ]
+        },
+        "created_at": "2021-02-26T15:14:03+00:00",
+        "started_at": "2021-02-26T15:14:07+00:00",
+        "ended_at": "2021-02-26T15:14:07+00:00",
+        "retry_of_task_id": null,
+        "copy_of_task_id": null,
+        "user_id": 23006389,
+        "priority": -10,
+        "host_name": null,
+        "storage": "minio-lim-sandbox",
+        "depends_on_task_ids": [],
+        "links": { "self": "https://api.sandbox.cloudconvert.com/v2/tasks/9ebdb9c7-ee41-4c08-9fb7-1f342289f712" }
+      }
+    ],
+    "links": { "self": "https://api.sandbox.cloudconvert.com/v2/jobs/1087398b-077e-4e30-8971-1be424da232a" }
+  }
+}
