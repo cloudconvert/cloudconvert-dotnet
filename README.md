@@ -7,11 +7,11 @@
 ## Creating Jobs
 
 ```c#
-using —loud—onvert.API;
-using —loud—onvert.API.Models.ExportOperations;
-using —loud—onvert.API.Models.ImportOperations;
-using —loud—onvert.API.Models.JobModels;
-using —loud—onvert.API.Models.TaskOperations;
+using CloudConvert.API;
+using CloudConvert.API.Models.ExportOperations;
+using CloudConvert.API.Models.ImportOperations;
+using CloudConvert.API.Models.JobModels;
+using CloudConvert.API.Models.TaskOperations;
 
 var _cloudConvert = new CloudConvertAPI("api_key");
 
