@@ -26,7 +26,7 @@ namespace CloudConvert.Test
     [Test]
     public async Task CreateJob()
     {
-      var req = new JobCreateRequest
+      var job = await _cloudConvertAPI.CreateJobAsync(new JobCreateRequest
       {
         Tasks = new
         {
@@ -37,17 +37,15 @@ namespace CloudConvert.Test
           }
         },
         Tag = "integration-test-upload-download"
-      };
-
-      var job = await _cloudConvertAPI.CreateJobAsync(req);
+      });
 
       var uploadTask = job.Data.Tasks.FirstOrDefault(t => t.Name == "import_it");
 
       Assert.IsNotNull(uploadTask);
 
-      var path = @"TestFiles\test.pdf";
+      var path = @"TestFiles\input.pdf";
       byte[] file = await File.ReadAllBytesAsync(path);
-      string fileName = "test.pdf";
+      string fileName = "input.pdf";
 
       var result = await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), file, fileName, uploadTask.Result.Form.Parameters);
 
@@ -62,7 +60,7 @@ namespace CloudConvert.Test
       var fileExport = exportTask.Result.Files.FirstOrDefault();
 
       Assert.IsNotNull(fileExport);
-      Assert.AreEqual(fileExport.Filename, "test.pdf");
+      Assert.AreEqual(fileExport.Filename, "input.pdf");
 
       using (var client = new WebClient()) client.DownloadFile(fileExport.Url, fileExport.Filename);
     }
@@ -76,9 +74,9 @@ namespace CloudConvert.Test
 
       var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportUploadData.Operation, reqImport);
 
-      var path = @"TestFiles\test.pdf";
+      var path = @"TestFiles\input.pdf";
       byte[] file = await File.ReadAllBytesAsync(path);
-      string fileName = "test.pdf";
+      string fileName = "input.pdf";
 
       await _cloudConvertAPI.UploadAsync(importTask.Data.Result.Form.Url.ToString(), file, fileName, importTask.Data.Result.Form.Parameters);
 
@@ -106,7 +104,7 @@ namespace CloudConvert.Test
       var fileExport = exportTask.Data.Result.Files.FirstOrDefault();
 
       Assert.IsNotNull(fileExport);
-      Assert.AreEqual(fileExport.Filename, "test.pdf");
+      Assert.AreEqual(fileExport.Filename, "input.pdf");
 
       using (var client = new WebClient()) client.DownloadFile(fileExport.Url, fileExport.Filename);
 

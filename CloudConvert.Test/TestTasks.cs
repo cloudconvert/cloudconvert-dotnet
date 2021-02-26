@@ -96,9 +96,9 @@ namespace CloudConvert.Test
 
       var task = await _cloudConvertAPI.CreateTaskAsync(ImportUploadData.Operation, req);
 
-      var path = @"TestFiles\test.pdf";
+      var path = @"TestFiles\input.pdf";
       byte[] file = await File.ReadAllBytesAsync(path);
-      string fileName = "test.pdf";
+      string fileName = "input.pdf";
 
       var result = await _cloudConvertAPI.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters);
 
