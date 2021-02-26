@@ -51,7 +51,7 @@ namespace CloudConvert.Test
         Tasks = new
         {
           import_example_1 = new ImportUploadData(),
-          convert = new TaskConvertCreateData
+          convert = new TaskConvertCreateRequest
           {
             Input = "import_example_1",
             Input_Format = "pdf",

@@ -49,7 +49,7 @@ namespace CloudConvert.Test
     [Test]
     public async Task CreateTask()
     {
-      var req = new TaskConvertCreateData
+      var req = new TaskConvertCreateRequest
       {
         Input = "1d9f85de-360a-428d-aed2-a8e568c6c46f", //Guid import
         Input_Format = "pdf",
@@ -57,7 +57,7 @@ namespace CloudConvert.Test
         Engine = "bcl"
       };
 
-      var result = await _cloudConvertAPI.CreateTaskAsync(TaskConvertCreateData.Operation, req);
+      var result = await _cloudConvertAPI.CreateTaskAsync(TaskConvertCreateRequest.Operation, req);
 
       Assert.IsNotNull(result);
       Assert.IsTrue(result.Data.Status == TaskCCStatus.waiting);

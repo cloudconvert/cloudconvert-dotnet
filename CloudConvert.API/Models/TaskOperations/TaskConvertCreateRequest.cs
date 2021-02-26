@@ -1,13 +1,12 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
-using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskThumbnailCreateData
+  public class TaskConvertCreateRequest
   {
     [JsonProperty("operation")]
-    public static string Operation = "thumbnail";
-
+    public static string Operation = "convert";
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
@@ -22,7 +21,7 @@ namespace CloudConvert.API.Models.TaskOperations
     public string Input_Format { get; set; }
 
     [JsonProperty("output_format")]
-    public OutputFormatThumbnail Output_Format { get; set; }
+    public string Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }
@@ -41,5 +40,14 @@ namespace CloudConvert.API.Models.TaskOperations
     /// </summary>
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
+
+    /// <summary>
+    /// Conversion and engine specific options. Depends on input_format and output_format.
+    /// Select input and output format above to show additional conversion options.
+    /// </summary>
+    [JsonExtensionData]
+    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<string, object> Options { get; set; }
+
   }
 }

@@ -1,12 +1,13 @@
-using System.Collections.Generic;
 using Newtonsoft.Json;
+using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskConvertCreateData
+  public class TaskMergeCreateRequest
   {
     [JsonProperty("operation")]
-    public static string Operation = "convert";
+    public static string Operation = "merge";
+
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
@@ -14,14 +15,8 @@ namespace CloudConvert.API.Models.TaskOperations
     [JsonProperty("input")]
     public dynamic Input { get; set; }
 
-    /// <summary>
-    /// If not set, the extension of the input file is used as input format
-    /// </summary>
-    [JsonProperty("input_format", NullValueHandling = NullValueHandling.Ignore)]
-    public string Input_Format { get; set; }
-
     [JsonProperty("output_format")]
-    public string Output_Format { get; set; }
+    public OutputFormatMerge Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }
@@ -40,14 +35,5 @@ namespace CloudConvert.API.Models.TaskOperations
     /// </summary>
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
-
-    /// <summary>
-    /// Conversion and engine specific options. Depends on input_format and output_format.
-    /// Select input and output format above to show additional conversion options.
-    /// </summary>
-    [JsonExtensionData]
-    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-    public Dictionary<string, object> Options { get; set; }
-
   }
 }

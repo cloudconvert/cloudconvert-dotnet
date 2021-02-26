@@ -1,12 +1,11 @@
 using Newtonsoft.Json;
-using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskMergeCreateData
+  public class TaskArchiveCreateRequest
   {
     [JsonProperty("operation")]
-    public static string Operation = "merge";
+    public static string Operation = "archive";
 
     /// <summary>
     /// The input task name(s) for this task.
@@ -16,7 +15,7 @@ namespace CloudConvert.API.Models.TaskOperations
     public dynamic Input { get; set; }
 
     [JsonProperty("output_format")]
-    public OutputFormatMerge Output_Format { get; set; }
+    public string Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }

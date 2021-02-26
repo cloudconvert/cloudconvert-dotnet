@@ -1,11 +1,12 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskArchiveCreateData
+  public class TaskMetadataCreateRequest
   {
     [JsonProperty("operation")]
-    public static string Operation = "archive";
+    public static string Operation = "metadata";
 
     /// <summary>
     /// The input task name(s) for this task.
@@ -14,8 +15,11 @@ namespace CloudConvert.API.Models.TaskOperations
     [JsonProperty("input")]
     public dynamic Input { get; set; }
 
-    [JsonProperty("output_format")]
-    public string Output_Format { get; set; }
+    /// <summary>
+    /// If not set, the extension of the input file is used as input format
+    /// </summary>
+    [JsonProperty("input_format", NullValueHandling = NullValueHandling.Ignore)]
+    public string Input_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }
@@ -23,16 +27,11 @@ namespace CloudConvert.API.Models.TaskOperations
     [JsonProperty("engine_version", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine_Version { get; set; }
 
-    /// <summary>
-    /// Choose a filename (including extension) for the output file.
-    /// </summary>
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
-    public string Filename { get; set; }
-
-    /// <summary>
-    /// Timeout in seconds after the task will be cancelled.
-    /// </summary>
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
+
+    [JsonExtensionData]
+    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<string, object> Options { get; set; }
   }
 }
