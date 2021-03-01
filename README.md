@@ -76,7 +76,7 @@ var job = await _cloudConvertAPI.CreateJobAsync(new JobCreateRequest
 
 var uploadTask = job.Data.Tasks.FirstOrDefault(t => t.Name == "upload_my_file");
 
-var path = @"TestFiles\test.pdf";
+var path = @"TestFiles/test.pdf";
 byte[] file = await File.ReadAllBytesAsync(path);
 string fileName = "test.pdf";
 

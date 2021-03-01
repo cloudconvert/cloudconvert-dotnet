@@ -43,7 +43,7 @@ namespace CloudConvert.Test
 
       Assert.IsNotNull(uploadTask);
 
-      var path = @"TestFiles\input.pdf";
+      var path = @"TestFiles/input.pdf";
       byte[] file = await File.ReadAllBytesAsync(path);
       string fileName = "input.pdf";
 
@@ -74,7 +74,7 @@ namespace CloudConvert.Test
 
       var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportUploadCreateRequest.Operation, reqImport);
 
-      var path = @"TestFiles\input.pdf";
+      var path = @"TestFiles/input.pdf";
       byte[] file = await File.ReadAllBytesAsync(path);
       string fileName = "input.pdf";
 
