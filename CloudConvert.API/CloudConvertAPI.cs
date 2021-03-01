@@ -78,8 +78,6 @@ namespace CloudConvert.API
       var content = new MultipartFormDataContent();
       var request = new HttpRequestMessage { RequestUri = new Uri(endpoint), Method = method, };
 
-      content.Add(new ByteArrayContent(file), "file", fileName);
-
       if (parameters != null)
       {
         foreach (var param in parameters)
@@ -87,6 +85,8 @@ namespace CloudConvert.API
           content.Add(new StringContent(param.Value), param.Key);
         }
       }
+
+      content.Add(new ByteArrayContent(file), "file", fileName);
 
       request.Content = content;
 
@@ -225,7 +225,7 @@ namespace CloudConvert.API
       foreach (JToken attribute in attributes)
       {
         JProperty jProperty = attribute.ToObject<JProperty>();
-        dictionaryParameters.Add(jProperty.Name, jProperty.Value.ToString().Replace("${filename}", fileName));
+        dictionaryParameters.Add(jProperty.Name, jProperty.Value.ToString());
       }
 
       return dictionaryParameters;
