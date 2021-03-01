@@ -203,7 +203,7 @@ namespace CloudConvert.API
 
     #endregion
 
-    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters = null) => _restHelper.RequestAsync(GetMultipartFormDataRequest($"{url}", HttpMethod.Post, file, fileName, GetParameters(parameters, fileName)));
+    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters = null) => _restHelper.RequestAsync(GetMultipartFormDataRequest($"{url}", HttpMethod.Post, file, fileName, GetParameters(parameters)));
 
     public bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret)
     {
@@ -218,7 +218,7 @@ namespace CloudConvert.API
       return BitConverter.ToString(hash).Replace("-", "").ToLower();
     }
 
-    private Dictionary<string, string> GetParameters(object parameters, string fileName)
+    private Dictionary<string, string> GetParameters(object parameters)
     {
       var attributes = ((JToken)parameters).ToList();
       Dictionary<string, string> dictionaryParameters = new Dictionary<string, string>();
