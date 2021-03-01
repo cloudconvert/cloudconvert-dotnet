@@ -44,6 +44,7 @@ namespace CloudConvert.Test
       }
       catch (Exception ex)
       {
+        var error = ex.Message;
       }
     }
 
