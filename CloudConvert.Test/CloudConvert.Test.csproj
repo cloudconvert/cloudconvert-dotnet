@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -18,43 +18,43 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Responses\job.json">
+    <None Update="Responses/job.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Responses\jobs.json">
+    <None Update="Responses/jobs.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Responses\job_created.json">
+    <None Update="Responses/job_created.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Responses\job_finished.json">
+    <None Update="Responses/job_finished.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Responses\task.json">
+    <None Update="Responses/task.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Responses\tasks.json">
+    <None Update="Responses/tasks.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Responses\task_created.json">
+    <None Update="Responses/task_created.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Responses\upload_task_created.json">
+    <None Update="Responses/upload_task_created.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\input.pdf">
+    <None Update="TestFiles/input.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\input.png">
+    <None Update="TestFiles/input.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\test.png">
+    <None Update="TestFiles/test.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\test.pdf">
+    <None Update="TestFiles/test.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Responses\webhook_job_created_payload.json">
+    <None Update="Responses/webhook_job_created_payload.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

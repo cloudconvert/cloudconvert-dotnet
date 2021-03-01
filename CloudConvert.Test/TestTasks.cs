@@ -24,7 +24,7 @@ namespace CloudConvert.Test
       {
         TaskFilter filter = new TaskFilter();
 
-        var path = @"Responses\tasks.json";
+        var path = @"Responses/tasks.json";
         string json = File.ReadAllText(path);
         _cloudConvertAPI.Setup(cc => cc.GetAllTasksAsync(filter))
                         .ReturnsAsync(JsonConvert.DeserializeObject<ListResponse<TaskResponse>>(json));
@@ -61,7 +61,7 @@ namespace CloudConvert.Test
         Engine = "bcl"
       };
 
-      var path = @"Responses\task_created.json";
+      var path = @"Responses/task_created.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.CreateTaskAsync(TaskConvertCreateRequest.Operation, req))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
@@ -77,7 +77,7 @@ namespace CloudConvert.Test
     {
       string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
 
-      var path = @"Responses\task.json";
+      var path = @"Responses/task.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.GetTaskAsync(id, null))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
@@ -93,7 +93,7 @@ namespace CloudConvert.Test
     {
       string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
 
-      var path = @"Responses\task.json";
+      var path = @"Responses/task.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.WaitTaskAsync(id))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
@@ -120,7 +120,7 @@ namespace CloudConvert.Test
     {
       var req = new ImportUploadCreateRequest();
 
-      var path = @"Responses\upload_task_created.json";
+      var path = @"Responses/upload_task_created.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.CreateTaskAsync(ImportUploadCreateRequest.Operation, req))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
@@ -129,7 +129,7 @@ namespace CloudConvert.Test
 
       Assert.IsNotNull(task);
 
-      var pathFile = @"TestFiles\input.pdf";
+      var pathFile = @"TestFiles/input.pdf";
       byte[] file = await File.ReadAllBytesAsync(pathFile);
       string fileName = "input.pdf";
 
