@@ -30,8 +30,8 @@ namespace CloudConvert.Test
       {
         Tasks = new
         {
-          import_it = new ImportUploadData(),
-          export_it = new ExportUrlData
+          import_it = new ImportUploadCreateRequest(),
+          export_it = new ExportUrlCreateRequest
           {
             Input = "import_it"
           }
@@ -70,9 +70,9 @@ namespace CloudConvert.Test
     {
       // import
 
-      var reqImport = new ImportUploadData();
+      var reqImport = new ImportUploadCreateRequest();
 
-      var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportUploadData.Operation, reqImport);
+      var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportUploadCreateRequest.Operation, reqImport);
 
       var path = @"TestFiles\input.pdf";
       byte[] file = await File.ReadAllBytesAsync(path);
@@ -87,12 +87,12 @@ namespace CloudConvert.Test
 
       // export
 
-      var reqExport = new ExportUrlData
+      var reqExport = new ExportUrlCreateRequest
       {
         Input = importTask.Data.Id
       };
 
-      var exportTask = await _cloudConvertAPI.CreateTaskAsync(ExportUrlData.Operation, reqExport);
+      var exportTask = await _cloudConvertAPI.CreateTaskAsync(ExportUrlCreateRequest.Operation, reqExport);
 
       Assert.IsNotNull(exportTask);
 

@@ -1,21 +1,14 @@
 using Newtonsoft.Json;
 
-namespace CloudConvert.API.Models.ExportOperations
+namespace CloudConvert.API.Models.ImportOperations
 {
-  public class ExportGoogleCloudStorageData
+  public class ImportGoogleCloudStorageCreateRequest
   {
     [JsonProperty("operation")]
-    public static string Operation = "export/google-cloud-storage";
-
-    /// <summary>
-    /// The input task name(s) for this task.
-    /// input: string | string[];
-    /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    public static string Operation = "import/google-cloud-storage";
 
     [JsonProperty("project_id")]
-    public string ProjectId { get; set; }
+    public string Project_Id { get; set; }
 
     [JsonProperty("bucket")]
     public string Bucket { get; set; }
@@ -31,5 +24,9 @@ namespace CloudConvert.API.Models.ExportOperations
 
     [JsonProperty("file_prefix", NullValueHandling = NullValueHandling.Ignore)]
     public string File_Prefix { get; set; }
+
+    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    public string Filename { get; set; }
+
   }
 }

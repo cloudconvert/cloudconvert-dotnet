@@ -1,18 +1,11 @@
 using Newtonsoft.Json;
 
-namespace CloudConvert.API.Models.ExportOperations
+namespace CloudConvert.API.Models.ImportOperations
 {
-  public class ExportAzureBlobData
+  public class ImportAzureBlobCreateRequest
   {
     [JsonProperty("operation")]
-    public static string Operation = "export/azure/blob";
-
-    /// <summary>
-    /// The input task name(s) for this task.
-    /// input: string | string[];
-    /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    public static string Operation = "import/azure/blob";
 
     [JsonProperty("storage_account")]
     public string Storage_Account { get; set; }
@@ -31,5 +24,8 @@ namespace CloudConvert.API.Models.ExportOperations
 
     [JsonProperty("blob_prefix", NullValueHandling = NullValueHandling.Ignore)]
     public string Blob_Prefix { get; set; }
+
+    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    public string Filename { get; set; }
   }
 }

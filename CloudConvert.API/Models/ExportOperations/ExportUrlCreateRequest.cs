@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.ExportOperations
 {
-  public class ExportUrlData
+  public class ExportUrlCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "export/url";

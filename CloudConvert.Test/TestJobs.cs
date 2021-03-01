@@ -24,7 +24,7 @@ namespace CloudConvert.Test
         var path = @"Responses\jobs.json";
         string json = File.ReadAllText(path);
         _cloudConvertAPI.Setup(cc => cc.GetAllJobsAsync(filter))
-                        .ReturnsAsync(JsonConvert.DeserializeObject<JobsResponse>(json));
+                        .ReturnsAsync(JsonConvert.DeserializeObject<ListResponse<JobResponse>>(json));
 
         var jobs = await _cloudConvertAPI.Object.GetAllJobsAsync(filter);
 
@@ -55,7 +55,7 @@ namespace CloudConvert.Test
       var path = @"Responses\job_created.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.CreateJobAsync(req))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<JobResponse>(json));
+                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<JobResponse>>(json));
 
       var job = await _cloudConvertAPI.Object.CreateJobAsync(req);
 
@@ -72,7 +72,7 @@ namespace CloudConvert.Test
       var path = @"Responses\job.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.GetJobAsync(id))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<JobResponse>(json));
+                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<JobResponse>>(json));
 
       var job = await _cloudConvertAPI.Object.GetJobAsync(id);
 
@@ -89,7 +89,7 @@ namespace CloudConvert.Test
       var path = @"Responses\job_finished.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.WaitJobAsync(id))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<JobResponse>(json));
+                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<JobResponse>>(json));
 
       var job = await _cloudConvertAPI.Object.WaitJobAsync(id);
 

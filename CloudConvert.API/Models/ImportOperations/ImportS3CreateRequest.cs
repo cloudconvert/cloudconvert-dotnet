@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.ImportOperations
 {
-  public class ImportS3Data
+  public class ImportS3CreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "import/s3";

@@ -10,24 +10,25 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using CloudConvert.API.Models.JobModels;
 using CloudConvert.API.Models.TaskModels;
+using CloudConvert.API.Models;
 
 namespace CloudConvert.API
 {
   public interface ICloudConvertAPI
   {
     #region Jobs
-    Task<JobsResponse> GetAllJobsAsync(JobFilter jobFilter);
-    Task<JobResponse> CreateJobAsync(JobCreateRequest request);
-    Task<JobResponse> GetJobAsync(string id);
-    Task<JobResponse> WaitJobAsync(string id);
+    Task<ListResponse<JobResponse>> GetAllJobsAsync(JobFilter jobFilter);
+    Task<Response<JobResponse>> CreateJobAsync(JobCreateRequest request);
+    Task<Response<JobResponse>> GetJobAsync(string id);
+    Task<Response<JobResponse>> WaitJobAsync(string id);
     Task DeleteJobAsync(string id);
     #endregion
 
     #region Tasks
-    Task<TasksResponse> GetAllTasksAsync(TaskFilter jobFilter);
-    Task<TaskResponse> CreateTaskAsync<T>(string operation, T request);
-    Task<TaskResponse> GetTaskAsync(string id, string[] include = null);
-    Task<TaskResponse> WaitTaskAsync(string id);
+    Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskFilter jobFilter);
+    Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T request);
+    Task<Response<TaskResponse>> GetTaskAsync(string id, string[] include = null);
+    Task<Response<TaskResponse>> WaitTaskAsync(string id);
     Task DeleteTaskAsync(string id);
     #endregion
 
@@ -101,7 +102,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The list of jobs. You can find details about the job model response in the documentation about the show jobs endpoint.
     /// </returns>
-    public Task<JobsResponse> GetAllJobsAsync(JobFilter jobFilter) => _restHelper.RequestAsync<JobsResponse>(GetRequest($"{_apiUrl}/jobs?filter[status]={jobFilter.Status}&filter[tag]={jobFilter.Tag}&include={jobFilter.Include}&per_page={jobFilter.PerPage}&page={jobFilter.Page}", HttpMethod.Get));
+    public Task<ListResponse<JobResponse>> GetAllJobsAsync(JobFilter jobFilter) => _restHelper.RequestAsync<ListResponse<JobResponse>>(GetRequest($"{_apiUrl}/jobs?filter[status]={jobFilter.Status}&filter[tag]={jobFilter.Tag}&include={jobFilter.Include}&per_page={jobFilter.PerPage}&page={jobFilter.Page}", HttpMethod.Get));
 
     /// <summary>
     /// Create a job with one ore more tasks. Requires the task.write scope.
@@ -110,14 +111,14 @@ namespace CloudConvert.API
     /// <returns>
     /// The created job. You can find details about the job model response in the documentation about the show jobs endpoint.
     /// </returns>
-    public Task<JobResponse> CreateJobAsync(JobCreateRequest model) => _restHelper.RequestAsync<JobResponse>(GetRequest($"{_apiUrl}/jobs", HttpMethod.Post, model));
+    public Task<Response<JobResponse>> CreateJobAsync(JobCreateRequest model) => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiUrl}/jobs", HttpMethod.Post, model));
 
     /// <summary>
     /// Show a job. Requires the task.read scope.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public Task<JobResponse> GetJobAsync(string id) => _restHelper.RequestAsync<JobResponse>(GetRequest($"{_apiUrl}/jobs/{id}", HttpMethod.Get));
+    public Task<Response<JobResponse>> GetJobAsync(string id) => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiUrl}/jobs/{id}", HttpMethod.Get));
 
     /// <summary>
     /// Wait until the job status is finished or error. This makes the request block until the job has been completed. Requires the task.read scope.
@@ -132,7 +133,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The finished or failed job, including tasks. You can find details about the job model response in the documentation about the show job endpoint.
     /// </returns>
-    public Task<JobResponse> WaitJobAsync(string id) => _restHelper.RequestAsync<JobResponse>(GetRequest($"{_apiUrl}/jobs/{id}/wait", HttpMethod.Get));
+    public Task<Response<JobResponse>> WaitJobAsync(string id) => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiUrl}/jobs/{id}/wait", HttpMethod.Get));
 
     /// <summary>
     /// Delete a job, including all tasks and data. Requires the task.write scope.
@@ -155,7 +156,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The list of tasks. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<TasksResponse> GetAllTasksAsync(TaskFilter taskFilter) => _restHelper.RequestAsync<TasksResponse>(GetRequest($"{_apiUrl}/tasks?filter[job_id]={taskFilter.JobId}&filter[status]={taskFilter.Status}&filter[operation]={taskFilter.Operation}&include={taskFilter.Include}&per_page={taskFilter.PerPage}&page={taskFilter.Page}", HttpMethod.Get));
+    public Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskFilter taskFilter) => _restHelper.RequestAsync<ListResponse<TaskResponse>>(GetRequest($"{_apiUrl}/tasks?filter[job_id]={taskFilter.JobId}&filter[status]={taskFilter.Status}&filter[operation]={taskFilter.Operation}&include={taskFilter.Include}&per_page={taskFilter.PerPage}&page={taskFilter.Page}", HttpMethod.Get));
 
     /// <summary>
     /// Create task.
@@ -165,7 +166,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<TaskResponse> CreateTaskAsync<T>(string operation, T model) => _restHelper.RequestAsync<TaskResponse>(GetRequest($"{_apiUrl}/{operation}", HttpMethod.Post, model));
+    public Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T model) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/{operation}", HttpMethod.Post, model));
 
     /// <summary>
     /// Show a task. Requires the task.read scope.
@@ -173,7 +174,7 @@ namespace CloudConvert.API
     /// <param name="id"></param>
     /// <param name="include"></param>
     /// <returns></returns>
-    public Task<TaskResponse> GetTaskAsync(string id, string[] include = null) => _restHelper.RequestAsync<TaskResponse>(GetRequest($"{_apiUrl}/tasks/{id}?include={include}", HttpMethod.Get));
+    public Task<Response<TaskResponse>> GetTaskAsync(string id, string[] include = null) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/tasks/{id}?include={include}", HttpMethod.Get));
 
     /// <summary>
     /// Wait until the task status is finished or error. This makes the request block until the task has been completed. Requires the task.read scope.
@@ -188,7 +189,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The finished or failed task. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<TaskResponse> WaitTaskAsync(string id) => _restHelper.RequestAsync<TaskResponse>(GetRequest($"{_apiUrl}/tasks/{id}/wait", HttpMethod.Get));
+    public Task<Response<TaskResponse>> WaitTaskAsync(string id) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/tasks/{id}/wait", HttpMethod.Get));
 
     /// <summary>
     /// Delete a task, including all data. Requires the task.write scope.

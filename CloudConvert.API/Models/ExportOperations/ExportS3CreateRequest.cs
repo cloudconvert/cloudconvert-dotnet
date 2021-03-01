@@ -4,7 +4,7 @@ using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.ExportOperations
 {
-  public class ExportS3Data
+  public class ExportS3CreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "export/s3";

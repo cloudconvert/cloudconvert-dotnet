@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.ExportOperations
 {
-  public class ExportOpenStackData
+  public class ExportOpenStackCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "export/openstack";

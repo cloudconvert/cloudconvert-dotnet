@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.ImportOperations
 {
-  public class ImportOpenStackData
+  public class ImportOpenStackCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "import/openstack";

@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using CloudConvert.API.Models.JobModels;
 using Newtonsoft.Json;
 
-namespace CloudConvert.API.Models.JobModels
+namespace CloudConvert.API.Models
 {
-  public partial class JobsResponse
+  public partial class ListResponse<T>
   {
     [JsonProperty("data")]
-    public List<JobCC> Data { get; set; }
+    public List<T> Data { get; set; }
 
     [JsonProperty("links")]
     public Links Links { get; set; }

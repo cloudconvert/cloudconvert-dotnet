@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.ExportOperations
 {
-  public class ExportSFTPData
+  public class ExportSFTPCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "export/sftp";

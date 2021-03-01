@@ -31,7 +31,7 @@ namespace CloudConvert.Test
         var path = @"Responses\tasks.json";
         string json = File.ReadAllText(path);
         _cloudConvertAPI1.Setup(cc => cc.GetAllTasksAsync(filter))
-                        .ReturnsAsync(JsonConvert.DeserializeObject<TasksResponse>(json));
+                        .ReturnsAsync(JsonConvert.DeserializeObject<ListResponse<TaskResponse>>(json));
 
         var tasks = await _cloudConvertAPI1.Object.GetAllTasksAsync(filter);
 
@@ -68,7 +68,7 @@ namespace CloudConvert.Test
       var path = @"Responses\task_created.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI1.Setup(cc => cc.CreateTaskAsync(TaskConvertCreateRequest.Operation, req))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<TaskResponse>(json));
+                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
 
       var task = await _cloudConvertAPI1.Object.CreateTaskAsync(TaskConvertCreateRequest.Operation, req);
 
@@ -84,7 +84,7 @@ namespace CloudConvert.Test
       var path = @"Responses\task.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI1.Setup(cc => cc.GetTaskAsync(id, null))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<TaskResponse>(json));
+                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
 
       var task = await _cloudConvertAPI1.Object.GetTaskAsync("9de1a620-952c-4482-9d44-681ae28d72a1");
 
@@ -100,7 +100,7 @@ namespace CloudConvert.Test
       var path = @"Responses\task.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI1.Setup(cc => cc.WaitTaskAsync(id))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<TaskResponse>(json));
+                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
 
       var task = await _cloudConvertAPI1.Object.WaitTaskAsync(id);
 
@@ -122,14 +122,14 @@ namespace CloudConvert.Test
     [Test]
     public async Task Upload()
     {
-      var req = new ImportUploadData();
+      var req = new ImportUploadCreateRequest();
 
       var path = @"Responses\upload_task_created.json";
       string json = File.ReadAllText(path);
-      _cloudConvertAPI1.Setup(cc => cc.CreateTaskAsync(ImportUploadData.Operation, req))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<TaskResponse>(json));
+      _cloudConvertAPI1.Setup(cc => cc.CreateTaskAsync(ImportUploadCreateRequest.Operation, req))
+                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
 
-      var task = await _cloudConvertAPI1.Object.CreateTaskAsync(ImportUploadData.Operation, req);
+      var task = await _cloudConvertAPI1.Object.CreateTaskAsync(ImportUploadCreateRequest.Operation, req);
 
       Assert.IsNotNull(task);
 
