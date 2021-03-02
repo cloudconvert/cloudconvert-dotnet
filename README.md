@@ -28,7 +28,7 @@ var job = await _cloudConvert.CreateJobAsync(new JobCreateRequest
         Tasks = new
         {
           import_example_1 = new ImportUploadCreateRequest(),
-          convert = new onvertCreateRequest
+          convert = new ConvertCreateRequest
           {
             Input = "import_example_1",
             Input_Format = "pdf",
@@ -84,6 +84,25 @@ string fileName = "test.pdf";
 
 await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), file, fileName, uploadTask.Result.Form.Parameters);
 ```
+
+## Conversion Specific Options
+
+You can pass any custom options to the task payload via the special `Options` property:
+
+```c#
+var task = new ConvertCreateRequest
+          {
+            Input = "import_example_1",
+            Input_Format = "pdf",
+            Output_Format = "jpg",
+            Options = new Dictionary<string, object> {
+              { "width": 800 },
+              { "height": 600 },
+              { "fit": "max" }
+            }
+          }
+```
+You can use the [Job Builder](https://cloudconvert.com/api/v2/jobs/builder) to see the available options.
 
 ## Webhook Signing
 
