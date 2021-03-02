@@ -22,7 +22,7 @@ namespace CloudConvert.Test
     {
       try
       {
-        TaskFilter filter = new TaskFilter();
+        TaskListFilter filter = new TaskListFilter();
 
         var path = @"Responses/tasks.json";
         string json = File.ReadAllText(path);
@@ -70,7 +70,7 @@ namespace CloudConvert.Test
       var task = await _cloudConvertAPI.Object.CreateTaskAsync(TaskConvertCreateRequest.Operation, req);
 
       Assert.IsNotNull(task);
-      Assert.IsTrue(task.Data.Status == TaskCCStatus.waiting);
+      Assert.IsTrue(task.Data.Status == API.Models.Enums.TaskStatus.waiting);
     }
 
     [Test]
@@ -103,7 +103,7 @@ namespace CloudConvert.Test
 
       Assert.IsNotNull(task);
       Assert.IsTrue(task.Data.Operation == "convert");
-      Assert.AreEqual(task.Data.Status, TaskCCStatus.finished);
+      Assert.AreEqual(task.Data.Status, API.Models.Enums.TaskStatus.finished);
     }
 
     [Test]

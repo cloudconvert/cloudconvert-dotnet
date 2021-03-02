@@ -1,7 +1,7 @@
 namespace CloudConvert.API.Models.Enums
 {
-  public enum TaskCCStatus
-  {
+  public enum TaskStatus
+   {
     waiting,
     processing,
     finished,

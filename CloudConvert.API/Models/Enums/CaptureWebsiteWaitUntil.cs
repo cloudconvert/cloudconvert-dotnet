@@ -1,6 +1,6 @@
 namespace CloudConvert.API.Models.Enums
 {
-  public enum WaitUntil 
+  public enum CaptureWebsiteWaitUntil 
   { 
     domcontentloaded, 
     load, 

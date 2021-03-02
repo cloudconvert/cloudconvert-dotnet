@@ -1,12 +1,16 @@
-# cloudconvert-net
+# cloudconvert-dotnet
 
 > This is the official .net SDK v1 for the [CloudConvert](https://cloudconvert.com/api/v2) _API v2_.
 
 ## Installation
 
-> PM> Install-Package CloudConvert.API -Version 1.0.0
-
-> dotnet add package CloudConvert.API --version 1.0.0
+```
+PM> Install-Package CloudConvert.API -Version 1.0.0
+```
+or
+```
+dotnet add package CloudConvert.API --version 1.0.0
+```
 
 ## Creating Jobs
 
@@ -23,15 +27,15 @@ var job = await _cloudConvert.CreateJobAsync(new JobCreateRequest
       {
         Tasks = new
         {
-          import_example_1 = new ImportUploadData(),
-          convert = new TaskConvertCreateData
+          import_example_1 = new ImportUploadCreateRequest(),
+          convert = new TaskConvertCreateRequest
           {
             Input = "import_example_1",
             Input_Format = "pdf",
             Output_Format = "docx",
             Engine = "bcl"
           },
-          export = new ExportUrlData
+          export = new ExportUrlCreateRequest
           {
             Input = "convert",
             Inline_Additional = true,
@@ -105,7 +109,11 @@ You can use the Sandbox to avoid consuming your quota while testing your applica
 var _cloudConvert = new CloudConvertAPI("api_key", true);
 ```
 
-### Unit Tests
+## Tests
+
+```
+dotnet test
+```
 
 ### Integration Tests
 

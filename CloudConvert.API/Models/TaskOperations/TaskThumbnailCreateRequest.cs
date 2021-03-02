@@ -22,7 +22,7 @@ namespace CloudConvert.API.Models.TaskOperations
     public string Input_Format { get; set; }
 
     [JsonProperty("output_format")]
-    public OutputFormatThumbnail Output_Format { get; set; }
+    public ThumbnailOutputFormat Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }

@@ -2,9 +2,9 @@ using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.JobModels
 {
-  public class JobFilter
+  public class JobListFilter
   {
-    public JobFilter()
+    public JobListFilter()
     {
       Status = null;
       Tag = null;
@@ -16,7 +16,7 @@ namespace CloudConvert.API.Models.JobModels
     /// <summary>
     /// The result will be filtered to include only jobs with a specific status (processing, finished or error).
     /// </summary>
-    public JobCCStatus? Status { get; set; }
+    public JobStatus? Status { get; set; }
 
     /// <summary>
     /// The result will be filtered to include only jobs with a tag.

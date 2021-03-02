@@ -20,7 +20,7 @@ namespace CloudConvert.API.Models.TaskOperations
     /// If not set, the extension of the input file is used as input format
     /// </summary>
     [JsonProperty("input_format", NullValueHandling = NullValueHandling.Ignore)]
-    public InputFormat? Input_Format { get; set; }
+    public OptimizeInputFormat? Input_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }
@@ -38,7 +38,7 @@ namespace CloudConvert.API.Models.TaskOperations
     public int? Quality { get; set; }
 
     [JsonProperty("profile", NullValueHandling = NullValueHandling.Ignore)]
-    public Profile? Profile { get; set; }
+    public OptimizeProfile? Profile { get; set; }
 
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.

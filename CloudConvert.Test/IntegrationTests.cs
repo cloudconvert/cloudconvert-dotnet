@@ -83,7 +83,7 @@ namespace CloudConvert.Test
       importTask = await _cloudConvertAPI.WaitTaskAsync(importTask.Data.Id);
 
       Assert.IsNotNull(importTask);
-      Assert.AreEqual(importTask.Data.Status, TaskCCStatus.finished);
+      Assert.AreEqual(importTask.Data.Status, API.Models.Enums.TaskStatus.finished);
 
       // export
 
@@ -99,7 +99,7 @@ namespace CloudConvert.Test
       exportTask = await _cloudConvertAPI.WaitTaskAsync(exportTask.Data.Id);
 
       Assert.IsNotNull(exportTask);
-      Assert.IsTrue(exportTask.Data.Status == TaskCCStatus.finished);
+      Assert.IsTrue(exportTask.Data.Status == API.Models.Enums.TaskStatus.finished);
 
       var fileExport = exportTask.Data.Result.Files.FirstOrDefault();
 

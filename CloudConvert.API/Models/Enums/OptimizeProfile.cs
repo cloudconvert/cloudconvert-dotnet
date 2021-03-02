@@ -1,6 +1,6 @@
 namespace CloudConvert.API.Models.Enums
 {
-  public enum Profile
+  public enum OptimizeProfile
   {
     archive, 
     max, 

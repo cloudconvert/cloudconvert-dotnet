@@ -1,6 +1,6 @@
 namespace CloudConvert.API.Models.Enums
 {
-  public enum InputFormat
+  public enum OptimizeInputFormat
   {
     jpg,
     pdf,

@@ -19,7 +19,7 @@ namespace CloudConvert.Test
     {
       try
       {
-        JobFilter filter = new JobFilter();
+        JobListFilter filter = new JobListFilter();
 
         var path = @"Responses/jobs.json";
         string json = File.ReadAllText(path);

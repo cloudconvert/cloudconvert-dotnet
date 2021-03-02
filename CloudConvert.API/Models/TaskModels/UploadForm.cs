@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.TaskModels
 {
-  public partial class Form
+  public partial class UploadForm
   {
     [JsonProperty("url")]
     public Uri Url { get; set; }

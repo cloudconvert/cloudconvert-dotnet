@@ -32,7 +32,7 @@ namespace CloudConvert.API.Models.TaskModels
     /// The status of the task. Is one of waiting, processing, finished or error.
     /// </summary>
     [JsonProperty("status")]
-    public TaskCCStatus Status { get; set; }
+    public TaskStatus Status { get; set; }
 
     /// <summary>
     /// The amount of conversion minutes the task consumed. Available when the status is finished.
@@ -132,9 +132,9 @@ namespace CloudConvert.API.Models.TaskModels
     /// Finished tasks always do have a files key with the names of the result files of the task (See the example on the right).
     /// </summary>
     [JsonProperty("result")]
-    public ResultTask Result { get; set; }
+    public TaskResult Result { get; set; }
   
     [JsonProperty("links")]
-    public DatumLinks Links { get; set; }
+    public ResponseLinks Links { get; set; }
   }
 }

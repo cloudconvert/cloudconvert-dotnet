@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace CloudConvert.API.Models.Enums
 {
-  public enum Acl
+  public enum ExportS3Acl
   {
     [Description("private")]
     Private,

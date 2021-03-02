@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using CloudConvert.API.Models.JobModels;
 using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models

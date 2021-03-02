@@ -1,6 +1,6 @@
 namespace CloudConvert.API.Models.Enums
 {
-  public enum JobCCStatus
+  public enum JobStatus
   {
     processing,
     finished,

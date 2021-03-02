@@ -17,7 +17,7 @@ namespace CloudConvert.API
   public interface ICloudConvertAPI
   {
     #region Jobs
-    Task<ListResponse<JobResponse>> GetAllJobsAsync(JobFilter jobFilter);
+    Task<ListResponse<JobResponse>> GetAllJobsAsync(JobListFilter jobFilter);
     Task<Response<JobResponse>> CreateJobAsync(JobCreateRequest request);
     Task<Response<JobResponse>> GetJobAsync(string id);
     Task<Response<JobResponse>> WaitJobAsync(string id);
@@ -25,7 +25,7 @@ namespace CloudConvert.API
     #endregion
 
     #region Tasks
-    Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskFilter jobFilter);
+    Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskListFilter jobFilter);
     Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T request);
     Task<Response<TaskResponse>> GetTaskAsync(string id, string[] include = null);
     Task<Response<TaskResponse>> WaitTaskAsync(string id);
@@ -102,7 +102,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The list of jobs. You can find details about the job model response in the documentation about the show jobs endpoint.
     /// </returns>
-    public Task<ListResponse<JobResponse>> GetAllJobsAsync(JobFilter jobFilter) => _restHelper.RequestAsync<ListResponse<JobResponse>>(GetRequest($"{_apiUrl}/jobs?filter[status]={jobFilter.Status}&filter[tag]={jobFilter.Tag}&include={jobFilter.Include}&per_page={jobFilter.PerPage}&page={jobFilter.Page}", HttpMethod.Get));
+    public Task<ListResponse<JobResponse>> GetAllJobsAsync(JobListFilter jobFilter) => _restHelper.RequestAsync<ListResponse<JobResponse>>(GetRequest($"{_apiUrl}/jobs?filter[status]={jobFilter.Status}&filter[tag]={jobFilter.Tag}&include={jobFilter.Include}&per_page={jobFilter.PerPage}&page={jobFilter.Page}", HttpMethod.Get));
 
     /// <summary>
     /// Create a job with one ore more tasks. Requires the task.write scope.
@@ -156,7 +156,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The list of tasks. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskFilter taskFilter) => _restHelper.RequestAsync<ListResponse<TaskResponse>>(GetRequest($"{_apiUrl}/tasks?filter[job_id]={taskFilter.JobId}&filter[status]={taskFilter.Status}&filter[operation]={taskFilter.Operation}&include={taskFilter.Include}&per_page={taskFilter.PerPage}&page={taskFilter.Page}", HttpMethod.Get));
+    public Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskListFilter taskFilter) => _restHelper.RequestAsync<ListResponse<TaskResponse>>(GetRequest($"{_apiUrl}/tasks?filter[job_id]={taskFilter.JobId}&filter[status]={taskFilter.Status}&filter[operation]={taskFilter.Operation}&include={taskFilter.Include}&per_page={taskFilter.PerPage}&page={taskFilter.Page}", HttpMethod.Get));
 
     /// <summary>
     /// Create task.

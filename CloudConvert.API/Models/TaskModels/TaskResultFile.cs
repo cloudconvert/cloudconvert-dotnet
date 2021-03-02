@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.TaskModels
 {
-  public partial class FileTask
+  public partial class TaskResultFile
   {
     [JsonProperty("filename")]
     public string Filename { get; set; }

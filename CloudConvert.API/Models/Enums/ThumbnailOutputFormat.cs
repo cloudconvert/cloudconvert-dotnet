@@ -1,6 +1,6 @@
 namespace CloudConvert.API.Models.Enums
 {
-  public enum OutputFormatThumbnail 
+  public enum ThumbnailOutputFormat 
   { 
     jpg, 
     png 

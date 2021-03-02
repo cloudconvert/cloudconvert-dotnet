@@ -2,9 +2,9 @@ using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskModels
 {
-  public class TaskFilter
+  public class TaskListFilter
   {
-    public TaskFilter()
+    public TaskListFilter()
     {
       Status = null;
       JobId = null;
@@ -17,7 +17,7 @@ namespace CloudConvert.API.Models.TaskModels
     /// <summary>
     /// The result will be filtered to include only tasks with a specific status (waiting, processing, finished or error).
     /// </summary>
-    public TaskCCStatus? Status { get; set; }
+    public TaskStatus? Status { get; set; }
 
     /// <summary>
     /// The result will be filtered to include only tasks for a specific Job ID.

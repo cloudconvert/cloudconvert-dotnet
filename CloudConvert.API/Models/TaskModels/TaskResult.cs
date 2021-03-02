@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.TaskModels
 {
-  public partial class ResultTask
+  public partial class TaskResult
   {
     [JsonProperty("form")]
-    public Form Form { get; set; }
+    public UploadForm Form { get; set; }
 
     [JsonProperty("files")]
-    public List<FileTask> Files { get; set; }
+    public List<TaskResultFile> Files { get; set; }
   }
 }

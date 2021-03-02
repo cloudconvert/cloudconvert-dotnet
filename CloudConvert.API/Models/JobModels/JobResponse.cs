@@ -50,6 +50,6 @@ namespace CloudConvert.API.Models.JobModels
     public List<TaskResponse> Tasks { get; set; }
 
     [JsonProperty("links")]
-    public DatumLinks Links { get; set; }
+    public ResponseLinks Links { get; set; }
   }
 }

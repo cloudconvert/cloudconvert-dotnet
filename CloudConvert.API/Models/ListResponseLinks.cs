@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace CloudConvert.API.Models.JobModels
+namespace CloudConvert.API.Models
 {
   public partial class Links
   {

@@ -65,7 +65,7 @@ namespace CloudConvert.API.Models.ExportOperations
     /// S3 ACL for storing the files.
     /// </summary>
     [JsonProperty("acl", NullValueHandling = NullValueHandling.Ignore)]
-    public Acl? Acl { get; set; }
+    public ExportS3Acl? Acl { get; set; }
 
     /// <summary>
     /// S3 CacheControl header to specify the lifetime of the file.

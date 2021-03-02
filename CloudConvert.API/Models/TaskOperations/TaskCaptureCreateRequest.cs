@@ -68,7 +68,7 @@ namespace CloudConvert.API.Models.TaskOperations
     public string Footer_Template { get; set; }
 
     [JsonProperty("wait_until", NullValueHandling = NullValueHandling.Ignore)]
-    public WaitUntil? Wait_Until { get; set; }
+    public CaptureWebsiteWaitUntil? Wait_Until { get; set; }
 
     [JsonProperty("wait_for_element", NullValueHandling = NullValueHandling.Ignore)]
     public string Wait_For_Element { get; set; }
