@@ -9,9 +9,9 @@ namespace CloudConvert.API.Models
     public List<T> Data { get; set; }
 
     [JsonProperty("links")]
-    public Links Links { get; set; }
+    public ListResponseLinks Links { get; set; }
 
     [JsonProperty("meta")]
-    public Meta Meta { get; set; }
+    public ListResponseMeta Meta { get; set; }
   }
 }

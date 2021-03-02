@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models
 {
-  public partial class Links
+  public partial class ListResponseLinks
   {
     [JsonProperty("first")]
     public Uri First { get; set; }

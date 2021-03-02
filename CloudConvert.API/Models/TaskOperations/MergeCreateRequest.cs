@@ -16,7 +16,7 @@ namespace CloudConvert.API.Models.TaskOperations
     public dynamic Input { get; set; }
 
     [JsonProperty("output_format")]
-    public OutputFormatMerge Output_Format { get; set; }
+    public MergeOutputFormat Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
     public string Engine { get; set; }

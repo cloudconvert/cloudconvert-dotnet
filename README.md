@@ -28,17 +28,15 @@ var job = await _cloudConvert.CreateJobAsync(new JobCreateRequest
         Tasks = new
         {
           import_example_1 = new ImportUploadCreateRequest(),
-          convert = new TaskConvertCreateRequest
+          convert = new onvertCreateRequest
           {
             Input = "import_example_1",
             Input_Format = "pdf",
-            Output_Format = "docx",
-            Engine = "bcl"
+            Output_Format = "docx"
           },
           export = new ExportUrlCreateRequest
           {
             Input = "convert",
-            Inline_Additional = true,
             Archive_Multiple_Files = true
           }
         },
@@ -73,7 +71,7 @@ var job = await _cloudConvertAPI.CreateJobAsync(new JobCreateRequest
       {
         Tasks = new
         {
-          upload_my_file = new ImportUploadData()
+          upload_my_file = new ImportUploadCreateRequest()
           // ...
         }
       });

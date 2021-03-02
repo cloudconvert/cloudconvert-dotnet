@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models
 {
-  public partial class Meta
+  public partial class ListResponseMeta
   {
     [JsonProperty("current_page")]
     public int? Current_Page { get; set; }

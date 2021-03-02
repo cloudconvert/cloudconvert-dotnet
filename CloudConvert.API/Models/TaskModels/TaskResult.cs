@@ -10,5 +10,8 @@ namespace CloudConvert.API.Models.TaskModels
 
     [JsonProperty("files")]
     public List<TaskResultFile> Files { get; set; }
+
+    [JsonProperty("metadata")]
+    public Dictionary<string, object> Metadata { get; set; }
   }
 }
