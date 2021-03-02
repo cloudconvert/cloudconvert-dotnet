@@ -69,6 +69,7 @@ namespace CloudConvert.API
       }
       
       request.Headers.Add("Authorization", _api_key);
+      request.Headers.Add("User-Agent", "cloudconvert-dotnet/v"  +  System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + " (https://github.com/cloudconvert/cloudconvert-dotnet)");
      
       return request;
     }
