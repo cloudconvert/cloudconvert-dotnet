@@ -3,7 +3,7 @@ using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskMergeCreateRequest
+  public class MergeCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "merge";

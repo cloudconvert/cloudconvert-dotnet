@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskMetadataCreateRequest
+  public class MetadataCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "metadata";

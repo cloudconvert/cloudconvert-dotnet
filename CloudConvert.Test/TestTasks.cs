@@ -54,7 +54,7 @@ namespace CloudConvert.Test
     [Test]
     public async Task CreateTask()
     {
-      var req = new TaskConvertCreateRequest
+      var req = new ConvertCreateRequest
       {
         Input = "9ebdb9c7-ee41-4c08-9fb7-1f342289f712", //Guid import
         Input_Format = "pdf",
@@ -64,10 +64,10 @@ namespace CloudConvert.Test
 
       var path = @"Responses/task_created.json";
       string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.CreateTaskAsync(TaskConvertCreateRequest.Operation, req))
+      _cloudConvertAPI.Setup(cc => cc.CreateTaskAsync(ConvertCreateRequest.Operation, req))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
 
-      var task = await _cloudConvertAPI.Object.CreateTaskAsync(TaskConvertCreateRequest.Operation, req);
+      var task = await _cloudConvertAPI.Object.CreateTaskAsync(ConvertCreateRequest.Operation, req);
 
       Assert.IsNotNull(task);
       Assert.IsTrue(task.Data.Status == API.Models.Enums.TaskStatus.waiting);

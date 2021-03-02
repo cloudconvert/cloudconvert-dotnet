@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskConvertCreateRequest
+  public class ConvertCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "convert";

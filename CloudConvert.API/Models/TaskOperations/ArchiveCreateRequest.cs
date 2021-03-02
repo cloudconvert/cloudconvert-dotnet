@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskArchiveCreateRequest
+  public class ArchiveCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "archive";

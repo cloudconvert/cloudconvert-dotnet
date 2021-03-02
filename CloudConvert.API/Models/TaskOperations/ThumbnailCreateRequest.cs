@@ -3,7 +3,7 @@ using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskThumbnailCreateRequest
+  public class ThumbnailCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "thumbnail";

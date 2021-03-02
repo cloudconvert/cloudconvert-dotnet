@@ -4,7 +4,7 @@ using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
-  public class TaskOptimizeCreateRequest
+  public class OptimizeCreateRequest
   {
     [JsonProperty("operation")]
     public static string Operation = "optimize";
