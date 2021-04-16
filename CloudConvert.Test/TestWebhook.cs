@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using CloudConvert.API;
 using NUnit.Framework;
@@ -12,7 +13,7 @@ namespace CloudConvert.Test
     [Test]
     public void Verify()
     {
-      var path = @"Responses/webhook_job_created_payload.json";
+      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/webhook_job_created_payload.json";
       string json = File.ReadAllText(path);
 
       var result = _cloudConvertAPI.ValidateWebhookSignatures(json, "88c3103f1d64282bf963af5dd8405ef26348af25b8903e10f0c288c11f0f907b", "9E1I8fQSLM7WsH1Y2Zp0uurYfhLqdERu");
