@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet: [ '2.1.x', '5.0.x' ]
-    name: Dotnet ${{ matrix.dotnet }} sample
+        dotnet: [ '5.0.x' ]
+    name: Dotnet ${{ matrix.dotnet }}
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
