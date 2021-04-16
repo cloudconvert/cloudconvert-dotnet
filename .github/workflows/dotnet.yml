@@ -10,6 +10,11 @@ jobs:
   build:
 
    runs-on: [windows-latest]
+   strategy:
+      matrix:
+        dotnet: [ '4.6.1', '3.1.x', '5.0.x' ]
+   name: Dotnet ${{ matrix.dotnet }}
+   
    steps:
     - uses: actions/checkout@v2
       
