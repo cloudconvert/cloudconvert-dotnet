@@ -9,18 +9,20 @@ on:
 jobs:
   build:
 
-   runs-on: [windows-latest]
-   steps:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet: [ '3.1.x', '5.0.x' ]
+    name: Dotnet ${{ matrix.dotnet }}
+    steps:
     - uses: actions/checkout@v2
-      
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
-
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.5
-
-    - name: Restore NuGet packages
-      run: nuget restore CloudConvert.sln
-
-    - name: Build the Solution
-      run: msbuild CloudConvert.sln /p:Configuration=Release
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
