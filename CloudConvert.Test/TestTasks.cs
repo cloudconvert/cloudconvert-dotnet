@@ -62,7 +62,7 @@ namespace CloudConvert.Test
         Engine = "bcl"
       };
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task_created.json";
+      var path = @"Responses/task_created.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.CreateTaskAsync(ConvertCreateRequest.Operation, req))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
@@ -78,7 +78,7 @@ namespace CloudConvert.Test
     {
       string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task.json";
+      var path = @"Responses/task.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.GetTaskAsync(id, null))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
@@ -94,7 +94,7 @@ namespace CloudConvert.Test
     {
       string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task.json";
+      var path = @"Responses/task.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.WaitTaskAsync(id))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
@@ -121,7 +121,7 @@ namespace CloudConvert.Test
     {
       var req = new ImportUploadCreateRequest();
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/upload_task_created.json";
+      var path = @"Responses/upload_task_created.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.CreateTaskAsync(ImportUploadCreateRequest.Operation, req))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
@@ -130,8 +130,8 @@ namespace CloudConvert.Test
 
       Assert.IsNotNull(task);
 
-      var pathFile = AppDomain.CurrentDomain.BaseDirectory + @"TestFiles/input.pdf";
-      byte[] file = File.ReadAllBytes(pathFile);
+      var pathFile = @"TestFiles/input.pdf";
+      byte[] file = await File.ReadAllBytesAsync(pathFile);
       string fileName = "input.pdf";
 
       _cloudConvertAPI.Setup(cc => cc.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters));

@@ -22,7 +22,7 @@ namespace CloudConvert.API.Extensions
     {
       var s = source.ToString();
 
-      FieldInfo fi = source.GetType().GetField(s);
+      FieldInfo fi = source.GetType().GetField(s!);
 
       if (fi == null)
       {

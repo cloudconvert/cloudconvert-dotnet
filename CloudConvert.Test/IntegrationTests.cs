@@ -11,7 +11,6 @@ using CloudConvert.API.Models.TaskOperations;
 using CloudConvert.API.Models.JobModels;
 
 using System.Collections.Generic;
-using System;
 
 namespace CloudConvert.Test
 {
@@ -47,8 +46,8 @@ namespace CloudConvert.Test
 
       Assert.IsNotNull(uploadTask);
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"TestFiles/input.pdf";
-      byte[] file = File.ReadAllBytes(path);
+      var path = @"TestFiles/input.pdf";
+      byte[] file = await File.ReadAllBytesAsync(path);
       string fileName = "input.pdf";
 
       var result = await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), file, fileName, uploadTask.Result.Form.Parameters);
@@ -78,8 +77,8 @@ namespace CloudConvert.Test
 
       var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportUploadCreateRequest.Operation, reqImport);
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"TestFiles/input.pdf";
-      byte[] file = File.ReadAllBytes(path);
+      var path = @"TestFiles/input.pdf";
+      byte[] file = await File.ReadAllBytesAsync(path);
       string fileName = "input.pdf";
 
       await _cloudConvertAPI.UploadAsync(importTask.Data.Result.Form.Url.ToString(), file, fileName, importTask.Data.Result.Form.Parameters);
