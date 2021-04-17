@@ -29,3 +29,6 @@ jobs:
 
     - name: Build the Solution
       run: msbuild CloudConvert.sln /p:Configuration=Release
+      
+    - name: Test
+      run: dotnet test --no-build --verbosity normal -f ${{ matrix.dotnet }}
