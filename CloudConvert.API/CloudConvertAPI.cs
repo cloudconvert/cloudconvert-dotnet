@@ -215,7 +215,7 @@ namespace CloudConvert.API
 
     private string HashHMAC(string key, string message)
     {
-      byte[] hash = new HMACSHA256(Encoding.UTF8.GetBytes(key)).ComputeHash(new ASCIIEncoding().GetBytes(message));
+      byte[] hash = new HMACSHA256(Encoding.UTF8.GetBytes(key)).ComputeHash(new UTF8Encoding().GetBytes(message));
       return BitConverter.ToString(hash).Replace("-", "").ToLower();
     }
 
