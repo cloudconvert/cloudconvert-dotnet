@@ -1,15 +1,18 @@
 # cloudconvert-dotnet
 
-> This is the official .net SDK v1 for the [CloudConvert](https://cloudconvert.com/api/v2) _API v2_.
+[![.NET Tests](https://github.com/cloudconvert/cloudconvert-dotnet/actions/workflows/dotnet-tests.yml/badge.svg)](https://github.com/cloudconvert/cloudconvert-dotnet/actions/workflows/dotnet-tests.yml)
+[![Nuget](https://img.shields.io/nuget/v/CloudConvert.API)](https://www.nuget.org/packages/CloudConvert.API)
+
+This is the official .net SDK v1 for the [CloudConvert](https://cloudconvert.com/api/v2) _API v2_.
 
 ## Installation
 
 ```
-PM> Install-Package CloudConvert.API -Version 1.0.0
+PM> Install-Package CloudConvert.API
 ```
 or
 ```
-dotnet add package CloudConvert.API --version 1.0.0
+dotnet add package CloudConvert.API
 ```
 
 ## Creating Jobs
