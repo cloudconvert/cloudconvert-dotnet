@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
@@ -41,5 +42,38 @@ namespace CloudConvert.API.Models.TaskOperations
     /// </summary>
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
+
+    /// <summary>
+    /// Sets the mode of sizing the thumbnail. "Max" resizes the thumbnail to fit within the width and height, but will not increase the size of the image if it is smaller than width or height. "Crop" resizes the thumbnail to fill the width and height dimensions and crops any excess image data. "Scale" enforces the thumbnail width and height by scaling. Defaults to max. 
+    /// </summary>
+    [JsonProperty("fit", NullValueHandling = NullValueHandling.Ignore)]
+    public ThumbnailFit? Fit { get; set; }
+
+    /// <summary>
+    /// Set thumbnail width in pixels.
+    /// </summary>
+    [JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
+    public int? Width { get; set; }
+
+    /// <summary>
+    /// Set thumbnail height in pixels.
+    /// </summary>
+    [JsonProperty("height", NullValueHandling = NullValueHandling.Ignore)]
+    public int? Height { get; set; }
+
+    /// <summary>
+    /// Number of thumbnails to create. Defaults to 1.
+    /// </summary>
+    [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
+    public int? Count { get; set; }
+
+    /// <summary>
+    /// Conversion and engine specific options. Depends on input_format and output_format.
+    /// Select input and output format above to show additional conversion options.
+    /// </summary>
+    [JsonExtensionData]
+    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<string, object> Options { get; set; }
+
   }
 }
