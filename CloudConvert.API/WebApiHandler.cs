@@ -35,8 +35,7 @@ namespace CloudConvert.API
           string responseString = (await response.Content.ReadAsStringAsync()).TrimLengthWithEllipsis(20000);
         }
 
-        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized
-          || response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        if ((int)response.StatusCode >= 400)
         {
           throw new WebApiException((await response.Content.ReadAsStringAsync()).TrimLengthWithEllipsis(20000));
         }
