@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
@@ -16,6 +17,7 @@ namespace CloudConvert.API.Models.TaskOperations
     public dynamic Input { get; set; }
 
     [JsonProperty("output_format")]
+    [JsonConverter(typeof(StringEnumConverter))]
     public MergeOutputFormat Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]

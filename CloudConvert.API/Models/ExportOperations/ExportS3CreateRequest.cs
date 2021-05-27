@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.ExportOperations
@@ -65,6 +66,7 @@ namespace CloudConvert.API.Models.ExportOperations
     /// S3 ACL for storing the files.
     /// </summary>
     [JsonProperty("acl", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonConverter(typeof(StringEnumConverter))]
     public ExportS3Acl? Acl { get; set; }
 
     /// <summary>

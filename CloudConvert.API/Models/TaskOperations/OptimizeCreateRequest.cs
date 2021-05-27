@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
@@ -19,6 +20,7 @@ namespace CloudConvert.API.Models.TaskOperations
     /// <summary>
     /// If not set, the extension of the input file is used as input format
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     [JsonProperty("input_format", NullValueHandling = NullValueHandling.Ignore)]
     public OptimizeInputFormat? Input_Format { get; set; }
 
@@ -37,6 +39,7 @@ namespace CloudConvert.API.Models.TaskOperations
     [JsonProperty("quality", NullValueHandling = NullValueHandling.Ignore)]
     public int? Quality { get; set; }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     [JsonProperty("profile", NullValueHandling = NullValueHandling.Ignore)]
     public OptimizeProfile? Profile { get; set; }
 

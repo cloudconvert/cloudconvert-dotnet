@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using CloudConvert.API.Models.Enums;
 
@@ -23,6 +24,7 @@ namespace CloudConvert.API.Models.TaskOperations
     public string Input_Format { get; set; }
 
     [JsonProperty("output_format")]
+    [JsonConverter(typeof(StringEnumConverter))]
     public ThumbnailOutputFormat Output_Format { get; set; }
 
     [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
@@ -47,6 +49,7 @@ namespace CloudConvert.API.Models.TaskOperations
     /// Sets the mode of sizing the thumbnail. "Max" resizes the thumbnail to fit within the width and height, but will not increase the size of the image if it is smaller than width or height. "Crop" resizes the thumbnail to fill the width and height dimensions and crops any excess image data. "Scale" enforces the thumbnail width and height by scaling. Defaults to max. 
     /// </summary>
     [JsonProperty("fit", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonConverter(typeof(StringEnumConverter))]
     public ThumbnailFit? Fit { get; set; }
 
     /// <summary>
