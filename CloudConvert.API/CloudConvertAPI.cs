@@ -32,7 +32,7 @@ namespace CloudConvert.API
     Task DeleteTaskAsync(string id);
     #endregion
 
-    Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters = null);
+    Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters);
     bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret);
   }
 
@@ -204,7 +204,7 @@ namespace CloudConvert.API
 
     #endregion
 
-    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters = null) => _restHelper.RequestAsync(GetMultipartFormDataRequest($"{url}", HttpMethod.Post, file, fileName, GetParameters(parameters)));
+    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest($"{url}", HttpMethod.Post, file, fileName, GetParameters(parameters)));
 
     public bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret)
     {
