@@ -120,7 +120,38 @@ var isValid = _cloudConvertAPI.ValidateWebhookSignatures(payloadString, signatur
 // returns true or false
 ```
 
-## Using Sandbox
+## Signed URLs
+
+Signed URLs allow converting files on demand only using URL query parameters. The .NET SDK allows to generate such URLs. Therefore, you need to obtain a signed URL base and a signing secret on the [CloudConvert Dashboard](https://cloudconvert.com/dashboard/api/v2/signed-urls).
+
+```c#
+var signedUrlBase = 'https://s.cloudconvert.com/...'; // You can find it in your signed URL settings.
+var signingSecret = '...'; // You can find it in your signed URL settings.
+var cacheKey = 'cache-key'; // Allows caching of the result file for 24h
+
+var job = new JobCreateRequest
+      {
+        Tasks = new
+        {
+          import_example_1 = new ImportUploadCreateRequest(),
+          convert = new ConvertCreateRequest
+          {
+            Input = "import_example_1",
+            Input_Format = "pdf",
+            Output_Format = "docx"
+          },
+          export = new ExportUrlCreateRequest
+          {
+            Input = "convert"
+          }
+        },
+};
+
+string signedUrl = _cloudConvertAPI.CreateSignedUrl(baseUrl, signingSecret, job, cacheKey)
+// returns the signed URL
+```
+
+## Using the Sandbox
 
 You can use the Sandbox to avoid consuming your quota while testing your application. The .net SDK allows you to do that.
 
