@@ -39,14 +39,20 @@ namespace CloudConvert.API
   public class CloudConvertAPI : ICloudConvertAPI
   {
     readonly string _apiUrl;
+    readonly string _apiSyncUrl;
+
     readonly RestHelper _restHelper;
     readonly string _api_key = "Bearer ";
     const string sandboxUrlApi = "https://api.sandbox.cloudconvert.com/v2";
     const string publicUrlApi = "https://api.cloudconvert.com/v2";
 
+    const string sandboxUrlSyncApi = "https://sync.api.sandbox.cloudconvert.com/v2";
+    const string publicUrlSyncApi = "https://sync.api.cloudconvert.com/v2";
+
     public CloudConvertAPI(string api_key, bool isSandbox = false)
     {
       _apiUrl = isSandbox ? sandboxUrlApi : publicUrlApi;
+      _apiSyncUrl = isSandbox ? sandboxUrlSyncApi : publicUrlSyncApi;
       _api_key += api_key;
       _restHelper = new RestHelper();
     }
@@ -134,7 +140,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The finished or failed job, including tasks. You can find details about the job model response in the documentation about the show job endpoint.
     /// </returns>
-    public Task<Response<JobResponse>> WaitJobAsync(string id) => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiUrl}/jobs/{id}/wait", HttpMethod.Get));
+    public Task<Response<JobResponse>> WaitJobAsync(string id) => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiSyncUrl}/jobs/{id}", HttpMethod.Get));
 
     /// <summary>
     /// Delete a job, including all tasks and data. Requires the task.write scope.
@@ -190,7 +196,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The finished or failed task. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<Response<TaskResponse>> WaitTaskAsync(string id) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/tasks/{id}/wait", HttpMethod.Get));
+    public Task<Response<TaskResponse>> WaitTaskAsync(string id) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiSyncUrl}/tasks/{id}", HttpMethod.Get));
 
     /// <summary>
     /// Delete a task, including all data. Requires the task.write scope.
