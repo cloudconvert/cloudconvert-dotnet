@@ -34,6 +34,7 @@ namespace CloudConvert.API
 
     Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters);
     bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret);
+    string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null);
   }
 
   public class CloudConvertAPI : ICloudConvertAPI
@@ -45,9 +46,10 @@ namespace CloudConvert.API
     readonly string _api_key = "Bearer ";
     const string sandboxUrlApi = "https://api.sandbox.cloudconvert.com/v2";
     const string publicUrlApi = "https://api.cloudconvert.com/v2";
-
     const string sandboxUrlSyncApi = "https://sync.api.sandbox.cloudconvert.com/v2";
     const string publicUrlSyncApi = "https://sync.api.cloudconvert.com/v2";
+    static readonly char[] base64Padding = { '=' };
+
 
     public CloudConvertAPI(string api_key, bool isSandbox = false)
     {
@@ -211,6 +213,25 @@ namespace CloudConvert.API
     #endregion
 
     public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest($"{url}", HttpMethod.Post, file, fileName, GetParameters(parameters)));
+
+    public string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null)
+    {
+      string url = baseUrl;
+      string jobJson = JsonConvert.SerializeObject(job);
+      string base64Job = System.Convert.ToBase64String(Encoding.ASCII.GetBytes(jobJson)).TrimEnd(base64Padding).Replace('+', '-').Replace('/', '_');
+      
+      url += "?job="  + base64Job;
+
+      if(cacheKey != null) {
+        url += "&cache_key=" + cacheKey;
+      }
+
+      string signature = HashHMAC(signingSecret, url);
+
+      url += "&s=" + signature;
+
+      return url;
+    }
 
     public bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret)
     {
