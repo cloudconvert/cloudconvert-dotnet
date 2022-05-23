@@ -52,7 +52,7 @@ namespace CloudConvert.API.Models.ImportOperations
     [JsonProperty("session_token", NullValueHandling = NullValueHandling.Ignore)]
     public string Session_Token { get; set; }
 
-    [JsonProperty("filename")]
+    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
     public string Filename { get; set; }
   }
 }
