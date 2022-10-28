@@ -86,5 +86,13 @@ namespace CloudConvert.API.Models.TaskOperations
     /// </summary>
     [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
     public int? Timeout { get; set; }
+
+    /// <summary>
+    /// Conversion and engine specific options. Depends on input_format and output_format.
+    /// Select input and output format above to show additional conversion options.
+    /// </summary>
+    [JsonExtensionData]
+    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<string, object> Options { get; set; }
   }
 }
