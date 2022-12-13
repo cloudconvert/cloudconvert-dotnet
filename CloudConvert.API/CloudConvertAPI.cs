@@ -49,14 +49,13 @@ namespace CloudConvert.API
     const string sandboxUrlSyncApi = "https://sync.api.sandbox.cloudconvert.com/v2";
     const string publicUrlSyncApi = "https://sync.api.cloudconvert.com/v2";
     static readonly char[] base64Padding = { '=' };
-
-
-    public CloudConvertAPI(string api_key, bool isSandbox = false)
+    
+    public CloudConvertAPI(string api_key, bool isSandbox = false, TimeSpan? httpClientTimeout = null)
     {
       _apiUrl = isSandbox ? sandboxUrlApi : publicUrlApi;
       _apiSyncUrl = isSandbox ? sandboxUrlSyncApi : publicUrlSyncApi;
       _api_key += api_key;
-      _restHelper = new RestHelper();
+      _restHelper = new RestHelper(httpClientTimeout);
     }
 
     public CloudConvertAPI(string url, string api_key)

@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,9 +9,14 @@ namespace CloudConvert.API
   {
     private readonly HttpClient _httpClient;
 
-    internal RestHelper()
+    internal RestHelper(TimeSpan? httpClientTimeout = null)
     {
       _httpClient = new HttpClient(new WebApiHandler(true));
+      
+      if (httpClientTimeout != null)
+      {
+        _httpClient.Timeout = httpClientTimeout.Value;
+      }
     }
 
     public async Task<T> RequestAsync<T>(HttpRequestMessage request)
