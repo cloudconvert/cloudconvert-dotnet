@@ -11,6 +11,7 @@ namespace CloudConvert.API
     internal RestHelper()
     {
       _httpClient = new HttpClient(new WebApiHandler(true));
+      _httpClient.Timeout = System.TimeSpan.FromMilliseconds(System.Threading.Timeout.Infinite);
     }
 
     public async Task<T> RequestAsync<T>(HttpRequestMessage request)
