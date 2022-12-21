@@ -95,7 +95,9 @@ namespace CloudConvert.API
         }
       }
 
-      content.Add(new ByteArrayContent(file), "file", fileName);
+      var fileContent = new ByteArrayContent(file);
+      fileContent.Headers.Add("Content-Disposition", $"form-data; name=\"file\"; filename=\"{ new string(Encoding.UTF8.GetBytes(fileName).Select(b => (char)b).ToArray())}\"");
+      content.Add(fileContent);
 
       request.Content = content;
 
