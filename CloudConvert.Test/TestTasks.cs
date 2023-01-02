@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using CloudConvert.API;
 using CloudConvert.API.Models;
@@ -7,7 +10,9 @@ using CloudConvert.API.Models.Enums;
 using CloudConvert.API.Models.ImportOperations;
 using CloudConvert.API.Models.TaskModels;
 using CloudConvert.API.Models.TaskOperations;
+using CloudConvert.Test.Extensions;
 using Moq;
+using Moq.Protected;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -15,8 +20,6 @@ namespace CloudConvert.Test
 {
   public class TestTasks
   {
-    readonly Mock<ICloudConvertAPI> _cloudConvertAPI = new Mock<ICloudConvertAPI>();
-
     [Test]
     public async Task GetAllTasks()
     {
@@ -26,10 +29,12 @@ namespace CloudConvert.Test
 
         var path = @"Responses/tasks.json";
         string json = File.ReadAllText(path);
-        _cloudConvertAPI.Setup(cc => cc.GetAllTasksAsync(filter))
+
+        var cloudConvertApi = new Mock<ICloudConvertAPI>();
+        cloudConvertApi.Setup(cc => cc.GetAllTasksAsync(filter))
                         .ReturnsAsync(JsonConvert.DeserializeObject<ListResponse<TaskResponse>>(json));
 
-        var tasks = await _cloudConvertAPI.Object.GetAllTasksAsync(filter);
+        var tasks = await cloudConvertApi.Object.GetAllTasksAsync(filter);
 
         Assert.IsNotNull(tasks);
         Assert.IsTrue(tasks.Data.Count >= 0);
@@ -64,10 +69,12 @@ namespace CloudConvert.Test
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task_created.json";
       string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.CreateTaskAsync(ConvertCreateRequest.Operation, req))
+
+      var cloudConvertApi = new Mock<ICloudConvertAPI>();
+      cloudConvertApi.Setup(cc => cc.CreateTaskAsync(ConvertCreateRequest.Operation, req))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
 
-      var task = await _cloudConvertAPI.Object.CreateTaskAsync(ConvertCreateRequest.Operation, req);
+      var task = await cloudConvertApi.Object.CreateTaskAsync(ConvertCreateRequest.Operation, req);
 
       Assert.IsNotNull(task);
       Assert.IsTrue(task.Data.Status == API.Models.Enums.TaskStatus.waiting);
@@ -80,6 +87,8 @@ namespace CloudConvert.Test
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task.json";
       string json = File.ReadAllText(path);
+
+      var _cloudConvertAPI = new Mock<ICloudConvertAPI>();
       _cloudConvertAPI.Setup(cc => cc.GetTaskAsync(id, null))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
 
@@ -96,10 +105,12 @@ namespace CloudConvert.Test
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task.json";
       string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.WaitTaskAsync(id))
+
+      var cloudConvertApi = new Mock<ICloudConvertAPI>();
+      cloudConvertApi.Setup(cc => cc.WaitTaskAsync(id))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
 
-      var task = await _cloudConvertAPI.Object.WaitTaskAsync(id);
+      var task = await cloudConvertApi.Object.WaitTaskAsync(id);
 
       Assert.IsNotNull(task);
       Assert.IsTrue(task.Data.Operation == "convert");
@@ -111,22 +122,24 @@ namespace CloudConvert.Test
     {
       string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
 
-      _cloudConvertAPI.Setup(cc => cc.DeleteTaskAsync(id));
+      var cloudConvertApi = new Mock<ICloudConvertAPI>();
+      cloudConvertApi.Setup(cc => cc.DeleteTaskAsync(id));
 
-      await _cloudConvertAPI.Object.DeleteTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
+      await cloudConvertApi.Object.DeleteTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
     }
 
     [Test]
     public async Task Upload()
     {
+      var cloudConvertApi = new Mock<ICloudConvertAPI>();
       var req = new ImportUploadCreateRequest();
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/upload_task_created.json";
       string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.CreateTaskAsync(ImportUploadCreateRequest.Operation, req))
+      cloudConvertApi.Setup(cc => cc.CreateTaskAsync(ImportUploadCreateRequest.Operation, req))
                       .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
 
-      var task = await _cloudConvertAPI.Object.CreateTaskAsync(ImportUploadCreateRequest.Operation, req);
+      var task = await cloudConvertApi.Object.CreateTaskAsync(ImportUploadCreateRequest.Operation, req);
 
       Assert.IsNotNull(task);
 
@@ -134,9 +147,35 @@ namespace CloudConvert.Test
       byte[] file = File.ReadAllBytes(pathFile);
       string fileName = "input.pdf";
 
-      _cloudConvertAPI.Setup(cc => cc.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters));
+      cloudConvertApi.Setup(cc => cc.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters));
 
-      await _cloudConvertAPI.Object.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters);
+      await cloudConvertApi.Object.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters);
+    }
+
+    [Test]
+    public async Task UploadStream()
+    {
+      var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+      httpMessageHandlerMock.MockResponse("/import/upload", "upload_task_created.json");
+      httpMessageHandlerMock.MockResponse("/tasks", "tasks.json");
+
+      var httpClient = new HttpClient(httpMessageHandlerMock.Object);
+      var restHelper = new RestHelper(httpClient);
+      var req = new ImportUploadCreateRequest();
+      var cloudConvertApi = new CloudConvertAPI(restHelper, "API_KEY");
+
+      var task = await cloudConvertApi.CreateTaskAsync(ImportUploadCreateRequest.Operation, req);
+
+      Assert.IsNotNull(task);
+      httpMessageHandlerMock.VerifyRequest("/import/upload", Times.Once());
+
+      var streamMock = new Mock<Stream>();
+      var fileName = "input.pdf";
+
+      await cloudConvertApi.UploadAsync(task.Data.Result.Form.Url.ToString(), streamMock.Object, fileName, task.Data.Result.Form.Parameters);
+
+      httpMessageHandlerMock.VerifyRequest("/tasks", Times.Once());
+      streamMock.Protected().Verify("Dispose", Times.Never(), args: true);
     }
   }
 }

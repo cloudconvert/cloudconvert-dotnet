@@ -66,27 +66,49 @@ using (var client = new WebClient()) client.DownloadFile(fileExport.Url, fileExp
 ```
 
 ## Uploading Files
+Uploads to CloudConvert are done via `import/upload` tasks (see the [docs](https://cloudconvert.com/api/v2/import#import-upload-tasks)). This SDK offers a convenient upload method.
 
-Uploads to CloudConvert are done via `import/upload` tasks (see the [docs](https://cloudconvert.com/api/v2/import#import-upload-tasks)). This SDK offers a convenient upload method:
+First create the upload job with `CreateJobAsync`:
 
 ```c#
 var job = await _cloudConvertAPI.CreateJobAsync(new JobCreateRequest
       {
-        Tasks = new
-        {
-          upload_my_file = new ImportUploadCreateRequest()
-          // ...
-        }
+            Tasks = new
+            {
+            upload_my_file = new ImportUploadCreateRequest()
+            // ...
+            }
       });
 
 var uploadTask = job.Data.Tasks.FirstOrDefault(t => t.Name == "upload_my_file");
-
-var path = @"TestFiles/test.pdf";
-byte[] file = await File.ReadAllBytesAsync(path);
-string fileName = "test.pdf";
-
-await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), file, fileName, uploadTask.Result.Form.Parameters);
 ```
+
+Then upload the file the file with `UploadAsync`. This can be done two ways:
+
+1. **Upload using a Stream**  
+   The file will be opened and send in chunks to CloudConvert.
+
+   > **Note**
+   > The stream will not be disposed. Make sure to dispose the stream with `stream.Dispose()` or by using the [using-statement](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/using-statement) as shown in the following example.
+   ```cs
+   string path = @"TestFiles/test.pdf";
+   string fileName = "test.pdf";
+   
+   using (System.IO.Stream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+   {
+         await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), stream, fileName, uploadTask.Result.Form.Parameters);
+   }
+   ```
+   
+2. **Upload using a byte-array (`byte[]`)**  
+   The entire file will be load into memory and send to CloudConvert. 
+   ```cs
+   string path = @"TestFiles/test.pdf";
+   byte[] file = await File.ReadAllBytesAsync(path);
+   string fileName = "test.pdf";
+   
+   await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), file, fileName, uploadTask.Result.Form.Parameters);
+   ```
 
 ## Conversion Specific Options
 

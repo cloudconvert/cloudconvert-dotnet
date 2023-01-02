@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -33,6 +34,7 @@ namespace CloudConvert.API
     #endregion
 
     Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters);
+    Task<string> UploadAsync(string url, Stream file, string fileName, object parameters);
     bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret);
     string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null);
   }
@@ -50,13 +52,17 @@ namespace CloudConvert.API
     const string publicUrlSyncApi = "https://sync.api.cloudconvert.com/v2";
     static readonly char[] base64Padding = { '=' };
 
-
-    public CloudConvertAPI(string api_key, bool isSandbox = false)
+    internal CloudConvertAPI(RestHelper restHelper, string api_key, bool isSandbox = false)
     {
       _apiUrl = isSandbox ? sandboxUrlApi : publicUrlApi;
       _apiSyncUrl = isSandbox ? sandboxUrlSyncApi : publicUrlSyncApi;
       _api_key += api_key;
-      _restHelper = new RestHelper();
+      _restHelper = restHelper;
+    }
+
+    public CloudConvertAPI(string api_key, bool isSandbox = false)
+      : this(new RestHelper(), api_key, isSandbox)
+    {
     }
 
     public CloudConvertAPI(string url, string api_key)
@@ -82,7 +88,7 @@ namespace CloudConvert.API
       return request;
     }
 
-    private HttpRequestMessage GetMultipartFormDataRequest(string endpoint, HttpMethod method, byte[] file, string fileName, Dictionary<string, string> parameters = null)
+    private HttpRequestMessage GetMultipartFormDataRequest(string endpoint, HttpMethod method, HttpContent fileContent, string fileName, Dictionary<string, string> parameters = null)
     {
       var content = new MultipartFormDataContent();
       var request = new HttpRequestMessage { RequestUri = new Uri(endpoint), Method = method, };
@@ -95,7 +101,6 @@ namespace CloudConvert.API
         }
       }
 
-      var fileContent = new ByteArrayContent(file);
       fileContent.Headers.Add("Content-Disposition", $"form-data; name=\"file\"; filename=\"{ new string(Encoding.UTF8.GetBytes(fileName).Select(b => (char)b).ToArray())}\"");
       content.Add(fileContent);
 
@@ -214,7 +219,9 @@ namespace CloudConvert.API
 
     #endregion
 
-    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest($"{url}", HttpMethod.Post, file, fileName, GetParameters(parameters)));
+    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, new ByteArrayContent(file), fileName, GetParameters(parameters)));
+
+    public Task<string> UploadAsync(string url, Stream stream, string fileName, object parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, new StreamContent(stream), fileName, GetParameters(parameters)));
 
     public string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null)
     {

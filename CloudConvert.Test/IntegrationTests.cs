@@ -27,8 +27,9 @@ namespace CloudConvert.Test
       _cloudConvertAPI = new CloudConvertAPI(apiKey, true);
     }
 
-    [Test]
-    public async Task CreateJob()
+    [TestCase("stream")]
+    [TestCase("bytes")]
+    public async Task CreateJob(string streamingMethod)
     {
       var job = await _cloudConvertAPI.CreateJobAsync(new JobCreateRequest
       {
@@ -48,10 +49,25 @@ namespace CloudConvert.Test
       Assert.IsNotNull(uploadTask);
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"TestFiles/input.pdf";
-      byte[] file = File.ReadAllBytes(path);
       string fileName = "input.pdf";
 
-      var result = await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), file, fileName, uploadTask.Result.Form.Parameters);
+      string result;
+
+      switch (streamingMethod)
+      {
+        case "bytes":
+        {
+          byte[] file = File.ReadAllBytes(path);
+          result = await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), file, fileName, uploadTask.Result.Form.Parameters);
+          break;
+        }
+        case "stream":
+        {
+          using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            result = await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), stream, fileName, uploadTask.Result.Form.Parameters);
+          break;
+        }
+      }
 
       job = await _cloudConvertAPI.WaitJobAsync(job.Data.Id);
 
@@ -69,8 +85,9 @@ namespace CloudConvert.Test
       using (var client = new WebClient()) client.DownloadFile(fileExport.Url, fileExport.Filename);
     }
 
-    [Test]
-    public async Task CreateTask()
+    [TestCase("stream")]
+    [TestCase("bytes")]
+    public async Task CreateTask(string streamingMethod)
     {
       // import
 
@@ -79,10 +96,23 @@ namespace CloudConvert.Test
       var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportUploadCreateRequest.Operation, reqImport);
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"TestFiles/input.pdf";
-      byte[] file = File.ReadAllBytes(path);
       string fileName = "input.pdf";
 
-      await _cloudConvertAPI.UploadAsync(importTask.Data.Result.Form.Url.ToString(), file, fileName, importTask.Data.Result.Form.Parameters);
+      switch (streamingMethod)
+      {
+        case "bytes":
+        {
+          byte[] file = File.ReadAllBytes(path);
+          await _cloudConvertAPI.UploadAsync(importTask.Data.Result.Form.Url.ToString(), file, fileName, importTask.Data.Result.Form.Parameters);
+          break;
+        }
+        case "stream":
+        {
+          using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            await _cloudConvertAPI.UploadAsync(importTask.Data.Result.Form.Url.ToString(), stream, fileName, importTask.Data.Result.Form.Parameters);
+          break;
+        }
+      }
 
       importTask = await _cloudConvertAPI.WaitTaskAsync(importTask.Data.Id);
 

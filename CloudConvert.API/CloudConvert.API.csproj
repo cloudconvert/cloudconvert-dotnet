@@ -11,7 +11,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
-    
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CloudConvert.Test" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
