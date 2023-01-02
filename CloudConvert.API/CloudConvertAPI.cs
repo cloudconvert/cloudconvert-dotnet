@@ -101,7 +101,8 @@ namespace CloudConvert.API
         }
       }
 
-      content.Add(fileContent, "file", fileName);
+      content.Headers.Add("Content-Disposition", $"form-data; name=\"file\"; filename=\"{ new string(Encoding.UTF8.GetBytes(fileName).Select(b => (char)b).ToArray())}\"");
+      content.Add(fileContent);
 
       request.Content = content;
 
@@ -218,24 +219,9 @@ namespace CloudConvert.API
 
     #endregion
 
-    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters)
-    {
-      var content = new ByteArrayContent(file);
-      PrepareContent(content, fileName);
-      return _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, content, fileName, GetParameters(parameters)));
-    }
+    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, new ByteArrayContent(file), fileName, GetParameters(parameters)));
 
-    public Task<string> UploadAsync(string url, Stream stream, string fileName, object parameters)
-    {
-      var content = new StreamContent(stream);
-      PrepareContent(content, fileName);
-      return _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, content, fileName, GetParameters(parameters)));
-    }
-
-    private static void PrepareContent(HttpContent content, string fileName)
-    {
-      content.Headers.Add("Content-Disposition", $"form-data; name=\"file\"; filename=\"{ new string(Encoding.UTF8.GetBytes(fileName).Select(b => (char)b).ToArray())}\"");
-    }
+    public Task<string> UploadAsync(string url, Stream stream, string fileName, object parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, new StreamContent(stream), fileName, GetParameters(parameters)));
 
     public string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null)
     {
