@@ -94,7 +94,7 @@ Then upload the file the file with `UploadAsync`. This can be done two ways:
    string path = @"TestFiles/test.pdf";
    string fileName = "test.pdf";
    
-   using (System.IO.Stream stream = await File.ReadAllBytesAsync(path))
+   using (System.IO.Stream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
    {
          await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), stream, fileName, uploadTask.Result.Form.Parameters);
    }
