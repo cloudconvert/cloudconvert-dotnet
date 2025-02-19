@@ -1,6 +1,5 @@
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using CloudConvert.API;
@@ -8,6 +7,7 @@ using CloudConvert.API.Models.ExportOperations;
 using CloudConvert.API.Models.ImportOperations;
 using CloudConvert.API.Models.JobModels;
 using System;
+using System.Net.Http;
 
 namespace CloudConvert.Test
 {
@@ -78,7 +78,9 @@ namespace CloudConvert.Test
       Assert.IsNotNull(fileExport);
       Assert.AreEqual(fileExport.Filename, "input.pdf");
 
-      using (var client = new WebClient()) client.DownloadFile(fileExport.Url, fileExport.Filename);
+      using var httpClient = new HttpClient();
+      var fileBytes = await httpClient.GetByteArrayAsync(fileExport.Url);
+      await File.WriteAllBytesAsync(fileExport.Filename, fileBytes);
     }
 
     [TestCase("stream")]
@@ -136,8 +138,9 @@ namespace CloudConvert.Test
       Assert.IsNotNull(fileExport);
       Assert.AreEqual(fileExport.Filename, "input.pdf");
 
-      using (var client = new WebClient()) client.DownloadFile(fileExport.Url, fileExport.Filename);
-
+      using var httpClient = new HttpClient();
+      var fileBytes = await httpClient.GetByteArrayAsync(fileExport.Url);
+      await File.WriteAllBytesAsync(fileExport.Filename, fileBytes);
     }
   }
 }
