@@ -1,6 +1,6 @@
 namespace CloudConvert.API.Models.Enums
 {
-    public enum ThumbnailFit 
+  public enum ThumbnailFit 
   { 
     max, 
     crop,
