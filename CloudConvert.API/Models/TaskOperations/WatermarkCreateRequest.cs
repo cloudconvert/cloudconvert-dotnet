@@ -1,7 +1,5 @@
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
-using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {

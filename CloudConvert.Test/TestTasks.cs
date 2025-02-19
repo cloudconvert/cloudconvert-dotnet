@@ -1,12 +1,9 @@
 using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using CloudConvert.API;
 using CloudConvert.API.Models;
-using CloudConvert.API.Models.Enums;
 using CloudConvert.API.Models.ImportOperations;
 using CloudConvert.API.Models.TaskModels;
 using CloudConvert.API.Models.TaskOperations;
