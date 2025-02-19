@@ -4,13 +4,9 @@ using System.Net;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using CloudConvert.API;
-using CloudConvert.API.Models.Enums;
 using CloudConvert.API.Models.ExportOperations;
 using CloudConvert.API.Models.ImportOperations;
-using CloudConvert.API.Models.TaskOperations;
 using CloudConvert.API.Models.JobModels;
-
-using System.Collections.Generic;
 using System;
 
 namespace CloudConvert.Test
