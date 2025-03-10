@@ -1,41 +1,41 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
   public class CommandCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "command";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "command";
 
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
     /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    [JsonPropertyName("input")]
+    public object Input { get; set; }
 
-    [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine")]
     public string Engine { get; set; }
 
-    [JsonProperty("engine_version", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine_version")]
     public string Engine_Version { get; set; }
 
     /// <summary>
     /// Capture the console output of the command and return it in the results object.
     /// </summary>
-    [JsonProperty("capture_output", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("capture_output")]
     public bool? Capture_Output { get; set; }
 
-    [JsonProperty("command", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("command")]
     public string Command { get; set; }
 
-    [JsonProperty("arguments", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("arguments")]
     public string Arguments { get; set; }
 
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.
     /// </summary>
-    [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("timeout")]
     public int? Timeout { get; set; }
   }
 }

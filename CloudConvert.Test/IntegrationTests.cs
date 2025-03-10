@@ -91,7 +91,7 @@ namespace CloudConvert.Test
 
       var reqImport = new ImportUploadCreateRequest();
 
-      var importTask = await _cloudConvertAPI.CreateTaskAsync(ImportUploadCreateRequest.Operation, reqImport);
+      var importTask = await _cloudConvertAPI.CreateTaskAsync(reqImport.Operation, reqImport);
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"TestFiles/input.pdf";
       string fileName = "input.pdf";
@@ -124,7 +124,7 @@ namespace CloudConvert.Test
         Input = importTask.Data.Id
       };
 
-      var exportTask = await _cloudConvertAPI.CreateTaskAsync(ExportUrlCreateRequest.Operation, reqExport);
+      var exportTask = await _cloudConvertAPI.CreateTaskAsync(reqExport.Operation, reqExport);
 
       Assert.IsNotNull(exportTask);
 

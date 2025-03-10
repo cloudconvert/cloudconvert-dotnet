@@ -1,31 +1,31 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.ImportOperations
 {
   public class ImportAzureBlobCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "import/azure/blob";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "import/azure/blob";
 
-    [JsonProperty("storage_account")]
+    [JsonPropertyName("storage_account")]
     public string Storage_Account { get; set; }
 
-    [JsonProperty("storage_access_key", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("storage_access_key")]
     public string Storage_Access_Key { get; set; }
 
-    [JsonProperty("sas_token", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("sas_token")]
     public string Sas_Token { get; set; }
 
-    [JsonProperty("container")]
+    [JsonPropertyName("container")]
     public string Container { get; set; }
 
-    [JsonProperty("blob", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("blob")]
     public string Blob { get; set; }
 
-    [JsonProperty("blob_prefix", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("blob_prefix")]
     public string Blob_Prefix { get; set; }
 
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
   }
 }

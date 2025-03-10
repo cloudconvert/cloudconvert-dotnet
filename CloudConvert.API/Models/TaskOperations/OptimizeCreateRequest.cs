@@ -1,56 +1,56 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
   public class OptimizeCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "optimize";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "optimize";
 
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
     /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    [JsonPropertyName("input")]
+    public object Input { get; set; }
 
     /// <summary>
     /// If not set, the extension of the input file is used as input format
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    [JsonProperty("input_format", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("input_format")]
     public OptimizeInputFormat? Input_Format { get; set; }
 
-    [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine")]
     public string Engine { get; set; }
 
-    [JsonProperty("engine_version", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine_version")]
     public string Engine_Version { get; set; }
 
     /// <summary>
     /// Choose a filename (including extension) for the output file.
     /// </summary>
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
 
-    [JsonProperty("quality", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("quality")]
     public int? Quality { get; set; }
 
-    [JsonConverter(typeof(StringEnumConverter))]
-    [JsonProperty("profile", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("profile")]
     public OptimizeProfile? Profile { get; set; }
 
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.
     /// </summary>
-    [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("timeout")]
     public int? Timeout { get; set; }
 
+    /// <summary>
+    /// Conversion and engine specific options. Depends on input_format and output_format.
+    /// </summary>
     [JsonExtensionData]
-    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("options")]
     public Dictionary<string, object> Options { get; set; }
   }
 }

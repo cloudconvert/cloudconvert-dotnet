@@ -1,24 +1,23 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.ImportOperations
 {
   public class ImportUrlCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "import/url";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "import/url";
 
-    [JsonProperty("url")]
+    [JsonPropertyName("url")]
     public string Url { get; set; }
 
     /// <summary>
     /// The filename of the input file, including extension. If none provided we will try to detect the filename from the URL.
     /// </summary>
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
 
-    [JsonProperty("headers", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("headers")]
     public Dictionary<string, string> Headers { get; set; }
-
   }
 }

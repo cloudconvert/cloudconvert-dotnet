@@ -1,34 +1,34 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.ImportOperations
 {
   public class ImportSFTPCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "import/sftp";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "import/sftp";
 
-    [JsonProperty("host")]
+    [JsonPropertyName("host")]
     public string Host { get; set; }
 
-    [JsonProperty("port", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("port")]
     public string Port { get; set; }
 
-    [JsonProperty("username")]
+    [JsonPropertyName("username")]
     public string Username { get; set; }
 
-    [JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("password")]
     public string Password { get; set; }
 
-    [JsonProperty("private_key", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("private_key")]
     public string Private_Key { get; set; }
 
-    [JsonProperty("file", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("file")]
     public string File { get; set; }
 
-    [JsonProperty("path", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("path")]
     public string Path { get; set; }
 
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
   }
 }

@@ -1,23 +1,23 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models
 {
   public partial class ListResponseMeta
   {
-    [JsonProperty("current_page")]
+    [JsonPropertyName("current_page")]
     public int? Current_Page { get; set; }
 
-    [JsonProperty("from")]
+    [JsonPropertyName("from")]
     public int? From { get; set; }
 
-    [JsonProperty("path")]
+    [JsonPropertyName("path")]
     public Uri Path { get; set; }
 
-    [JsonProperty("per_page")]
+    [JsonPropertyName("per_page")]
     public int? Per_Page { get; set; }
 
-    [JsonProperty("to")]
+    [JsonPropertyName("to")]
     public int? To { get; set; }
   }
 }

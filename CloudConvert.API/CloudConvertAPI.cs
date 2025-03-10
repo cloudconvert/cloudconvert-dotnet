@@ -6,8 +6,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using CloudConvert.API.Models.JobModels;
 using CloudConvert.API.Models.TaskModels;
 using CloudConvert.API.Models;
@@ -74,16 +73,17 @@ namespace CloudConvert.API
     private HttpRequestMessage GetRequest(string endpoint, HttpMethod method, object model = null)
     {
       var request = new HttpRequestMessage { RequestUri = new Uri(endpoint), Method = method };
-      
+
       if (model != null)
       {
-        var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonSerializer.Serialize(model, DefaultJsonSerializerOptions.SerializerOptions), Encoding.UTF8, "application/json");
         request.Content = content;
       }
-      
+
+
       request.Headers.Add("Authorization", _api_key);
-      request.Headers.Add("User-Agent", "cloudconvert-dotnet/v"  +  System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + " (https://github.com/cloudconvert/cloudconvert-dotnet)");
-     
+      request.Headers.Add("User-Agent", "cloudconvert-dotnet/v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + " (https://github.com/cloudconvert/cloudconvert-dotnet)");
+
       return request;
     }
 
@@ -100,7 +100,7 @@ namespace CloudConvert.API
         }
       }
 
-      fileContent.Headers.Add("Content-Disposition", $"form-data; name=\"file\"; filename=\"{ new string(Encoding.UTF8.GetBytes(fileName).Select(b => (char)b).ToArray())}\"");
+      fileContent.Headers.Add("Content-Disposition", $"form-data; name=\"file\"; filename=\"{new string(Encoding.UTF8.GetBytes(fileName).Select(b => (char)b).ToArray())}\"");
       content.Add(fileContent);
 
       request.Content = content;
@@ -225,10 +225,10 @@ namespace CloudConvert.API
     public string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null)
     {
       string url = baseUrl;
-      string jobJson = JsonConvert.SerializeObject(job);
+      string jobJson = JsonSerializer.Serialize(job, DefaultJsonSerializerOptions.SerializerOptions);
       string base64Job = System.Convert.ToBase64String(Encoding.ASCII.GetBytes(jobJson)).TrimEnd(base64Padding).Replace('+', '-').Replace('/', '_');
-      
-      url += "?job="  + base64Job;
+
+      url += "?job=" + base64Job;
 
       if(cacheKey != null) {
         url += "&cache_key=" + cacheKey;
@@ -254,14 +254,47 @@ namespace CloudConvert.API
       return BitConverter.ToString(hash).Replace("-", "").ToLower();
     }
 
+    // FIXME
     private Dictionary<string, string> GetParameters(object parameters)
     {
-      var attributes = ((JToken)parameters).ToList();
-      Dictionary<string, string> dictionaryParameters = new Dictionary<string, string>();
-      foreach (JToken attribute in attributes)
+      var dictionaryParameters = new Dictionary<string, string>();
+
+      if (parameters != null)
       {
-        JProperty jProperty = attribute.ToObject<JProperty>();
-        dictionaryParameters.Add(jProperty.Name, jProperty.Value.ToString());
+        // Serialize the input object to JSON.
+        string json = JsonSerializer.Serialize(parameters, DefaultJsonSerializerOptions.SerializerOptions);
+
+        // Parse the JSON using JsonDocument.
+        using (var doc = JsonDocument.Parse(json))
+        {
+          var root = doc.RootElement;
+          if (root.ValueKind == JsonValueKind.Object)
+          {
+            foreach (JsonProperty prop in root.EnumerateObject())
+            {
+              string valueStr;
+              // Replicate JToken.ToString() behavior:
+              // For string values, return the unquoted string.
+              // For objects and arrays, serialize them to JSON.
+              // Otherwise, use the default ToString().
+              switch (prop.Value.ValueKind)
+              {
+                case JsonValueKind.String:
+                  valueStr = prop.Value.GetString();
+                  break;
+                case JsonValueKind.Object:
+                case JsonValueKind.Array:
+                  valueStr = JsonSerializer.Serialize(prop.Value, DefaultJsonSerializerOptions.SerializerOptions);
+                  break;
+                default:
+                  valueStr = prop.Value.ToString();
+                  break;
+              }
+
+              dictionaryParameters[prop.Name] = valueStr;
+            }
+          }
+        }
       }
 
       return dictionaryParameters;

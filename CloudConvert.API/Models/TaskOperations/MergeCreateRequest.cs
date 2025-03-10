@@ -1,41 +1,39 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
   public class MergeCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "merge";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "merge";
 
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
     /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    [JsonPropertyName("input")]
+    public object Input { get; set; }
 
-    [JsonProperty("output_format")]
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonPropertyName("output_format")]
     public MergeOutputFormat Output_Format { get; set; }
 
-    [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine")]
     public string Engine { get; set; }
 
-    [JsonProperty("engine_version", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine_version")]
     public string Engine_Version { get; set; }
 
     /// <summary>
     /// Choose a filename (including extension) for the output file.
     /// </summary>
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
 
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.
     /// </summary>
-    [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("timeout")]
     public int? Timeout { get; set; }
   }
 }

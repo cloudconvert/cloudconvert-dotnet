@@ -1,73 +1,70 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
   public class ThumbnailCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "thumbnail";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "thumbnail";
 
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
     /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    [JsonPropertyName("input")]
+    public object Input { get; set; }
 
     /// <summary>
     /// If not set, the extension of the input file is used as input format
     /// </summary>
-    [JsonProperty("input_format", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("input_format")]
     public string Input_Format { get; set; }
 
-    [JsonProperty("output_format")]
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonPropertyName("output_format")]
     public ThumbnailOutputFormat Output_Format { get; set; }
 
-    [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine")]
     public string Engine { get; set; }
 
-    [JsonProperty("engine_version", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine_version")]
     public string Engine_Version { get; set; }
 
     /// <summary>
     /// Choose a filename (including extension) for the output file.
     /// </summary>
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
 
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.
     /// </summary>
-    [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("timeout")]
     public int? Timeout { get; set; }
 
     /// <summary>
     /// Sets the mode of sizing the thumbnail. "Max" resizes the thumbnail to fit within the width and height, but will not increase the size of the image if it is smaller than width or height. "Crop" resizes the thumbnail to fill the width and height dimensions and crops any excess image data. "Scale" enforces the thumbnail width and height by scaling. Defaults to max. 
     /// </summary>
-    [JsonProperty("fit", NullValueHandling = NullValueHandling.Ignore)]
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonPropertyName("fit")]
     public ThumbnailFit? Fit { get; set; }
 
     /// <summary>
     /// Set thumbnail width in pixels.
     /// </summary>
-    [JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("width")]
     public int? Width { get; set; }
 
     /// <summary>
     /// Set thumbnail height in pixels.
     /// </summary>
-    [JsonProperty("height", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("height")]
     public int? Height { get; set; }
 
     /// <summary>
     /// Number of thumbnails to create. Defaults to 1.
     /// </summary>
-    [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("count")]
     public int? Count { get; set; }
 
     /// <summary>
@@ -75,8 +72,7 @@ namespace CloudConvert.API.Models.TaskOperations
     /// Select input and output format above to show additional conversion options.
     /// </summary>
     [JsonExtensionData]
-    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("options")]
     public Dictionary<string, object> Options { get; set; }
-
   }
 }

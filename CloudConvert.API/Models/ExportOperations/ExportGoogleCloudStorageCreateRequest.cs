@@ -1,35 +1,35 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.ExportOperations
 {
   public class ExportGoogleCloudStorageCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "export/google-cloud-storage";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "export/google-cloud-storage";
 
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
     /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    [JsonPropertyName("input")]
+    public object Input { get; set; }
 
-    [JsonProperty("project_id")]
+    [JsonPropertyName("project_id")]
     public string ProjectId { get; set; }
 
-    [JsonProperty("bucket")]
+    [JsonPropertyName("bucket")]
     public string Bucket { get; set; }
 
-    [JsonProperty("client_email")]
+    [JsonPropertyName("client_email")]
     public string Client_Email { get; set; }
 
-    [JsonProperty("private_key")]
+    [JsonPropertyName("private_key")]
     public string Private_Key { get; set; }
 
-    [JsonProperty("file", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("file")]
     public string File { get; set; }
 
-    [JsonProperty("file_prefix", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("file_prefix")]
     public string File_Prefix { get; set; }
   }
 }

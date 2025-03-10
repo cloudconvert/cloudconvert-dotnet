@@ -1,11 +1,12 @@
 using System;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CloudConvert.API;
 using CloudConvert.API.Models;
 using CloudConvert.API.Models.JobModels;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CloudConvert.Test
@@ -24,7 +25,7 @@ namespace CloudConvert.Test
         var path = @"Responses/jobs.json";
         string json = File.ReadAllText(path);
         _cloudConvertAPI.Setup(cc => cc.GetAllJobsAsync(filter))
-                        .ReturnsAsync(JsonConvert.DeserializeObject<ListResponse<JobResponse>>(json));
+                        .ReturnsAsync(JsonSerializer.Deserialize<ListResponse<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
         var jobs = await _cloudConvertAPI.Object.GetAllJobsAsync(filter);
 
@@ -35,7 +36,7 @@ namespace CloudConvert.Test
       {
         if (ex.InnerException != null)
         {
-          var error = JsonConvert.DeserializeObject<ErrorResponse>(ex.InnerException.Message);
+          var error = JsonSerializer.Deserialize<ErrorResponse>(ex.InnerException.Message, DefaultJsonSerializerOptions.SerializerOptions);
         }
         else
         {
@@ -56,7 +57,7 @@ namespace CloudConvert.Test
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job_created.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.CreateJobAsync(req))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<JobResponse>>(json));
+                      .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
       var job = await _cloudConvertAPI.Object.CreateJobAsync(req);
 
@@ -73,7 +74,7 @@ namespace CloudConvert.Test
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.GetJobAsync(id))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<JobResponse>>(json));
+                      .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
       var job = await _cloudConvertAPI.Object.GetJobAsync(id);
 
@@ -90,7 +91,7 @@ namespace CloudConvert.Test
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job_finished.json";
       string json = File.ReadAllText(path);
       _cloudConvertAPI.Setup(cc => cc.WaitJobAsync(id))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<JobResponse>>(json));
+                      .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
       var job = await _cloudConvertAPI.Object.WaitJobAsync(id);
 
@@ -108,6 +109,5 @@ namespace CloudConvert.Test
 
       await _cloudConvertAPI.Object.DeleteJobAsync(id);
     }
-
   }
 }

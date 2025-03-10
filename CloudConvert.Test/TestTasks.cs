@@ -10,7 +10,7 @@ using CloudConvert.API.Models.TaskOperations;
 using CloudConvert.Test.Extensions;
 using Moq;
 using Moq.Protected;
-using Newtonsoft.Json;
+using System.Text.Json;
 using NUnit.Framework;
 
 namespace CloudConvert.Test
@@ -29,7 +29,7 @@ namespace CloudConvert.Test
 
         var cloudConvertApi = new Mock<ICloudConvertAPI>();
         cloudConvertApi.Setup(cc => cc.GetAllTasksAsync(filter))
-                        .ReturnsAsync(JsonConvert.DeserializeObject<ListResponse<TaskResponse>>(json));
+                       .ReturnsAsync(JsonSerializer.Deserialize<ListResponse<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
         var tasks = await cloudConvertApi.Object.GetAllTasksAsync(filter);
 
@@ -40,7 +40,7 @@ namespace CloudConvert.Test
       {
         if (ex.InnerException != null)
         {
-          var error = JsonConvert.DeserializeObject<ErrorResponse>(ex.InnerException.Message);
+          var error = JsonSerializer.Deserialize<ErrorResponse>(ex.InnerException.Message, DefaultJsonSerializerOptions.SerializerOptions);
         }
         else
         {
@@ -68,10 +68,10 @@ namespace CloudConvert.Test
       string json = File.ReadAllText(path);
 
       var cloudConvertApi = new Mock<ICloudConvertAPI>();
-      cloudConvertApi.Setup(cc => cc.CreateTaskAsync(ConvertCreateRequest.Operation, req))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
+      cloudConvertApi.Setup(cc => cc.CreateTaskAsync(req.Operation, req))
+                     .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
-      var task = await cloudConvertApi.Object.CreateTaskAsync(ConvertCreateRequest.Operation, req);
+      var task = await cloudConvertApi.Object.CreateTaskAsync(req.Operation, req);
 
       Assert.IsNotNull(task);
       Assert.IsTrue(task.Data.Status == API.Models.Enums.TaskStatus.waiting);
@@ -87,7 +87,7 @@ namespace CloudConvert.Test
 
       var _cloudConvertAPI = new Mock<ICloudConvertAPI>();
       _cloudConvertAPI.Setup(cc => cc.GetTaskAsync(id, null))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
+                      .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
       var task = await _cloudConvertAPI.Object.GetTaskAsync("9de1a620-952c-4482-9d44-681ae28d72a1");
 
@@ -105,7 +105,7 @@ namespace CloudConvert.Test
 
       var cloudConvertApi = new Mock<ICloudConvertAPI>();
       cloudConvertApi.Setup(cc => cc.WaitTaskAsync(id))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
+                      .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
       var task = await cloudConvertApi.Object.WaitTaskAsync(id);
 
@@ -133,10 +133,10 @@ namespace CloudConvert.Test
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/upload_task_created.json";
       string json = File.ReadAllText(path);
-      cloudConvertApi.Setup(cc => cc.CreateTaskAsync(ImportUploadCreateRequest.Operation, req))
-                      .ReturnsAsync(JsonConvert.DeserializeObject<Response<TaskResponse>>(json));
+      cloudConvertApi.Setup(cc => cc.CreateTaskAsync(req.Operation, req))
+                      .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
-      var task = await cloudConvertApi.Object.CreateTaskAsync(ImportUploadCreateRequest.Operation, req);
+      var task = await cloudConvertApi.Object.CreateTaskAsync(req.Operation, req);
 
       Assert.IsNotNull(task);
 
@@ -161,7 +161,7 @@ namespace CloudConvert.Test
       var req = new ImportUploadCreateRequest();
       var cloudConvertApi = new CloudConvertAPI(restHelper, "API_KEY");
 
-      var task = await cloudConvertApi.CreateTaskAsync(ImportUploadCreateRequest.Operation, req);
+      var task = await cloudConvertApi.CreateTaskAsync(req.Operation, req);
 
       Assert.IsNotNull(task);
       httpMessageHandlerMock.VerifyRequest("/import/upload", Times.Once());
