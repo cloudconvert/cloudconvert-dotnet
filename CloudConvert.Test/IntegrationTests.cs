@@ -10,6 +10,8 @@ using System;
 using System.Net.Http;
 using CloudConvert.API.Models.TaskOperations;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Text.Json;
 
 namespace CloudConvert.Test
 {
@@ -85,7 +87,7 @@ namespace CloudConvert.Test
       await File.WriteAllBytesAsync(fileExport.Filename, fileBytes);
     }
 
-    
+
     [Test]
     public async Task CreateJobWithOptions()
     {
@@ -96,15 +98,15 @@ namespace CloudConvert.Test
           import_it = new ImportUploadCreateRequest(),
           convert_it = new ConvertCreateRequest
           {
-            Input = "import_it", 
+            Input = "import_it",
             Input_Format = "pdf",
             Output_Format = "jpg",
             Options = new Dictionary<string, object> {
-                  { "width", 800 },
-                  { "height", 600 },
-                  { "fit", "max" }
-                }
+              { "width", 800 },
+              { "height", 600 },
+              { "fit", "max" }
             }
+          }
         },
         Tag = "integration-test-convert-with-options"
       });
@@ -120,11 +122,11 @@ namespace CloudConvert.Test
       // get created convert task
 
       var convertTask = await _cloudConvertAPI.GetTaskAsync(job.Data.Tasks.FirstOrDefault(t => t.Name == "convert_it").Id, "payload");
-      var payload = ((Newtonsoft.Json.Linq.JObject)convertTask.Data.Payload).ToObject<Dictionary<string, object>>();
+      dynamic payload = JsonSerializer.Deserialize<ExpandoObject>(convertTask.Data.Payload.ToString());
       Assert.IsNotNull(payload);
-      Assert.AreEqual(800, payload["width"]);
-      Assert.AreEqual(600, payload["height"]);
-      Assert.AreEqual("max", payload["fit"]);
+      Assert.AreEqual(800, ((JsonElement)payload.width).GetInt32());
+      Assert.AreEqual(600, ((JsonElement)payload.height).GetInt32());
+      Assert.AreEqual("max", ((JsonElement)payload.fit).GetString());
 
     }
 
