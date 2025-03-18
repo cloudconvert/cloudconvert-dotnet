@@ -41,16 +41,13 @@ namespace CloudConvert.Test
     
       };
 
-
       string signedUrl = _cloudConvertAPI.CreateSignedUrl(baseUrl, signingSecret, job, cacheKey);
 
 
       StringAssert.StartsWith(baseUrl, signedUrl);
       StringAssert.Contains("?job=", signedUrl);
       StringAssert.Contains("&cache_key=mykey", signedUrl);
-      StringAssert.Contains("&s=05521324eb16876aac906f2edc42a7ebfe6e71743e6cb965c4b3bf224c2b581f", signedUrl);
-
-
+      StringAssert.Contains("&s=81213540c2ccdf3330a0cf237642f14b381f57cf5bbffe293eb118468fde700b", signedUrl);
     }
   }
 }

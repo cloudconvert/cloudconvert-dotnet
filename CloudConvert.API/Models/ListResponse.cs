@@ -1,17 +1,17 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models
 {
   public partial class ListResponse<T>
   {
-    [JsonProperty("data")]
+    [JsonPropertyName("data")]
     public List<T> Data { get; set; }
 
-    [JsonProperty("links")]
+    [JsonPropertyName("links")]
     public ListResponseLinks Links { get; set; }
 
-    [JsonProperty("meta")]
+    [JsonPropertyName("meta")]
     public ListResponseMeta Meta { get; set; }
   }
 }

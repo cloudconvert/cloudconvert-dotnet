@@ -1,38 +1,38 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.ExportOperations
 {
   public class ExportOpenStackCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "export/openstack";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "export/openstack";
 
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
     /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    [JsonPropertyName("input")]
+    public object Input { get; set; }
 
-    [JsonProperty("auth_url")]
+    [JsonPropertyName("auth_url")]
     public string Auth_Url { get; set; }
 
-    [JsonProperty("username")]
+    [JsonPropertyName("username")]
     public string Username { get; set; }
 
-    [JsonProperty("password")]
+    [JsonPropertyName("password")]
     public string Password { get; set; }
 
-    [JsonProperty("region")]
+    [JsonPropertyName("region")]
     public string Region { get; set; }
 
-    [JsonProperty("container")]
+    [JsonPropertyName("container")]
     public string Container { get; set; }
 
-    [JsonProperty("file", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("file")]
     public string File { get; set; }
 
-    [JsonProperty("file_prefix", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("file_prefix")]
     public string FilePrefix { get; set; }
   }
 }

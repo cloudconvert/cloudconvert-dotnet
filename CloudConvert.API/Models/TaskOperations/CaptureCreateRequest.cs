@@ -1,98 +1,95 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 using CloudConvert.API.Models.Enums;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
   public class CaptureWebsiteCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "capture-website";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "capture-website";
 
     /// <summary>
     /// URL of the website
     /// </summary>
-    [JsonProperty("url")]
+    [JsonPropertyName("url")]
     public string Url { get; set; }
 
-    [JsonProperty("output_format")]
+    [JsonPropertyName("output_format")]
     public string Output_Format { get; set; }
 
-    [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine")]
     public string Engine { get; set; }
 
-    [JsonProperty("engine_version", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine_version")]
     public string Engine_Version { get; set; }
 
     /// <summary>
     /// Choose a filename(including extension) for the output file.
     /// </summary>
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
 
-    [JsonProperty("pages", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("pages")]
     public string Pages { get; set; }
 
-    [JsonProperty("zoom", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("zoom")]
     public int? Zoom { get; set; }
 
-    [JsonProperty("page_width", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("page_width")]
     public int? Page_Width { get; set; }
 
-
-    [JsonProperty("page_height", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("page_height")]
     public int? Page_Height { get; set; }
 
-    [JsonProperty("margin_top", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("margin_top")]
     public int? Margin_Top { get; set; }
 
-    [JsonProperty("margin_bottom", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("margin_bottom")]
     public int? Margin_Bottom { get; set; }
 
-    [JsonProperty("margin_left", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("margin_left")]
     public int? Margin_Left { get; set; }
 
-    [JsonProperty("margin_right", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("margin_right")]
     public int? Margin_Right { get; set; }
 
-    [JsonProperty("print_background", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("print_background")]
     public bool? Print_Background { get; set; }
 
-    [JsonProperty("display_header_footer", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("display_header_footer")]
     public bool? Display_Header_Footer { get; set; }
 
-    [JsonProperty("header_template", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("header_template")]
     public string Header_Template { get; set; }
 
-    [JsonProperty("footer_template", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("footer_template")]
     public string Footer_Template { get; set; }
 
-    [JsonProperty("wait_until", NullValueHandling = NullValueHandling.Ignore)]
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonPropertyName("wait_until")]
     public CaptureWebsiteWaitUntil? Wait_Until { get; set; }
 
-    [JsonProperty("wait_for_element", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("wait_for_element")]
     public string Wait_For_Element { get; set; }
 
-    [JsonProperty("wait_time", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("wait_time")]
     public int? Wait_Time { get; set; }
 
-    [JsonProperty("headers", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("headers")]
     public Dictionary<string, string> Headers { get; set; }
 
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.
     /// </summary>
-    [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("timeout")]
     public int? Timeout { get; set; }
 
     /// <summary>
-    /// Conversion and engine specific options. Depends on input_format and output_format.
+    /// Conversion and engine-specific options. Depends on input_format and output_format.
     /// Select input and output format above to show additional conversion options.
     /// </summary>
     [JsonExtensionData]
-    [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("options")]
     public Dictionary<string, object> Options { get; set; }
   }
 }

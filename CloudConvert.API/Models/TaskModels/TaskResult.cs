@@ -1,17 +1,17 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.TaskModels
 {
   public partial class TaskResult
   {
-    [JsonProperty("form")]
+    [JsonPropertyName("form")]
     public UploadForm Form { get; set; }
 
-    [JsonProperty("files")]
+    [JsonPropertyName("files")]
     public List<TaskResultFile> Files { get; set; }
 
-    [JsonProperty("metadata")]
+    [JsonPropertyName("metadata")]
     public Dictionary<string, object> Metadata { get; set; }
   }
 }

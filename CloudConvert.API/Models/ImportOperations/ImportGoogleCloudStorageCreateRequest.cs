@@ -1,32 +1,31 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.ImportOperations
 {
   public class ImportGoogleCloudStorageCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "import/google-cloud-storage";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "import/google-cloud-storage";
 
-    [JsonProperty("project_id")]
+    [JsonPropertyName("project_id")]
     public string Project_Id { get; set; }
 
-    [JsonProperty("bucket")]
+    [JsonPropertyName("bucket")]
     public string Bucket { get; set; }
 
-    [JsonProperty("client_email")]
+    [JsonPropertyName("client_email")]
     public string Client_Email { get; set; }
 
-    [JsonProperty("private_key")]
+    [JsonPropertyName("private_key")]
     public string Private_Key { get; set; }
 
-    [JsonProperty("file", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("file")]
     public string File { get; set; }
 
-    [JsonProperty("file_prefix", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("file_prefix")]
     public string File_Prefix { get; set; }
 
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
-
   }
 }

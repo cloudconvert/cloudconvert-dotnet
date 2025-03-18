@@ -1,14 +1,14 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.TaskModels
 {
   public partial class UploadForm
   {
-    [JsonProperty("url")]
+    [JsonPropertyName("url")]
     public Uri Url { get; set; }
 
-    [JsonProperty("parameters")]
+    [JsonPropertyName("parameters")]
     public object Parameters { get; set; }
   }
 }

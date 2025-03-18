@@ -1,5 +1,5 @@
-using Newtonsoft.Json;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CloudConvert.API
@@ -22,16 +22,14 @@ namespace CloudConvert.API
     public async Task<T> RequestAsync<T>(HttpRequestMessage request)
     {
       var response = await _httpClient.SendAsync(request);
-
       var responseRaw = await response.Content.ReadAsStringAsync();
 
-      return JsonConvert.DeserializeObject<T>(responseRaw);
+      return JsonSerializer.Deserialize<T>(responseRaw, DefaultJsonSerializerOptions.SerializerOptions);
     }
 
     public async Task<string> RequestAsync(HttpRequestMessage request)
     {
       var response = await _httpClient.SendAsync(request);
-
       return await response.Content.ReadAsStringAsync();
     }
   }

@@ -1,11 +1,11 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models
 {
   public partial class ResponseLinks
   {
-    [JsonProperty("self")]
+    [JsonPropertyName("self")]
     public Uri Self { get; set; }
   }
 }

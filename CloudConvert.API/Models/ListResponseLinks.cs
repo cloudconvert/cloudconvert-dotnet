@@ -1,20 +1,20 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models
 {
   public partial class ListResponseLinks
   {
-    [JsonProperty("first")]
+    [JsonPropertyName("first")]
     public Uri First { get; set; }
 
-    [JsonProperty("last")]
+    [JsonPropertyName("last")]
     public Uri Last { get; set; }
 
-    [JsonProperty("prev")]
+    [JsonPropertyName("prev")]
     public Uri Prev { get; set; }
 
-    [JsonProperty("next")]
+    [JsonPropertyName("next")]
     public Uri Next { get; set; }
   }
 }

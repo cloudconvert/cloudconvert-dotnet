@@ -1,35 +1,35 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.ExportOperations
 {
   public class ExportAzureBlobCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "export/azure/blob";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "export/azure/blob";
 
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
     /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    [JsonPropertyName("input")]
+    public object Input { get; set; }
 
-    [JsonProperty("storage_account")]
+    [JsonPropertyName("storage_account")]
     public string Storage_Account { get; set; }
 
-    [JsonProperty("storage_access_key", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("storage_access_key")]
     public string Storage_Access_Key { get; set; }
 
-    [JsonProperty("sas_token", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("sas_token")]
     public string Sas_Token { get; set; }
 
-    [JsonProperty("container")]
+    [JsonPropertyName("container")]
     public string Container { get; set; }
 
-    [JsonProperty("blob", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("blob")]
     public string Blob { get; set; }
 
-    [JsonProperty("blob_prefix", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("blob_prefix")]
     public string Blob_Prefix { get; set; }
   }
 }

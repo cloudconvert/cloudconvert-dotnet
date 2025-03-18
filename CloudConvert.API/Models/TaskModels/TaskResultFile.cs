@@ -1,17 +1,17 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.TaskModels
 {
   public partial class TaskResultFile
   {
-    [JsonProperty("filename")]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
 
-    [JsonProperty("size")]
+    [JsonPropertyName("size")]
     public long Size { get; set; }
 
-    [JsonProperty("url")]
+    [JsonPropertyName("url")]
     public Uri Url { get; set; }
   }
 }

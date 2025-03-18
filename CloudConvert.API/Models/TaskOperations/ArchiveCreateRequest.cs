@@ -1,38 +1,38 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CloudConvert.API.Models.TaskOperations
 {
   public class ArchiveCreateRequest
   {
-    [JsonProperty("operation")]
-    public static string Operation = "archive";
+    [JsonPropertyName("operation")]
+    public string Operation { get; } = "archive";
 
     /// <summary>
     /// The input task name(s) for this task.
     /// input: string | string[];
     /// </summary>
-    [JsonProperty("input")]
-    public dynamic Input { get; set; }
+    [JsonPropertyName("input")]
+    public object Input { get; set; }
 
-    [JsonProperty("output_format")]
+    [JsonPropertyName("output_format")]
     public string Output_Format { get; set; }
 
-    [JsonProperty("engine", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine")]
     public string Engine { get; set; }
 
-    [JsonProperty("engine_version", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("engine_version")]
     public string Engine_Version { get; set; }
 
     /// <summary>
     /// Choose a filename (including extension) for the output file.
     /// </summary>
-    [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("filename")]
     public string Filename { get; set; }
 
     /// <summary>
     /// Timeout in seconds after the task will be cancelled.
     /// </summary>
-    [JsonProperty("timeout", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("timeout")]
     public int? Timeout { get; set; }
   }
 }
