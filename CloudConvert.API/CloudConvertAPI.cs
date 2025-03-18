@@ -26,7 +26,7 @@ namespace CloudConvert.API
     #region Tasks
     Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskListFilter jobFilter);
     Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T request);
-    Task<Response<TaskResponse>> GetTaskAsync(string id, string[] include = null);
+    Task<Response<TaskResponse>> GetTaskAsync(string id, string include = null);
     Task<Response<TaskResponse>> WaitTaskAsync(string id);
     Task DeleteTaskAsync(string id);
     #endregion
@@ -189,7 +189,7 @@ namespace CloudConvert.API
     /// <param name="id"></param>
     /// <param name="include"></param>
     /// <returns></returns>
-    public Task<Response<TaskResponse>> GetTaskAsync(string id, string[] include = null) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/tasks/{id}?include={include}", HttpMethod.Get));
+    public Task<Response<TaskResponse>> GetTaskAsync(string id, string include = null) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/tasks/{id}?include={include}", HttpMethod.Get));
 
     /// <summary>
     /// Wait until the task status is finished or error. This makes the request block until the task has been completed. Requires the task.read scope.

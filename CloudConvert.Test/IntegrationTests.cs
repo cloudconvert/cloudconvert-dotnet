@@ -8,6 +8,8 @@ using CloudConvert.API.Models.ImportOperations;
 using CloudConvert.API.Models.JobModels;
 using System;
 using System.Net.Http;
+using CloudConvert.API.Models.TaskOperations;
+using System.Collections.Generic;
 
 namespace CloudConvert.Test
 {
@@ -81,6 +83,49 @@ namespace CloudConvert.Test
       using var httpClient = new HttpClient();
       var fileBytes = await httpClient.GetByteArrayAsync(fileExport.Url);
       await File.WriteAllBytesAsync(fileExport.Filename, fileBytes);
+    }
+
+    
+    [Test]
+    public async Task CreateJobWithOptions()
+    {
+      var job = await _cloudConvertAPI.CreateJobAsync(new JobCreateRequest
+      {
+        Tasks = new
+        {
+          import_it = new ImportUploadCreateRequest(),
+          convert_it = new ConvertCreateRequest
+          {
+            Input = "import_it", 
+            Input_Format = "pdf",
+            Output_Format = "jpg",
+            Options = new Dictionary<string, object> {
+                  { "width", 800 },
+                  { "height", 600 },
+                  { "fit", "max" }
+                }
+            }
+        },
+        Tag = "integration-test-convert-with-options"
+      });
+
+      var uploadTask = job.Data.Tasks.FirstOrDefault(t => t.Name == "import_it");
+
+      var path = AppDomain.CurrentDomain.BaseDirectory + @"TestFiles/input.pdf";
+
+      byte[] file = File.ReadAllBytes(path);
+      await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), file, "input.pdf", uploadTask.Result.Form.Parameters);
+
+
+      // get created convert task
+
+      var convertTask = await _cloudConvertAPI.GetTaskAsync(job.Data.Tasks.FirstOrDefault(t => t.Name == "convert_it").Id, "payload");
+      var payload = ((Newtonsoft.Json.Linq.JObject)convertTask.Data.Payload).ToObject<Dictionary<string, object>>();
+      Assert.IsNotNull(payload);
+      Assert.AreEqual(800, payload["width"]);
+      Assert.AreEqual(600, payload["height"]);
+      Assert.AreEqual("max", payload["fit"]);
+
     }
 
     [TestCase("stream")]
