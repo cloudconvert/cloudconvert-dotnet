@@ -253,47 +253,15 @@ namespace CloudConvert.API
       byte[] hash = new HMACSHA256(Encoding.UTF8.GetBytes(key)).ComputeHash(new UTF8Encoding().GetBytes(message));
       return BitConverter.ToString(hash).Replace("-", "").ToLower();
     }
-
-    // FIXME
     private Dictionary<string, string> GetParameters(object parameters)
     {
       var dictionaryParameters = new Dictionary<string, string>();
 
-      if (parameters != null)
+      if (parameters is JsonElement jsonElement)
       {
-        // Serialize the input object to JSON.
-        string json = JsonSerializer.Serialize(parameters, DefaultJsonSerializerOptions.SerializerOptions);
-
-        // Parse the JSON using JsonDocument.
-        using (var doc = JsonDocument.Parse(json))
+        foreach (JsonProperty prop in jsonElement.EnumerateObject())
         {
-          var root = doc.RootElement;
-          if (root.ValueKind == JsonValueKind.Object)
-          {
-            foreach (JsonProperty prop in root.EnumerateObject())
-            {
-              string valueStr;
-              // Replicate JToken.ToString() behavior:
-              // For string values, return the unquoted string.
-              // For objects and arrays, serialize them to JSON.
-              // Otherwise, use the default ToString().
-              switch (prop.Value.ValueKind)
-              {
-                case JsonValueKind.String:
-                  valueStr = prop.Value.GetString();
-                  break;
-                case JsonValueKind.Object:
-                case JsonValueKind.Array:
-                  valueStr = JsonSerializer.Serialize(prop.Value, DefaultJsonSerializerOptions.SerializerOptions);
-                  break;
-                default:
-                  valueStr = prop.Value.ToString();
-                  break;
-              }
-
-              dictionaryParameters[prop.Name] = valueStr;
-            }
-          }
+          dictionaryParameters[prop.Name] = prop.Value.GetString();
         }
       }
 
