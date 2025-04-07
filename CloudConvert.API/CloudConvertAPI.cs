@@ -10,29 +10,30 @@ using System.Text.Json;
 using CloudConvert.API.Models.JobModels;
 using CloudConvert.API.Models.TaskModels;
 using CloudConvert.API.Models;
+using System.Threading;
 
 namespace CloudConvert.API
 {
   public interface ICloudConvertAPI
   {
     #region Jobs
-    Task<ListResponse<JobResponse>> GetAllJobsAsync(JobListFilter jobFilter);
-    Task<Response<JobResponse>> CreateJobAsync(JobCreateRequest request);
-    Task<Response<JobResponse>> GetJobAsync(string id);
-    Task<Response<JobResponse>> WaitJobAsync(string id);
-    Task DeleteJobAsync(string id);
+    Task<ListResponse<JobResponse>> GetAllJobsAsync(JobListFilter jobFilter, CancellationToken cancellationToken = default);
+    Task<Response<JobResponse>> CreateJobAsync(JobCreateRequest request, CancellationToken cancellationToken = default);
+    Task<Response<JobResponse>> GetJobAsync(string id, CancellationToken cancellationToken = default);
+    Task<Response<JobResponse>> WaitJobAsync(string id, CancellationToken cancellationToken = default);
+    Task DeleteJobAsync(string id, CancellationToken cancellationToken = default);
     #endregion
 
     #region Tasks
-    Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskListFilter jobFilter);
-    Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T request);
-    Task<Response<TaskResponse>> GetTaskAsync(string id, string include = null);
-    Task<Response<TaskResponse>> WaitTaskAsync(string id);
-    Task DeleteTaskAsync(string id);
+    Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskListFilter jobFilter, CancellationToken cancellationToken = default);
+    Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T request, CancellationToken cancellationToken = default);
+    Task<Response<TaskResponse>> GetTaskAsync(string id, string include = null, CancellationToken cancellationToken = default);
+    Task<Response<TaskResponse>> WaitTaskAsync(string id, CancellationToken cancellationToken = default);
+    Task DeleteTaskAsync(string id, CancellationToken cancellationToken = default);
     #endregion
 
-    Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters);
-    Task<string> UploadAsync(string url, Stream file, string fileName, object parameters);
+    Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters, CancellationToken cancellationToken = default);
+    Task<string> UploadAsync(string url, Stream file, string fileName, object parameters, CancellationToken cancellationToken = default);
     bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret);
     string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null);
   }
@@ -114,26 +115,32 @@ namespace CloudConvert.API
     /// List all jobs. Requires the task.read scope.
     /// </summary>
     /// <param name="jobFilter"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>
     /// The list of jobs. You can find details about the job model response in the documentation about the show jobs endpoint.
     /// </returns>
-    public Task<ListResponse<JobResponse>> GetAllJobsAsync(JobListFilter jobFilter) => _restHelper.RequestAsync<ListResponse<JobResponse>>(GetRequest($"{_apiUrl}/jobs?filter[status]={jobFilter.Status}&filter[tag]={jobFilter.Tag}&include={jobFilter.Include}&per_page={jobFilter.PerPage}&page={jobFilter.Page}", HttpMethod.Get));
+    public Task<ListResponse<JobResponse>> GetAllJobsAsync(JobListFilter jobFilter, CancellationToken cancellationToken = default) 
+      => _restHelper.RequestAsync<ListResponse<JobResponse>>(GetRequest($"{_apiUrl}/jobs?filter[status]={jobFilter.Status}&filter[tag]={jobFilter.Tag}&include={jobFilter.Include}&per_page={jobFilter.PerPage}&page={jobFilter.Page}", HttpMethod.Get), cancellationToken);
 
     /// <summary>
     /// Create a job with one ore more tasks. Requires the task.write scope.
     /// </summary>
     /// <param name="model"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>
     /// The created job. You can find details about the job model response in the documentation about the show jobs endpoint.
     /// </returns>
-    public Task<Response<JobResponse>> CreateJobAsync(JobCreateRequest model) => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiUrl}/jobs", HttpMethod.Post, model));
+    public Task<Response<JobResponse>> CreateJobAsync(JobCreateRequest model, CancellationToken cancellationToken = default) 
+      => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiUrl}/jobs", HttpMethod.Post, model), cancellationToken);
 
     /// <summary>
     /// Show a job. Requires the task.read scope.
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task<Response<JobResponse>> GetJobAsync(string id) => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiUrl}/jobs/{id}", HttpMethod.Get));
+    public Task<Response<JobResponse>> GetJobAsync(string id, CancellationToken cancellationToken = default)
+      => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiUrl}/jobs/{id}", HttpMethod.Get), cancellationToken);
 
     /// <summary>
     /// Wait until the job status is finished or error. This makes the request block until the job has been completed. Requires the task.read scope.
@@ -145,20 +152,24 @@ namespace CloudConvert.API
     /// Using an asynchronous approach with webhooks is beneficial in such cases.
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>
     /// The finished or failed job, including tasks. You can find details about the job model response in the documentation about the show job endpoint.
     /// </returns>
-    public Task<Response<JobResponse>> WaitJobAsync(string id) => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiSyncUrl}/jobs/{id}", HttpMethod.Get));
+    public Task<Response<JobResponse>> WaitJobAsync(string id, CancellationToken cancellationToken = default)
+      => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiSyncUrl}/jobs/{id}", HttpMethod.Get), cancellationToken);
 
     /// <summary>
     /// Delete a job, including all tasks and data. Requires the task.write scope.
     /// Jobs are deleted automatically 24 hours after they have ended.
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>
     /// An empty response with HTTP Code 204.
     /// </returns>
-    public Task DeleteJobAsync(string id) => _restHelper.RequestAsync<object>(GetRequest($"{_apiUrl}/jobs/{id}", HttpMethod.Delete));
+    public Task DeleteJobAsync(string id, CancellationToken cancellationToken = default)
+      => _restHelper.RequestAsync<object>(GetRequest($"{_apiUrl}/jobs/{id}", HttpMethod.Delete), cancellationToken);
 
     #endregion
 
@@ -168,28 +179,34 @@ namespace CloudConvert.API
     /// List all tasks with their status, payload and result. Requires the task.read scope.
     /// </summary>
     /// <param name="taskFilter"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>
     /// The list of tasks. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskListFilter taskFilter) => _restHelper.RequestAsync<ListResponse<TaskResponse>>(GetRequest($"{_apiUrl}/tasks?filter[job_id]={taskFilter.JobId}&filter[status]={taskFilter.Status}&filter[operation]={taskFilter.Operation}&include={taskFilter.Include}&per_page={taskFilter.PerPage}&page={taskFilter.Page}", HttpMethod.Get));
+    public Task<ListResponse<TaskResponse>> GetAllTasksAsync(TaskListFilter taskFilter, CancellationToken cancellationToken = default)
+      => _restHelper.RequestAsync<ListResponse<TaskResponse>>(GetRequest($"{_apiUrl}/tasks?filter[job_id]={taskFilter.JobId}&filter[status]={taskFilter.Status}&filter[operation]={taskFilter.Operation}&include={taskFilter.Include}&per_page={taskFilter.PerPage}&page={taskFilter.Page}", HttpMethod.Get), cancellationToken);
 
     /// <summary>
     /// Create task.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="model"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>
     /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T model) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/{operation}", HttpMethod.Post, model));
+    public Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T model, CancellationToken cancellationToken = default) 
+      => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/{operation}", HttpMethod.Post, model), cancellationToken);
 
     /// <summary>
     /// Show a task. Requires the task.read scope.
     /// </summary>
     /// <param name="id"></param>
     /// <param name="include"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task<Response<TaskResponse>> GetTaskAsync(string id, string include = null) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/tasks/{id}?include={include}", HttpMethod.Get));
+    public Task<Response<TaskResponse>> GetTaskAsync(string id, string include = null, CancellationToken cancellationToken = default) 
+      => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/tasks/{id}?include={include}", HttpMethod.Get), cancellationToken);
 
     /// <summary>
     /// Wait until the task status is finished or error. This makes the request block until the task has been completed. Requires the task.read scope.
@@ -201,26 +218,32 @@ namespace CloudConvert.API
     /// Using an asynchronous approach with webhooks is beneficial in such cases.
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>
     /// The finished or failed task. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<Response<TaskResponse>> WaitTaskAsync(string id) => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiSyncUrl}/tasks/{id}", HttpMethod.Get));
+    public Task<Response<TaskResponse>> WaitTaskAsync(string id, CancellationToken cancellationToken = default) 
+      => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiSyncUrl}/tasks/{id}", HttpMethod.Get), cancellationToken);
 
     /// <summary>
     /// Delete a task, including all data. Requires the task.write scope.
     /// Tasks are deleted automatically 24 hours after they have ended.
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>
     /// An empty response with HTTP Code 204.
     /// </returns>
-    public Task DeleteTaskAsync(string id) => _restHelper.RequestAsync<object>(GetRequest($"{_apiUrl}/tasks/{id}", HttpMethod.Delete));
+    public Task DeleteTaskAsync(string id, CancellationToken cancellationToken = default) 
+      => _restHelper.RequestAsync<object>(GetRequest($"{_apiUrl}/tasks/{id}", HttpMethod.Delete), cancellationToken);
 
     #endregion
 
-    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, new ByteArrayContent(file), fileName, GetParameters(parameters)));
+    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters, CancellationToken cancellationToken) 
+      => _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, new ByteArrayContent(file), fileName, GetParameters(parameters)), cancellationToken);
 
-    public Task<string> UploadAsync(string url, Stream stream, string fileName, object parameters) => _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, new StreamContent(stream), fileName, GetParameters(parameters)));
+    public Task<string> UploadAsync(string url, Stream stream, string fileName, object parameters, CancellationToken cancellationToken = default)
+      => _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, new StreamContent(stream), fileName, GetParameters(parameters)), cancellationToken);
 
     public string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null)
     {

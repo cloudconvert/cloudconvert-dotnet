@@ -23,7 +23,7 @@ namespace CloudConvert.Test
 
         var path = @"Responses/jobs.json";
         string json = File.ReadAllText(path);
-        _cloudConvertAPI.Setup(cc => cc.GetAllJobsAsync(filter))
+        _cloudConvertAPI.Setup(cc => cc.GetAllJobsAsync(filter, default))
                         .ReturnsAsync(JsonSerializer.Deserialize<ListResponse<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
         var jobs = await _cloudConvertAPI.Object.GetAllJobsAsync(filter);
@@ -55,7 +55,7 @@ namespace CloudConvert.Test
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job_created.json";
       string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.CreateJobAsync(req))
+      _cloudConvertAPI.Setup(cc => cc.CreateJobAsync(req, default))
                       .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
       var job = await _cloudConvertAPI.Object.CreateJobAsync(req);
@@ -72,7 +72,7 @@ namespace CloudConvert.Test
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job.json";
       string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.GetJobAsync(id))
+      _cloudConvertAPI.Setup(cc => cc.GetJobAsync(id, default))
                       .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
       var job = await _cloudConvertAPI.Object.GetJobAsync(id);
@@ -89,7 +89,7 @@ namespace CloudConvert.Test
 
       var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job_finished.json";
       string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.WaitJobAsync(id))
+      _cloudConvertAPI.Setup(cc => cc.WaitJobAsync(id, default))
                       .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
       var job = await _cloudConvertAPI.Object.WaitJobAsync(id);
@@ -104,7 +104,7 @@ namespace CloudConvert.Test
     {
       string id = "cd82535b-0614-4b23-bbba-b24ab0e892f7";
 
-      _cloudConvertAPI.Setup(cc => cc.DeleteJobAsync(id));
+      _cloudConvertAPI.Setup(cc => cc.DeleteJobAsync(id, default));
 
       await _cloudConvertAPI.Object.DeleteJobAsync(id);
     }
