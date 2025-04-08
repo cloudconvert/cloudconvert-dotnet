@@ -12,6 +12,7 @@ using CloudConvert.API.Models.TaskOperations;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Text.Json;
+using System.Threading;
 
 namespace CloudConvert.Test
 {
@@ -25,6 +26,28 @@ namespace CloudConvert.Test
     public void Setup()
     {
       _cloudConvertAPI = new CloudConvertAPI(apiKey, true);
+    }
+
+    [TestCase("cancellationtoken")]
+    public async Task CancellationToken(string streamingMethod)
+    {
+      using var cts = new CancellationTokenSource();
+      var token = cts.Token;
+
+      cts.Cancel();
+
+      try
+      {
+        await _cloudConvertAPI.CreateJobAsync(new JobCreateRequest
+        {
+          Tasks = new()
+        }, token).ConfigureAwait(false);
+
+        Assert.Fail("Expected TaskCanceledException");
+      }
+      catch (WebApiException ex) when (ex.InnerException is TaskCanceledException)
+      {
+      }
     }
 
     [TestCase("stream")]

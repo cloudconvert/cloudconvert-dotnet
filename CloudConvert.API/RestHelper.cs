@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CloudConvert.API
@@ -19,18 +20,18 @@ namespace CloudConvert.API
       _httpClient = httpClient;
     }
 
-    public async Task<T> RequestAsync<T>(HttpRequestMessage request)
+    public async Task<T> RequestAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-      var response = await _httpClient.SendAsync(request);
-      var responseRaw = await response.Content.ReadAsStringAsync();
+      var response = await _httpClient.SendAsync(request, cancellationToken);
+      var responseRaw = await response.Content.ReadAsStringAsync(cancellationToken);
 
       return JsonSerializer.Deserialize<T>(responseRaw, DefaultJsonSerializerOptions.SerializerOptions);
     }
 
-    public async Task<string> RequestAsync(HttpRequestMessage request)
+    public async Task<string> RequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-      var response = await _httpClient.SendAsync(request);
-      return await response.Content.ReadAsStringAsync();
+      var response = await _httpClient.SendAsync(request, cancellationToken);
+      return await response.Content.ReadAsStringAsync(cancellationToken);
     }
   }
 }

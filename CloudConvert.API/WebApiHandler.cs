@@ -25,19 +25,19 @@ namespace CloudConvert.API
       {
         if (writeLog)
         {
-          var requestString = request.Content != null ? await request.Content.ReadAsStringAsync() : string.Empty;
+          var requestString = request.Content != null ? await request.Content.ReadAsStringAsync(cancellationToken) : string.Empty;
         }
 
         var response = await base.SendAsync(request, cancellationToken);
 
         if (writeLog)
         {
-          string responseString = (await response.Content.ReadAsStringAsync()).TrimLengthWithEllipsis(20000);
+          string responseString = (await response.Content.ReadAsStringAsync(cancellationToken)).TrimLengthWithEllipsis(20000);
         }
 
         if ((int)response.StatusCode >= 400)
         {
-          throw new WebApiException((await response.Content.ReadAsStringAsync()).TrimLengthWithEllipsis(20000));
+          throw new WebApiException((await response.Content.ReadAsStringAsync(cancellationToken)).TrimLengthWithEllipsis(20000));
         }
 
         return response;
