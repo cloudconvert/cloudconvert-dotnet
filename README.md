@@ -116,16 +116,16 @@ You can pass any custom options to the task payload via the special `Options` pr
 
 ```c#
 var task = new ConvertCreateRequest
-          {
-            Input = "import_example_1",
-            Input_Format = "pdf",
-            Output_Format = "jpg",
-            Options = new Dictionary<string, object> {
-              { "width": 800 },
-              { "height": 600 },
-              { "fit": "max" }
-            }
-          }
+{
+    Input = "import_example_1",
+    Input_Format = "pdf",
+    Output_Format = "jpg",
+    Options = new Dictionary<string, object> {
+      { "width", 800 },
+      { "height", 600 },
+      { "fit", "max" }
+    }
+};
 ```
 You can use the [Job Builder](https://cloudconvert.com/api/v2/jobs/builder) to see the available options.
 
