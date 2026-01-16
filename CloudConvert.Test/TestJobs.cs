@@ -1,10 +1,12 @@
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CloudConvert.API;
 using CloudConvert.API.Models;
 using CloudConvert.API.Models.JobModels;
+using CloudConvert.Test.Extensions;
 using Moq;
 using NUnit.Framework;
 
@@ -107,6 +109,26 @@ namespace CloudConvert.Test
       _cloudConvertAPI.Setup(cc => cc.DeleteJobAsync(id, default));
 
       await _cloudConvertAPI.Object.DeleteJobAsync(id);
+    }
+
+    [Test]
+    public async Task DeleteJob_WithNoContentResponse_ShouldNotThrow()
+    {
+      // This test verifies that DeleteJobAsync correctly handles HTTP 204 No Content responses
+      // with empty response bodies, which was broken in v1.4.0 when switching from Newtonsoft.Json to System.Text.Json
+      string id = "cd82535b-0614-4b23-bbba-b24ab0e892f7";
+
+      var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+      httpMessageHandlerMock.MockNoContentResponse($"/jobs/{id}");
+
+      var httpClient = new HttpClient(httpMessageHandlerMock.Object);
+      var restHelper = new RestHelper(httpClient);
+      var cloudConvertApi = new CloudConvertAPI(restHelper, "API_KEY");
+
+      // This should not throw an exception even though the response body is empty
+      await cloudConvertApi.DeleteJobAsync(id);
+
+      httpMessageHandlerMock.VerifyRequest($"/jobs/{id}", Moq.Times.Once());
     }
   }
 }

@@ -25,6 +25,19 @@ namespace CloudConvert.Test.Extensions
         });
     }
 
+    public static IReturnsResult<HttpMessageHandler> MockNoContentResponse(this Mock<HttpMessageHandler> mock, string endpoint)
+    {
+      return mock.Protected()
+        .Setup<Task<HttpResponseMessage>>("SendAsync",
+          ItExpr.Is<HttpRequestMessage>(message => message.RequestUri.AbsolutePath.EndsWith(endpoint)),
+          ItExpr.IsAny<CancellationToken>())
+        .ReturnsAsync(new HttpResponseMessage
+        {
+          StatusCode = HttpStatusCode.NoContent,
+          Content = new StringContent(string.Empty)
+        });
+    }
+
     public static void VerifyRequest(this Mock<HttpMessageHandler> mock, string endpoint, Times times)
     {
       mock.Protected()

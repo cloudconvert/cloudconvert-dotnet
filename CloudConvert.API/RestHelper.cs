@@ -25,6 +25,13 @@ namespace CloudConvert.API
       var response = await _httpClient.SendAsync(request, cancellationToken);
       var responseRaw = await response.Content.ReadAsStringAsync(cancellationToken);
 
+      // Handle empty response body (e.g., HTTP 204 No Content)
+      // System.Text.Json throws when trying to deserialize an empty string
+      if (string.IsNullOrWhiteSpace(responseRaw) || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+      {
+        return default(T);
+      }
+
       return JsonSerializer.Deserialize<T>(responseRaw, DefaultJsonSerializerOptions.SerializerOptions);
     }
 
