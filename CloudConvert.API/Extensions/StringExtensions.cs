@@ -15,7 +15,7 @@ namespace CloudConvert.API.Extensions
         return str;
       }
 
-      return str.Substring(0, maxLength) + "...";
+      return string.Concat(str.AsSpan(0, maxLength), "...");
     }
 
     public static string GetEnumDescription<TEnum>(this TEnum source) where TEnum : struct, Enum
@@ -39,5 +39,5 @@ namespace CloudConvert.API.Extensions
       return attributes[0].Description;
     }
 
-  }  
+  }
 }

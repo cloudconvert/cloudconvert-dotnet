@@ -15,9 +15,55 @@ or
 dotnet add package CloudConvert.API
 ```
 
+## Dependency Injection
+
+If your application uses the .NET dependency injection container, you can register the CloudConvert API client using the `AddCloudConvertAPI` extension method:
+
+```CSharp
+services.AddCloudConvertAPI(options =>
+{
+    options.ApiKey = "your_api_key";
+    options.IsSandbox = false; // defaults to false
+});
+```
+
+You can also bind options directly from your `appsettings.json`:
+
+```CSharp
+services.AddCloudConvertAPI(options =>
+    builder.Configuration.GetSection("CloudConvert").Bind(options));
+```
+
+```json
+{
+  "CloudConvert": {
+    "ApiKey": "your_api_key",
+    "IsSandbox": false
+  }
+}
+```
+
+Then inject `ICloudConvertAPI` wherever you need it:
+
+```CSharp
+public class MyService(ICloudConvertAPI cloudConvert)
+{
+    public async Task DoSomething(CancellationToken cancellationToken)
+    {
+        var job = await cloudConvert.CreateJobAsync(..., cancellationToken);
+    }
+}
+```
+
+If you are not using dependency injection, you can instantiate the client directly:
+
+```CSharp
+var cloudConvert = new CloudConvertAPI("your_api_key");
+```
+
 ## Creating Jobs
 
-```c#
+```CSharp
 using CloudConvert.API;
 using CloudConvert.API.Models.ExportOperations;
 using CloudConvert.API.Models.ImportOperations;
@@ -27,24 +73,24 @@ using CloudConvert.API.Models.TaskOperations;
 var _cloudConvert = new CloudConvertAPI("api_key");
 
 var job = await _cloudConvert.CreateJobAsync(new JobCreateRequest
-      {
-        Tasks = new
-        {
-          import_example_1 = new ImportUploadCreateRequest(),
-          convert = new ConvertCreateRequest
-          {
-            Input = "import_example_1",
-            Input_Format = "pdf",
-            Output_Format = "docx"
-          },
-          export = new ExportUrlCreateRequest
-          {
-            Input = "convert",
-            Archive_Multiple_Files = true
-          }
-        },
-        Tag = "Test"
-      });
+{
+  Tasks = new
+  {
+    import_example_1 = new ImportUploadCreateRequest(),
+    convert = new ConvertCreateRequest
+    {
+      Input = "import_example_1",
+      Input_Format = "pdf",
+      Output_Format = "docx"
+    },
+    export = new ExportUrlCreateRequest
+    {
+      Input = "convert",
+      Archive_Multiple_Files = true
+    }
+  },
+  Tag = "Test"
+});
 ```
 
 You can use the [CloudConvert Job Builder](https://cloudconvert.com/api/v2/jobs/builder) to see the available options for the various task types.
@@ -53,7 +99,7 @@ You can use the [CloudConvert Job Builder](https://cloudconvert.com/api/v2/jobs/
 
 CloudConvert can generate public URLs for using `export/url` tasks. You can use these URLs to download output files.
 
-```c#
+```CSharp
 var job = await _cloudConvertAPI.WaitJobAsync(job.Data.Id); // Wait for job completion
 
 // download export file
@@ -70,15 +116,15 @@ Uploads to CloudConvert are done via `import/upload` tasks (see the [docs](https
 
 First create the upload job with `CreateJobAsync`:
 
-```c#
+```CSharp
 var job = await _cloudConvertAPI.CreateJobAsync(new JobCreateRequest
-      {
-            Tasks = new
-            {
-            upload_my_file = new ImportUploadCreateRequest()
-            // ...
-            }
-      });
+{
+  Tasks = new
+  {
+    upload_my_file = new ImportUploadCreateRequest()
+    // ...
+  }
+});
 
 var uploadTask = job.Data.Tasks.FirstOrDefault(t => t.Name == "upload_my_file");
 ```
@@ -96,7 +142,7 @@ Then upload the file the file with `UploadAsync`. This can be done two ways:
    
    using (System.IO.Stream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
    {
-         await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), stream, fileName, uploadTask.Result.Form.Parameters);
+      await _cloudConvertAPI.UploadAsync(uploadTask.Result.Form.Url.ToString(), stream, fileName, uploadTask.Result.Form.Parameters);
    }
    ```
    
@@ -114,13 +160,14 @@ Then upload the file the file with `UploadAsync`. This can be done two ways:
 
 You can pass any custom options to the task payload via the special `Options` property:
 
-```c#
+```CSharp
 var task = new ConvertCreateRequest
 {
     Input = "import_example_1",
     Input_Format = "pdf",
     Output_Format = "jpg",
-    Options = new Dictionary<string, object> {
+    Options = new Dictionary<string, object> 
+    {
       { "width", 800 },
       { "height", 600 },
       { "fit", "max" }
@@ -133,7 +180,7 @@ You can use the [Job Builder](https://cloudconvert.com/api/v2/jobs/builder) to s
 
 The .net SDK allows to verify webhook requests received from CloudConvert.
 
-```c#
+```CSharp
 var payloadString = "..."; // The JSON string from the raw request body.
 var signature = "..."; // The value of the "CloudConvert-Signature" header.
 var signingSecret = "..."; // You can find it in your webhook settings.
@@ -146,27 +193,27 @@ var isValid = _cloudConvertAPI.ValidateWebhookSignatures(payloadString, signatur
 
 Signed URLs allow converting files on demand only using URL query parameters. The .NET SDK allows to generate such URLs. Therefore, you need to obtain a signed URL base and a signing secret on the [CloudConvert Dashboard](https://cloudconvert.com/dashboard/api/v2/signed-urls).
 
-```c#
+```CSharp
 var signedUrlBase = 'https://s.cloudconvert.com/...'; // You can find it in your signed URL settings.
 var signingSecret = '...'; // You can find it in your signed URL settings.
 var cacheKey = 'cache-key'; // Allows caching of the result file for 24h
 
 var job = new JobCreateRequest
+{
+  Tasks = new
+  {
+      import_example_1 = new ImportUploadCreateRequest(),
+      convert = new ConvertCreateRequest
       {
-        Tasks = new
-        {
-          import_example_1 = new ImportUploadCreateRequest(),
-          convert = new ConvertCreateRequest
-          {
-            Input = "import_example_1",
-            Input_Format = "pdf",
-            Output_Format = "docx"
-          },
-          export = new ExportUrlCreateRequest
-          {
-            Input = "convert"
-          }
-        },
+        Input = "import_example_1",
+        Input_Format = "pdf",
+        Output_Format = "docx"
+      },
+      export = new ExportUrlCreateRequest
+      {
+        Input = "convert"
+      }
+  }
 };
 
 string signedUrl = _cloudConvertAPI.CreateSignedUrl(baseUrl, signingSecret, job, cacheKey)
@@ -177,7 +224,7 @@ string signedUrl = _cloudConvertAPI.CreateSignedUrl(baseUrl, signingSecret, job,
 
 You can use the Sandbox to avoid consuming your quota while testing your application. The .net SDK allows you to do that.
 
-```c#
+```CSharp
 // Pass `true` to the constructor
 var _cloudConvert = new CloudConvertAPI("api_key", true);
 ```
