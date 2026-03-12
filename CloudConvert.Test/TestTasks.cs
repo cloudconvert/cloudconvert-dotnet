@@ -13,166 +13,165 @@ using Moq.Protected;
 using System.Text.Json;
 using NUnit.Framework;
 
-namespace CloudConvert.Test
+namespace CloudConvert.Test;
+
+public class TestTasks
 {
-  public class TestTasks
+  [Test]
+  public async Task GetAllTasks()
   {
-    [Test]
-    public async Task GetAllTasks()
+    try
     {
-      try
+      TaskListFilter filter = new TaskListFilter();
+
+      var path = @"Responses/tasks.json";
+      string json = File.ReadAllText(path);
+
+      var cloudConvertApi = new Mock<ICloudConvertAPI>();
+      cloudConvertApi.Setup(cc => cc.GetAllTasksAsync(filter, default))
+                     .ReturnsAsync(JsonSerializer.Deserialize<ListResponse<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
+
+      var tasks = await cloudConvertApi.Object.GetAllTasksAsync(filter);
+
+      Assert.IsNotNull(tasks);
+      Assert.IsTrue(tasks.Data.Count >= 0);
+    }
+    catch (WebApiException ex)
+    {
+      if (ex.InnerException is not null)
       {
-        TaskListFilter filter = new TaskListFilter();
-
-        var path = @"Responses/tasks.json";
-        string json = File.ReadAllText(path);
-
-        var cloudConvertApi = new Mock<ICloudConvertAPI>();
-        cloudConvertApi.Setup(cc => cc.GetAllTasksAsync(filter, default))
-                       .ReturnsAsync(JsonSerializer.Deserialize<ListResponse<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
-
-        var tasks = await cloudConvertApi.Object.GetAllTasksAsync(filter);
-
-        Assert.IsNotNull(tasks);
-        Assert.IsTrue(tasks.Data.Count >= 0);
+        var error = JsonSerializer.Deserialize<ErrorResponse>(ex.InnerException.Message, DefaultJsonSerializerOptions.SerializerOptions);
       }
-      catch (WebApiException ex)
-      {
-        if (ex.InnerException is not null)
-        {
-          var error = JsonSerializer.Deserialize<ErrorResponse>(ex.InnerException.Message, DefaultJsonSerializerOptions.SerializerOptions);
-        }
-        else
-        {
-          var error = ex.Message;
-        }
-      }
-      catch (Exception ex)
+      else
       {
         var error = ex.Message;
       }
     }
-
-    [Test]
-    public async Task CreateTask()
+    catch (Exception ex)
     {
-      var req = new ConvertCreateRequest
-      {
-        Input = "9ebdb9c7-ee41-4c08-9fb7-1f342289f712", //Guid import
-        Input_Format = "pdf",
-        Output_Format = "docx",
-        Engine = "bcl"
-      };
-
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task_created.json";
-      string json = File.ReadAllText(path);
-
-      var cloudConvertApi = new Mock<ICloudConvertAPI>();
-      cloudConvertApi.Setup(cc => cc.CreateTaskAsync(req.Operation, req, default))
-                     .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
-
-      var task = await cloudConvertApi.Object.CreateTaskAsync(req.Operation, req);
-
-      Assert.IsNotNull(task);
-      Assert.IsTrue(task.Data.Status == API.Models.Enums.TaskStatus.waiting);
+      var error = ex.Message;
     }
+  }
 
-    [Test]
-    public async Task GetTask()
+  [Test]
+  public async Task CreateTask()
+  {
+    var req = new ConvertCreateRequest
     {
-      string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
+      Input = "9ebdb9c7-ee41-4c08-9fb7-1f342289f712", //Guid import
+      Input_Format = "pdf",
+      Output_Format = "docx",
+      Engine = "bcl"
+    };
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task.json";
-      string json = File.ReadAllText(path);
+    var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task_created.json";
+    string json = File.ReadAllText(path);
 
-      var _cloudConvertAPI = new Mock<ICloudConvertAPI>();
-      _cloudConvertAPI.Setup(cc => cc.GetTaskAsync(id, null, default))
-                      .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
+    var cloudConvertApi = new Mock<ICloudConvertAPI>();
+    cloudConvertApi.Setup(cc => cc.CreateTaskAsync(req.Operation, req, default))
+                   .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
-      var task = await _cloudConvertAPI.Object.GetTaskAsync("9de1a620-952c-4482-9d44-681ae28d72a1");
+    var task = await cloudConvertApi.Object.CreateTaskAsync(req.Operation, req);
 
-      Assert.IsNotNull(task);
-      Assert.IsTrue(task.Data.Operation == "convert");
-    }
+    Assert.IsNotNull(task);
+    Assert.IsTrue(task.Data.Status == API.Models.Enums.TaskStatus.waiting);
+  }
 
-    [Test]
-    public async Task WaitTask()
-    {
-      string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
+  [Test]
+  public async Task GetTask()
+  {
+    string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task.json";
-      string json = File.ReadAllText(path);
+    var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task.json";
+    string json = File.ReadAllText(path);
 
-      var cloudConvertApi = new Mock<ICloudConvertAPI>();
-      cloudConvertApi.Setup(cc => cc.WaitTaskAsync(id, default))
-                      .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
+    var _cloudConvertAPI = new Mock<ICloudConvertAPI>();
+    _cloudConvertAPI.Setup(cc => cc.GetTaskAsync(id, null, default))
+                    .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
-      var task = await cloudConvertApi.Object.WaitTaskAsync(id);
+    var task = await _cloudConvertAPI.Object.GetTaskAsync("9de1a620-952c-4482-9d44-681ae28d72a1");
 
-      Assert.IsNotNull(task);
-      Assert.IsTrue(task.Data.Operation == "convert");
-      Assert.AreEqual(task.Data.Status, API.Models.Enums.TaskStatus.finished);
-    }
+    Assert.IsNotNull(task);
+    Assert.IsTrue(task.Data.Operation == "convert");
+  }
 
-    [Test]
-    public async Task DeleteTask()
-    {
-      string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
+  [Test]
+  public async Task WaitTask()
+  {
+    string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
 
-      var cloudConvertApi = new Mock<ICloudConvertAPI>();
-      cloudConvertApi.Setup(cc => cc.DeleteTaskAsync(id, default));
+    var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/task.json";
+    string json = File.ReadAllText(path);
 
-      await cloudConvertApi.Object.DeleteTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
-    }
+    var cloudConvertApi = new Mock<ICloudConvertAPI>();
+    cloudConvertApi.Setup(cc => cc.WaitTaskAsync(id, default))
+                    .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
-    [Test]
-    public async Task Upload()
-    {
-      var cloudConvertApi = new Mock<ICloudConvertAPI>();
-      var req = new ImportUploadCreateRequest();
+    var task = await cloudConvertApi.Object.WaitTaskAsync(id);
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/upload_task_created.json";
-      string json = File.ReadAllText(path);
-      cloudConvertApi.Setup(cc => cc.CreateTaskAsync(req.Operation, req, default))
-                      .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
+    Assert.IsNotNull(task);
+    Assert.IsTrue(task.Data.Operation == "convert");
+    Assert.AreEqual(task.Data.Status, API.Models.Enums.TaskStatus.finished);
+  }
 
-      var task = await cloudConvertApi.Object.CreateTaskAsync(req.Operation, req);
+  [Test]
+  public async Task DeleteTask()
+  {
+    string id = "9de1a620-952c-4482-9d44-681ae28d72a1";
 
-      Assert.IsNotNull(task);
+    var cloudConvertApi = new Mock<ICloudConvertAPI>();
+    cloudConvertApi.Setup(cc => cc.DeleteTaskAsync(id, default));
 
-      var pathFile = AppDomain.CurrentDomain.BaseDirectory + @"TestFiles/input.pdf";
-      byte[] file = File.ReadAllBytes(pathFile);
-      string fileName = "input.pdf";
+    await cloudConvertApi.Object.DeleteTaskAsync("c8a8da46-3758-45bf-b983-2510e3170acb");
+  }
 
-      cloudConvertApi.Setup(cc => cc.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters, default));
+  [Test]
+  public async Task Upload()
+  {
+    var cloudConvertApi = new Mock<ICloudConvertAPI>();
+    var req = new ImportUploadCreateRequest();
 
-      await cloudConvertApi.Object.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters);
-    }
+    var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/upload_task_created.json";
+    string json = File.ReadAllText(path);
+    cloudConvertApi.Setup(cc => cc.CreateTaskAsync(req.Operation, req, default))
+                    .ReturnsAsync(JsonSerializer.Deserialize<Response<TaskResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
-    [Test]
-    public async Task UploadStream()
-    {
-      var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-      httpMessageHandlerMock.MockResponse("/import/upload", "upload_task_created.json");
-      httpMessageHandlerMock.MockResponse("/tasks", "tasks.json");
+    var task = await cloudConvertApi.Object.CreateTaskAsync(req.Operation, req);
 
-      var httpClient = new HttpClient(httpMessageHandlerMock.Object);
-      var restHelper = new RestHelper(httpClient);
-      var req = new ImportUploadCreateRequest();
-      var cloudConvertApi = new CloudConvertAPI(restHelper, "API_KEY");
+    Assert.IsNotNull(task);
 
-      var task = await cloudConvertApi.CreateTaskAsync(req.Operation, req);
+    var pathFile = AppDomain.CurrentDomain.BaseDirectory + @"TestFiles/input.pdf";
+    byte[] file = File.ReadAllBytes(pathFile);
+    string fileName = "input.pdf";
 
-      Assert.IsNotNull(task);
-      httpMessageHandlerMock.VerifyRequest("/import/upload", Times.Once());
+    cloudConvertApi.Setup(cc => cc.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters, default));
 
-      var streamMock = new Mock<Stream>();
-      var fileName = "input.pdf";
+    await cloudConvertApi.Object.UploadAsync(task.Data.Result.Form.Url.ToString(), file, fileName, task.Data.Result.Form.Parameters);
+  }
 
-      await cloudConvertApi.UploadAsync(task.Data.Result.Form.Url.ToString(), streamMock.Object, fileName, task.Data.Result.Form.Parameters);
+  [Test]
+  public async Task UploadStream()
+  {
+    var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+    httpMessageHandlerMock.MockResponse("/import/upload", "upload_task_created.json");
+    httpMessageHandlerMock.MockResponse("/tasks", "tasks.json");
 
-      httpMessageHandlerMock.VerifyRequest("/tasks", Times.Once());
-      streamMock.Protected().Verify("Dispose", Times.Never(), args: true);
-    }
+    var httpClient = new HttpClient(httpMessageHandlerMock.Object);
+    var restHelper = new RestHelper(httpClient);
+    var req = new ImportUploadCreateRequest();
+    var cloudConvertApi = new CloudConvertAPI(restHelper, "API_KEY");
+
+    var task = await cloudConvertApi.CreateTaskAsync(req.Operation, req);
+
+    Assert.IsNotNull(task);
+    httpMessageHandlerMock.VerifyRequest("/import/upload", Times.Once());
+
+    var streamMock = new Mock<Stream>();
+    var fileName = "input.pdf";
+
+    await cloudConvertApi.UploadAsync(task.Data.Result.Form.Url.ToString(), streamMock.Object, fileName, task.Data.Result.Form.Parameters);
+
+    httpMessageHandlerMock.VerifyRequest("/tasks", Times.Once());
+    streamMock.Protected().Verify("Dispose", Times.Never(), args: true);
   }
 }

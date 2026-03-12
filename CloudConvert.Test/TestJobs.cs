@@ -10,125 +10,124 @@ using CloudConvert.Test.Extensions;
 using Moq;
 using NUnit.Framework;
 
-namespace CloudConvert.Test
+namespace CloudConvert.Test;
+
+public class TestJobs
 {
-  public class TestJobs
+  readonly Mock<ICloudConvertAPI> _cloudConvertAPI = new Mock<ICloudConvertAPI>();
+
+  [Test]
+  public async Task GetAllJobs()
   {
-    readonly Mock<ICloudConvertAPI> _cloudConvertAPI = new Mock<ICloudConvertAPI>();
-
-    [Test]
-    public async Task GetAllJobs()
+    try
     {
-      try
+      JobListFilter filter = new JobListFilter();
+
+      var path = @"Responses/jobs.json";
+      string json = File.ReadAllText(path);
+      _cloudConvertAPI.Setup(cc => cc.GetAllJobsAsync(filter, default))
+                      .ReturnsAsync(JsonSerializer.Deserialize<ListResponse<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
+
+      var jobs = await _cloudConvertAPI.Object.GetAllJobsAsync(filter);
+
+      Assert.IsNotNull(jobs);
+      Assert.IsTrue(jobs.Data.Count >= 0);
+    }
+    catch (WebApiException ex)
+    {
+      if (ex.InnerException is not null)
       {
-        JobListFilter filter = new JobListFilter();
-
-        var path = @"Responses/jobs.json";
-        string json = File.ReadAllText(path);
-        _cloudConvertAPI.Setup(cc => cc.GetAllJobsAsync(filter, default))
-                        .ReturnsAsync(JsonSerializer.Deserialize<ListResponse<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
-
-        var jobs = await _cloudConvertAPI.Object.GetAllJobsAsync(filter);
-
-        Assert.IsNotNull(jobs);
-        Assert.IsTrue(jobs.Data.Count >= 0);
+        var error = JsonSerializer.Deserialize<ErrorResponse>(ex.InnerException.Message, DefaultJsonSerializerOptions.SerializerOptions);
       }
-      catch (WebApiException ex)
-      {
-        if (ex.InnerException is not null)
-        {
-          var error = JsonSerializer.Deserialize<ErrorResponse>(ex.InnerException.Message, DefaultJsonSerializerOptions.SerializerOptions);
-        }
-        else
-        {
-          var error = ex.Message;
-        }
-      }
-      catch (Exception ex)
+      else
       {
         var error = ex.Message;
       }
     }
-
-    [Test]
-    public async Task CreateJob()
+    catch (Exception ex)
     {
-      var req = new JobCreateRequest();
-
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job_created.json";
-      string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.CreateJobAsync(req, default))
-                      .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
-
-      var job = await _cloudConvertAPI.Object.CreateJobAsync(req);
-
-      Assert.IsNotNull(job);
-      Assert.IsTrue(job.Data.Tasks.Count > 0);
-      Assert.AreEqual(job.Data.Status, "waiting");
+      var error = ex.Message;
     }
+  }
 
-    [Test]
-    public async Task GetJob()
-    {
-      string id = "cd82535b-0614-4b23-bbba-b24ab0e892f7";
+  [Test]
+  public async Task CreateJob()
+  {
+    var req = new JobCreateRequest();
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job.json";
-      string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.GetJobAsync(id, default))
-                      .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
+    var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job_created.json";
+    string json = File.ReadAllText(path);
+    _cloudConvertAPI.Setup(cc => cc.CreateJobAsync(req, default))
+                    .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
-      var job = await _cloudConvertAPI.Object.GetJobAsync(id);
+    var job = await _cloudConvertAPI.Object.CreateJobAsync(req);
 
-      Assert.IsNotNull(job);
-      Assert.IsTrue(job.Data.Tasks.Count > 0);
-      Assert.AreEqual(job.Data.Status, "error");
-    }
+    Assert.IsNotNull(job);
+    Assert.IsTrue(job.Data.Tasks.Count > 0);
+    Assert.AreEqual(job.Data.Status, "waiting");
+  }
 
-    [Test]
-    public async Task WaitJob()
-    {
-      string id = "1087398b-077e-4e30-8971-1be424da232a";
+  [Test]
+  public async Task GetJob()
+  {
+    string id = "cd82535b-0614-4b23-bbba-b24ab0e892f7";
 
-      var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job_finished.json";
-      string json = File.ReadAllText(path);
-      _cloudConvertAPI.Setup(cc => cc.WaitJobAsync(id, default))
-                      .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
+    var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job.json";
+    string json = File.ReadAllText(path);
+    _cloudConvertAPI.Setup(cc => cc.GetJobAsync(id, default))
+                    .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
-      var job = await _cloudConvertAPI.Object.WaitJobAsync(id);
+    var job = await _cloudConvertAPI.Object.GetJobAsync(id);
 
-      Assert.IsNotNull(job);
-      Assert.IsTrue(job.Data.Tasks.Count > 0);
-      Assert.AreEqual(job.Data.Status, "finished");
-    }
+    Assert.IsNotNull(job);
+    Assert.IsTrue(job.Data.Tasks.Count > 0);
+    Assert.AreEqual(job.Data.Status, "error");
+  }
 
-    [Test]
-    public async Task DeleteJob()
-    {
-      string id = "cd82535b-0614-4b23-bbba-b24ab0e892f7";
+  [Test]
+  public async Task WaitJob()
+  {
+    string id = "1087398b-077e-4e30-8971-1be424da232a";
 
-      _cloudConvertAPI.Setup(cc => cc.DeleteJobAsync(id, default));
+    var path = AppDomain.CurrentDomain.BaseDirectory + @"Responses/job_finished.json";
+    string json = File.ReadAllText(path);
+    _cloudConvertAPI.Setup(cc => cc.WaitJobAsync(id, default))
+                    .ReturnsAsync(JsonSerializer.Deserialize<Response<JobResponse>>(json, DefaultJsonSerializerOptions.SerializerOptions));
 
-      await _cloudConvertAPI.Object.DeleteJobAsync(id);
-    }
+    var job = await _cloudConvertAPI.Object.WaitJobAsync(id);
 
-    [Test]
-    public async Task DeleteJob_WithNoContentResponse_ShouldNotThrow()
-    {
-      // This test verifies that DeleteJobAsync correctly handles HTTP 204 No Content responses
-      // with empty response bodies, which was broken in v1.4.0 when switching from Newtonsoft.Json to System.Text.Json
-      string id = "cd82535b-0614-4b23-bbba-b24ab0e892f7";
+    Assert.IsNotNull(job);
+    Assert.IsTrue(job.Data.Tasks.Count > 0);
+    Assert.AreEqual(job.Data.Status, "finished");
+  }
 
-      var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-      httpMessageHandlerMock.MockNoContentResponse($"/jobs/{id}");
+  [Test]
+  public async Task DeleteJob()
+  {
+    string id = "cd82535b-0614-4b23-bbba-b24ab0e892f7";
 
-      var httpClient = new HttpClient(httpMessageHandlerMock.Object);
-      var restHelper = new RestHelper(httpClient);
-      var cloudConvertApi = new CloudConvertAPI(restHelper, "API_KEY");
+    _cloudConvertAPI.Setup(cc => cc.DeleteJobAsync(id, default));
 
-      // This should not throw an exception even though the response body is empty
-      await cloudConvertApi.DeleteJobAsync(id);
+    await _cloudConvertAPI.Object.DeleteJobAsync(id);
+  }
 
-      httpMessageHandlerMock.VerifyRequest($"/jobs/{id}", Moq.Times.Once());
-    }
+  [Test]
+  public async Task DeleteJob_WithNoContentResponse_ShouldNotThrow()
+  {
+    // This test verifies that DeleteJobAsync correctly handles HTTP 204 No Content responses
+    // with empty response bodies, which was broken in v1.4.0 when switching from Newtonsoft.Json to System.Text.Json
+    string id = "cd82535b-0614-4b23-bbba-b24ab0e892f7";
+
+    var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+    httpMessageHandlerMock.MockNoContentResponse($"/jobs/{id}");
+
+    var httpClient = new HttpClient(httpMessageHandlerMock.Object);
+    var restHelper = new RestHelper(httpClient);
+    var cloudConvertApi = new CloudConvertAPI(restHelper, "API_KEY");
+
+    // This should not throw an exception even though the response body is empty
+    await cloudConvertApi.DeleteJobAsync(id);
+
+    httpMessageHandlerMock.VerifyRequest($"/jobs/{id}", Moq.Times.Once());
   }
 }
