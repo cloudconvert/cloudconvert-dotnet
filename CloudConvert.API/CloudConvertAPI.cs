@@ -247,22 +247,25 @@ public class CloudConvertAPI : ICloudConvertAPI
 
   public string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null)
   {
-    string url = baseUrl;
-    string jobJson = JsonSerializer.Serialize(job, DefaultJsonSerializerOptions.SerializerOptions);
-    string base64Job = System.Convert.ToBase64String(Encoding.ASCII.GetBytes(jobJson)).TrimEnd(base64Padding).Replace('+', '-').Replace('/', '_');
+    var jobJson = JsonSerializer.Serialize(job, DefaultJsonSerializerOptions.SerializerOptions);
+    var base64Job = Convert.ToBase64String(Encoding.ASCII.GetBytes(jobJson))
+        .TrimEnd(base64Padding)
+        .Replace('+', '-')
+        .Replace('/', '_');
 
-    url += "?job=" + base64Job;
+    var builder = new StringBuilder(baseUrl)
+        .Append("?job=")
+        .Append(base64Job);
 
     if (cacheKey is not null)
     {
-      url += "&cache_key=" + cacheKey;
+      builder.Append("&cache_key=").Append(cacheKey);
     }
 
-    string signature = HashHMAC(signingSecret, url);
+    var urlWithoutSignature = builder.ToString();
+    var signature = HashHMAC(signingSecret, urlWithoutSignature);
 
-    url += "&s=" + signature;
-
-    return url;
+    return builder.Append("&s=").Append(signature).ToString();
   }
 
   public bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret)
