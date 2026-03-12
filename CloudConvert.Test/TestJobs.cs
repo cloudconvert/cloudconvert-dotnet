@@ -35,7 +35,7 @@ namespace CloudConvert.Test
       }
       catch (WebApiException ex)
       {
-        if (ex.InnerException != null)
+        if (ex.InnerException is not null)
         {
           var error = JsonSerializer.Deserialize<ErrorResponse>(ex.InnerException.Message, DefaultJsonSerializerOptions.SerializerOptions);
         }

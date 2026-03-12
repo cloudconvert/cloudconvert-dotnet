@@ -1,14 +1,13 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace CloudConvert.API.Models.TaskModels
-{
-  public partial class UploadForm
-  {
-    [JsonPropertyName("url")]
-    public Uri Url { get; set; }
+namespace CloudConvert.API.Models.TaskModels;
 
-    [JsonPropertyName("parameters")]
-    public object Parameters { get; set; }
-  }
+public partial class UploadForm
+{
+  [JsonPropertyName("url")]
+  public Uri Url { get; set; }
+
+  [JsonPropertyName("parameters")]
+  public object Parameters { get; set; }
 }

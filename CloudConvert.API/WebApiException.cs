@@ -1,23 +1,22 @@
 using System;
 
-namespace CloudConvert.API
+namespace CloudConvert.API;
+
+public class WebApiException : Exception
 {
-  public class WebApiException : Exception
+  public WebApiException()
   {
-    public WebApiException()
-    {
-    }
+  }
 
-    public WebApiException(Exception innerException) : base(innerException.Message, innerException)
-    {
-    }
+  public WebApiException(Exception innerException) : base(innerException.Message, innerException)
+  {
+  }
 
-    public WebApiException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
+  public WebApiException(string message, Exception innerException) : base(message, innerException)
+  {
+  }
 
-    public WebApiException(string message) : base(message)
-    {
-    }
+  public WebApiException(string message) : base(message)
+  {
   }
 }

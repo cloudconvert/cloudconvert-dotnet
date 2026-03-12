@@ -3,42 +3,41 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CloudConvert.API
+namespace CloudConvert.API;
+
+public class RestHelper
 {
-  public class RestHelper
+  private readonly HttpClient _httpClient;
+
+  internal RestHelper()
   {
-    private readonly HttpClient _httpClient;
+    _httpClient = new HttpClient(new WebApiHandler(true));
+    _httpClient.Timeout = System.TimeSpan.FromMilliseconds(System.Threading.Timeout.Infinite);
+  }
 
-    internal RestHelper()
+  internal RestHelper(HttpClient httpClient)
+  {
+    _httpClient = httpClient;
+  }
+
+  internal async Task<T> RequestAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
+  {
+    var response = await _httpClient.SendAsync(request, cancellationToken);
+    var responseRaw = await response.Content.ReadAsStringAsync(cancellationToken);
+
+    // Handle empty response body (e.g., HTTP 204 No Content)
+    // System.Text.Json throws when trying to deserialize an empty string
+    if (string.IsNullOrWhiteSpace(responseRaw) || response.StatusCode == System.Net.HttpStatusCode.NoContent)
     {
-      _httpClient = new HttpClient(new WebApiHandler(true));
-      _httpClient.Timeout = System.TimeSpan.FromMilliseconds(System.Threading.Timeout.Infinite);
+      return default(T);
     }
 
-    internal RestHelper(HttpClient httpClient)
-    {
-      _httpClient = httpClient;
-    }
+    return JsonSerializer.Deserialize<T>(responseRaw, DefaultJsonSerializerOptions.SerializerOptions);
+  }
 
-    public async Task<T> RequestAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
-    {
-      var response = await _httpClient.SendAsync(request, cancellationToken);
-      var responseRaw = await response.Content.ReadAsStringAsync(cancellationToken);
-
-      // Handle empty response body (e.g., HTTP 204 No Content)
-      // System.Text.Json throws when trying to deserialize an empty string
-      if (string.IsNullOrWhiteSpace(responseRaw) || response.StatusCode == System.Net.HttpStatusCode.NoContent)
-      {
-        return default(T);
-      }
-
-      return JsonSerializer.Deserialize<T>(responseRaw, DefaultJsonSerializerOptions.SerializerOptions);
-    }
-
-    public async Task<string> RequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-    {
-      var response = await _httpClient.SendAsync(request, cancellationToken);
-      return await response.Content.ReadAsStringAsync(cancellationToken);
-    }
+  internal async Task<string> RequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+  {
+    var response = await _httpClient.SendAsync(request, cancellationToken);
+    return await response.Content.ReadAsStringAsync(cancellationToken);
   }
 }

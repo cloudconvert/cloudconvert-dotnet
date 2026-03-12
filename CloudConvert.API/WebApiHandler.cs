@@ -4,48 +4,40 @@ using System.Threading;
 using System.Threading.Tasks;
 using CloudConvert.API.Extensions;
 
-namespace CloudConvert.API
+namespace CloudConvert.API;
+
+internal sealed class WebApiHandler(bool loggingEnabled) : HttpClientHandler
 {
-  internal sealed class WebApiHandler : HttpClientHandler
+  protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
   {
 
-    private readonly bool _loggingEnabled;
+    bool writeLog = loggingEnabled;
 
-    public WebApiHandler(bool loggingEnabled)
+    try
     {
-      _loggingEnabled = loggingEnabled;
+      if (writeLog)
+      {
+        var requestString = request.Content is not null ? await request.Content.ReadAsStringAsync(cancellationToken) : string.Empty;
+      }
+
+      var response = await base.SendAsync(request, cancellationToken);
+      await response.Content.LoadIntoBufferAsync();
+
+      if (writeLog)
+      {
+        string responseString = (await response.Content.ReadAsStringAsync(cancellationToken)).TrimLengthWithEllipsis(20000);
+      }
+
+      if ((int)response.StatusCode >= 400)
+      {
+        throw new WebApiException((await response.Content.ReadAsStringAsync(cancellationToken)).TrimLengthWithEllipsis(20000));
+      }
+
+      return response;
     }
-
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    catch (Exception exc)
     {
-
-      bool writeLog = _loggingEnabled;
-
-      try
-      {
-        if (writeLog)
-        {
-          var requestString = request.Content != null ? await request.Content.ReadAsStringAsync(cancellationToken) : string.Empty;
-        }
-
-        var response = await base.SendAsync(request, cancellationToken);
-
-        if (writeLog)
-        {
-          string responseString = (await response.Content.ReadAsStringAsync(cancellationToken)).TrimLengthWithEllipsis(20000);
-        }
-
-        if ((int)response.StatusCode >= 400)
-        {
-          throw new WebApiException((await response.Content.ReadAsStringAsync(cancellationToken)).TrimLengthWithEllipsis(20000));
-        }
-
-        return response;
-      }
-      catch (Exception exc)
-      {
-        throw new WebApiException($"{request.Method} {request.RequestUri} failed: {exc.Message}", exc);
-      }
+      throw new WebApiException($"{request.Method} {request.RequestUri} failed: {exc.Message}", exc);
     }
   }
 }

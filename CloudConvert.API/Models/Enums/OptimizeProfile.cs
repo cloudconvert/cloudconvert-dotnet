@@ -1,11 +1,10 @@
-namespace CloudConvert.API.Models.Enums
+namespace CloudConvert.API.Models.Enums;
+
+public enum OptimizeProfile
 {
-  public enum OptimizeProfile
-  {
-    archive, 
-    max, 
-    mrc, 
-    print, 
-    web
-  };
-}
+  archive, 
+  max, 
+  mrc, 
+  print, 
+  web
+};

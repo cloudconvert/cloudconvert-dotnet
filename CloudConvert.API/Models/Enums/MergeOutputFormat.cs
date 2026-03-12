@@ -1,7 +1,6 @@
-namespace CloudConvert.API.Models.Enums
-{
-  public enum MergeOutputFormat
-  { 
-    pdf
-  };
-}
+namespace CloudConvert.API.Models.Enums;
+
+public enum MergeOutputFormat
+{ 
+  pdf
+};
