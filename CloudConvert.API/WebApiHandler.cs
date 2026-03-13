@@ -12,11 +12,12 @@ namespace CloudConvert.API
     {
       try
       {
-        var response = await base.SendAsync(request, cancellationToken);
+        var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
         if ((int)response.StatusCode >= 400)
         {
-          throw new WebApiException((await response.Content.ReadAsStringAsync(cancellationToken)).TrimLengthWithEllipsis(20000));
+          var errorBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+          throw new WebApiException(errorBody.TrimLengthWithEllipsis(20000));
         }
 
         return response;
