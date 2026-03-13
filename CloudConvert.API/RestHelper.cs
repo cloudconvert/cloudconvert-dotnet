@@ -22,12 +22,17 @@ namespace CloudConvert.API
 
     internal async Task<T> RequestAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-      var response = await _httpClient.SendAsync(request, cancellationToken);
-      var responseRaw = await response.Content.ReadAsStringAsync(cancellationToken);
+      var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-      // Handle empty response body (e.g., HTTP 204 No Content)
-      // System.Text.Json throws when trying to deserialize an empty string
-      if (string.IsNullOrWhiteSpace(responseRaw) || response.StatusCode == System.Net.HttpStatusCode.NoContent)
+      // Short-circuit earlier as 204 will never have a body to read
+      if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+      {
+        return default;
+      }
+
+      var responseRaw = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
+      if (string.IsNullOrWhiteSpace(responseRaw))
       {
         return default;
       }
@@ -37,8 +42,8 @@ namespace CloudConvert.API
 
     internal async Task<string> RequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-      var response = await _httpClient.SendAsync(request, cancellationToken);
-      return await response.Content.ReadAsStringAsync(cancellationToken);
+      var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+      return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
   }
 }
