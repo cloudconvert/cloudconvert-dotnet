@@ -5,12 +5,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using CloudConvert.API.Models;
 using CloudConvert.API.Models.JobModels;
 using CloudConvert.API.Models.TaskModels;
-using CloudConvert.API.Models;
-using System.Threading;
 
 namespace CloudConvert.API
 {
@@ -45,17 +45,17 @@ namespace CloudConvert.API
 
     readonly RestHelper _restHelper;
     readonly string _api_key = "Bearer ";
-    const string sandboxUrlApi = "https://api.sandbox.cloudconvert.com/v2";
-    const string publicUrlApi = "https://api.cloudconvert.com/v2";
-    const string sandboxUrlSyncApi = "https://sync.api.sandbox.cloudconvert.com/v2";
-    const string publicUrlSyncApi = "https://sync.api.cloudconvert.com/v2";
+    private const string SandboxUrlApi = "https://api.sandbox.cloudconvert.com/v2";
+    private const string PublicUrlApi = "https://api.cloudconvert.com/v2";
+    private const string SandboxUrlSyncApi = "https://sync.api.sandbox.cloudconvert.com/v2";
+    private const string PublicUrlSyncApi = "https://sync.api.cloudconvert.com/v2";
     static readonly char[] base64Padding = { '=' };
 
     internal CloudConvertAPI(RestHelper restHelper, string api_key, bool isSandbox = false)
     {
-      _apiUrl = isSandbox ? sandboxUrlApi : publicUrlApi;
-      _apiSyncUrl = isSandbox ? sandboxUrlSyncApi : publicUrlSyncApi;
-      _api_key += api_key;
+      _apiUrl = isSandbox ? SandboxUrlApi : PublicUrlApi;
+      _apiSyncUrl = isSandbox ? SandboxUrlSyncApi : PublicUrlSyncApi;
+      _api_key = $"Bearer {api_key}";
       _restHelper = restHelper;
     }
 
@@ -67,7 +67,7 @@ namespace CloudConvert.API
     public CloudConvertAPI(string url, string api_key)
     {
       _apiUrl = url;
-      _api_key += api_key;
+      _api_key = $"Bearer {api_key}";
       _restHelper = new RestHelper();
     }
 
@@ -75,7 +75,7 @@ namespace CloudConvert.API
     {
       var request = new HttpRequestMessage { RequestUri = new Uri(endpoint), Method = method };
 
-      if (model != null)
+      if (model is not null)
       {
         var content = new StringContent(JsonSerializer.Serialize(model, DefaultJsonSerializerOptions.SerializerOptions), Encoding.UTF8, "application/json");
         request.Content = content;
@@ -93,7 +93,7 @@ namespace CloudConvert.API
       var content = new MultipartFormDataContent();
       var request = new HttpRequestMessage { RequestUri = new Uri(endpoint), Method = method, };
 
-      if (parameters != null)
+      if (parameters is not null)
       {
         foreach (var param in parameters)
         {
@@ -119,7 +119,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The list of jobs. You can find details about the job model response in the documentation about the show jobs endpoint.
     /// </returns>
-    public Task<ListResponse<JobResponse>> GetAllJobsAsync(JobListFilter jobFilter, CancellationToken cancellationToken = default) 
+    public Task<ListResponse<JobResponse>> GetAllJobsAsync(JobListFilter jobFilter, CancellationToken cancellationToken = default)
       => _restHelper.RequestAsync<ListResponse<JobResponse>>(GetRequest($"{_apiUrl}/jobs?filter[status]={jobFilter.Status}&filter[tag]={jobFilter.Tag}&include={jobFilter.Include}&per_page={jobFilter.PerPage}&page={jobFilter.Page}", HttpMethod.Get), cancellationToken);
 
     /// <summary>
@@ -130,7 +130,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The created job. You can find details about the job model response in the documentation about the show jobs endpoint.
     /// </returns>
-    public Task<Response<JobResponse>> CreateJobAsync(JobCreateRequest model, CancellationToken cancellationToken = default) 
+    public Task<Response<JobResponse>> CreateJobAsync(JobCreateRequest model, CancellationToken cancellationToken = default)
       => _restHelper.RequestAsync<Response<JobResponse>>(GetRequest($"{_apiUrl}/jobs", HttpMethod.Post, model), cancellationToken);
 
     /// <summary>
@@ -195,7 +195,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The created task. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T model, CancellationToken cancellationToken = default) 
+    public Task<Response<TaskResponse>> CreateTaskAsync<T>(string operation, T model, CancellationToken cancellationToken = default)
       => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/{operation}", HttpMethod.Post, model), cancellationToken);
 
     /// <summary>
@@ -205,7 +205,7 @@ namespace CloudConvert.API
     /// <param name="include"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task<Response<TaskResponse>> GetTaskAsync(string id, string include = null, CancellationToken cancellationToken = default) 
+    public Task<Response<TaskResponse>> GetTaskAsync(string id, string include = null, CancellationToken cancellationToken = default)
       => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiUrl}/tasks/{id}?include={include}", HttpMethod.Get), cancellationToken);
 
     /// <summary>
@@ -222,7 +222,7 @@ namespace CloudConvert.API
     /// <returns>
     /// The finished or failed task. You can find details about the task model response in the documentation about the show tasks endpoint.
     /// </returns>
-    public Task<Response<TaskResponse>> WaitTaskAsync(string id, CancellationToken cancellationToken = default) 
+    public Task<Response<TaskResponse>> WaitTaskAsync(string id, CancellationToken cancellationToken = default)
       => _restHelper.RequestAsync<Response<TaskResponse>>(GetRequest($"{_apiSyncUrl}/tasks/{id}", HttpMethod.Get), cancellationToken);
 
     /// <summary>
@@ -234,12 +234,12 @@ namespace CloudConvert.API
     /// <returns>
     /// An empty response with HTTP Code 204.
     /// </returns>
-    public Task DeleteTaskAsync(string id, CancellationToken cancellationToken = default) 
+    public Task DeleteTaskAsync(string id, CancellationToken cancellationToken = default)
       => _restHelper.RequestAsync<object>(GetRequest($"{_apiUrl}/tasks/{id}", HttpMethod.Delete), cancellationToken);
 
     #endregion
 
-    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters, CancellationToken cancellationToken) 
+    public Task<string> UploadAsync(string url, byte[] file, string fileName, object parameters, CancellationToken cancellationToken)
       => _restHelper.RequestAsync(GetMultipartFormDataRequest(url, HttpMethod.Post, new ByteArrayContent(file), fileName, GetParameters(parameters)), cancellationToken);
 
     public Task<string> UploadAsync(string url, Stream stream, string fileName, object parameters, CancellationToken cancellationToken = default)
@@ -247,21 +247,25 @@ namespace CloudConvert.API
 
     public string CreateSignedUrl(string baseUrl, string signingSecret, JobCreateRequest job, string cacheKey = null)
     {
-      string url = baseUrl;
-      string jobJson = JsonSerializer.Serialize(job, DefaultJsonSerializerOptions.SerializerOptions);
-      string base64Job = System.Convert.ToBase64String(Encoding.ASCII.GetBytes(jobJson)).TrimEnd(base64Padding).Replace('+', '-').Replace('/', '_');
+      var jobJson = JsonSerializer.Serialize(job, DefaultJsonSerializerOptions.SerializerOptions);
+      var base64Job = Convert.ToBase64String(Encoding.ASCII.GetBytes(jobJson))
+          .TrimEnd(base64Padding)
+          .Replace('+', '-')
+          .Replace('/', '_');
 
-      url += "?job=" + base64Job;
+      var builder = new StringBuilder(baseUrl)
+          .Append("?job=")
+          .Append(base64Job);
 
-      if(cacheKey != null) {
-        url += "&cache_key=" + cacheKey;
+      if (cacheKey is not null)
+      {
+        builder.Append("&cache_key=").Append(cacheKey);
       }
 
-      string signature = HashHMAC(signingSecret, url);
+      var urlWithoutSignature = builder.ToString();
+      var signature = HashHMAC(signingSecret, urlWithoutSignature);
 
-      url += "&s=" + signature;
-
-      return url;
+      return builder.Append("&s=").Append(signature).ToString();
     }
 
     public bool ValidateWebhookSignatures(string payloadString, string signature, string signingSecret)
@@ -271,11 +275,13 @@ namespace CloudConvert.API
       return hashHMAC == signature;
     }
 
-    private string HashHMAC(string key, string message)
+    private static string HashHMAC(string key, string message)
     {
-      byte[] hash = new HMACSHA256(Encoding.UTF8.GetBytes(key)).ComputeHash(new UTF8Encoding().GetBytes(message));
+      using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key));
+      var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
       return BitConverter.ToString(hash).Replace("-", "").ToLower();
     }
+
     private Dictionary<string, string> GetParameters(object parameters)
     {
       var dictionaryParameters = new Dictionary<string, string>();

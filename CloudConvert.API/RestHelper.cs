@@ -11,7 +11,7 @@ namespace CloudConvert.API
 
     internal RestHelper()
     {
-      _httpClient = new HttpClient(new WebApiHandler(true));
+      _httpClient = new HttpClient(new WebApiHandler());
       _httpClient.Timeout = System.TimeSpan.FromMilliseconds(System.Threading.Timeout.Infinite);
     }
 
@@ -20,7 +20,7 @@ namespace CloudConvert.API
       _httpClient = httpClient;
     }
 
-    public async Task<T> RequestAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
+    internal async Task<T> RequestAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
     {
       var response = await _httpClient.SendAsync(request, cancellationToken);
       var responseRaw = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -29,13 +29,13 @@ namespace CloudConvert.API
       // System.Text.Json throws when trying to deserialize an empty string
       if (string.IsNullOrWhiteSpace(responseRaw) || response.StatusCode == System.Net.HttpStatusCode.NoContent)
       {
-        return default(T);
+        return default;
       }
 
       return JsonSerializer.Deserialize<T>(responseRaw, DefaultJsonSerializerOptions.SerializerOptions);
     }
 
-    public async Task<string> RequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    internal async Task<string> RequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
       var response = await _httpClient.SendAsync(request, cancellationToken);
       return await response.Content.ReadAsStringAsync(cancellationToken);
